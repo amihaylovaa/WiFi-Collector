@@ -1,0 +1,24 @@
+
+J
+java:S1612Æ",Replace this lambda with a method reference.(—ì¯Œ8Êù—¤.
+X	java:S125š"<This block of commented-out lines of code should be removed.(¤ÆºM8¤æ¯—¤.
+Y
+java:S2696 "6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8ñ¢—¤.
+Y
+java:S2696‡"6Make the enclosing method "static" or remove this set.(É¯”Îşÿÿÿÿ8ñ¢—¤.
+F
+java:S1148Ì"#Use a logger to log this exception.(Ú¸ÿÿÿÿÿ8ñ¢—¤.
+J
+java:S1612",Replace this lambda with a method reference.(—ì¯Œ8íŒ—¤.
+P
+java:S1135Õ"2Complete the task associated to this TODO comment.(øç‡›8ñ¢—¤.
+O
+java:S1128"-Remove this unused import 'android.Manifest'.(¦øïúÿÿÿÿ8‡×ó–¤.
+v
+java:S14500"TRemove the "mFile" field and declare it as a local variable in the relevant methods.(Œ˜‡ÿÿÿÿÿ8è¡õ–¤.
+K
+java:S10680")Remove this unused "mFile" private field.(Œ˜‡ÿÿÿÿÿ8è¡õ–¤.
+X
+java:S1141À"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ8ñ¢—¤.
+F
+java:S1148Ç"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ñ¢—¤.

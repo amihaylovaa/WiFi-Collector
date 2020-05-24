@@ -1,0 +1,9 @@
+
+X
+java:S1444"6Make this "public static isAlreadyScanned" field final(ŸÕœÉüÿÿÿÿ8¸üù¤.
+P
+java:S1444"3Make this "public static hasWorkFailed" field final(¯§€ˆ8¸üù¤.
+v
+java:S1104"YMake hasWorkFailed a static final constant or non-public and provide accessors if needed.(¯§€ˆ8¸üù¤.
+~
+java:S1104"\Make isAlreadyScanned a static final constant or non-public and provide accessors if needed.(ŸÕœÉüÿÿÿÿ8¸üù¤.

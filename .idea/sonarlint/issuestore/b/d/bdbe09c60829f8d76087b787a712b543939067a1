@@ -1,0 +1,11 @@
+
+P
+java:S1141>"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
+k
+java:S2095="PUse try-with-resources or close this "OutputStreamWriter" in a "finally" clause.(…—®£ýÿÿÿÿ
+>
+java:S1148I"#Use a logger to log this exception.(ŽÚ¸ÿÿÿÿÿ
+L
+java:S2696'"6Make the enclosing method "static" or remove this set.(ƒÎ×¹
+>
+java:S1148D"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ

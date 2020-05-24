@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/start_scanning_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="187dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="22dp"
+        android:fontFamily="monospace"
+        android:text="@string/start_scanning_button_content"
+        android:textAlignment="center"
+        android:textStyle="normal" />
+
+    <Button
+        android:id="@+id/send_data_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="187dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="22dp"
+        android:fontFamily="monospace"
+        android:text="@string/send_data_button_content"
+        android:textAlignment="center"
+        android:textStyle="normal" />
+</LinearLayout>
