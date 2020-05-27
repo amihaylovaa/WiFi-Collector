@@ -6,7 +6,6 @@ public class Constants {
     private Constants() {
     }
 
-
     public static final String ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
     public static boolean isAlreadyScanned = true;
@@ -14,7 +13,7 @@ public class Constants {
     public static final int ONE_MINUTE = 1 * 60 * 1000;
     public static final int TWO_MINUTES = 2 * 60 * 1000;
     public static final String WORKER_REQUEST_TAG = "Background location worker ";
-    public static final String FILE_NAME = "Location_Wifi.txt";
+    public static final String FILE_NAME = "Location_Wifi.gpx";
 
     public static final String INTRO = "This application collect " +
             "your location and wireless access points based on your current location.\n" +

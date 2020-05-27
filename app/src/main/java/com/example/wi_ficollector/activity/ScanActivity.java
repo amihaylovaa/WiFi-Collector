@@ -22,13 +22,16 @@ import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.*;
 import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
+import com.example.wi_ficollector.repository.WiFiLocationRepository;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
@@ -45,11 +48,13 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private LocationRequest mLocationRequest;
     private ScanPreference mScanPreference;
     private File mFile;
+    private WiFiLocationRepository mWiFiLocationRepository;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mWiFiLocationRepository = new WiFiLocationRepository();
         mFile = new File(this.getFilesDir(), FILE_NAME);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
@@ -273,6 +278,8 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     private void receiveLocationResults() {
+        Toast.makeText(this, "Found result", Toast.LENGTH_SHORT).show();
+
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -281,7 +288,12 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    showIt(location);
+                    try {
+                        FileOutputStream out = new FileOutputStream(mFile);
+                        mWiFiLocationRepository.saveData(location, out);
+                    } catch (IOException | TransformerException | ParserConfigurationException ios) {
+                        ;
+                    }
                 }
                 isAlreadyScanned = false;
                 startWiFiScanning();
@@ -306,28 +318,5 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         super.onDestroy();
         mWorkManager.cancelAllWork();
         unregisterReceiver(mWifiReceiver);
-    }
-
-    public void showIt(Location location) {
-        String fileContent = "\nLatitude :" + location.getLatitude() + "\n Longitude : " + location.getLongitude() + "\n";
-        LocalDateTime localDateTime = LocalDateTime.now();
-
-        Toast.makeText(this, "Found result", Toast.LENGTH_SHORT).show();
-        try {
-            OutputStreamWriter osw = new OutputStreamWriter(openFileOutput(FILE_NAME, Context.MODE_APPEND));
-            try {
-                osw.write("------------------");
-                osw.write(fileContent);
-                osw.write(String.valueOf(localDateTime));
-                osw.write("\n");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            osw.flush();
-            osw.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
     }
 }

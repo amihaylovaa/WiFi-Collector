@@ -37,5 +37,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation "androidx.work:work-runtime:$work_version"
     implementation 'androidx.concurrent:concurrent-futures:1.0.0'
-    implementation files('libs/jpx-2.0.0.jar')
+    implementation files('libs/GPXParser_20200512.jar')
 }

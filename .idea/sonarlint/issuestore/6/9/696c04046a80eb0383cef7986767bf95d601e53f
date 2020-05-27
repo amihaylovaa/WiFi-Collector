@@ -1,21 +1,15 @@
 
-F
-java:S1148Å"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ñ¢—¤.
-O
-java:S1612",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8úçÁ¼¤.
 Y
-java:S2696…"6Make the enclosing method "static" or remove this set.(É¯”Îşÿÿÿÿ8ñ¢—¤.
-Y
-java:S2696"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8ñ¢—¤.
+java:S2696…"6Make the enclosing method "static" or remove this set.(É¯”Îşÿÿÿÿ8•æğ”¥.
 O
-java:S1612Ä",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Êù—¤.
-X
-java:S1141¾"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ8ñ¢—¤.
-K
-java:S1068/")Remove this unused "mFile" private field.(Œ˜‡ÿÿÿÿÿ8è¡õ–¤.
+java:S1612Ä",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8•æğ”¥.
+?
+java:S1116Ÿ"Remove this empty statement.(Åñ­õşÿÿÿÿ8•æğ”¥.
+V
+java:S1128"4Remove this unused import 'java.time.LocalDateTime'.(æÃ§ƒüÿÿÿÿ8¶œ¦³¥.
+Y
+java:S2696¢"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8•æğ”¥.
 P
-java:S1135Ó"2Complete the task associated to this TODO comment.(øç‡›8ñ¢—¤.
-v
-java:S1450/"TRemove the "mFile" field and declare it as a local variable in the relevant methods.(Œ˜‡ÿÿÿÿÿ8è¡õ–¤.
-F
-java:S1148Ê"#Use a logger to log this exception.(Ú¸ÿÿÿÿÿ8ñ¢—¤.
+java:S1135Ó"2Complete the task associated to this TODO comment.(øç‡›8•æğ”¥.
+O
+java:S1612",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8•æğ”¥.
