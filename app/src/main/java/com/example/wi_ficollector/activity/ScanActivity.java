@@ -37,6 +37,7 @@ import static com.example.wi_ficollector.utils.Constants.*;
 
 public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
+    Context context = this;
     private static final int FINE_LOCATION_PERMISSION_CODE = 87;
     private static final int BACKGROUND_LOCATION_PERMISSION_CODE = 43;
     private static final int REQUEST_LOCATION_SETTINGS_CODE = 104;
@@ -54,12 +55,12 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mWiFiLocationRepository = new WiFiLocationRepository();
-        mFile = new File(this.getFilesDir(), FILE_NAME);
+        mFile = new File(getApplicationContext().getFilesDir(), FILE_NAME);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mWorkManager = WorkManager.getInstance(getApplicationContext());
         mScanPreference = new ScanPreference(this);
+        mWiFiLocationRepository = new WiFiLocationRepository();
 
         if (!isBackgroundPermissionRequestRequired()) {
             createBackgroundTask();
@@ -289,15 +290,16 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                 }
                 for (Location location : locationResult.getLocations()) {
                     try {
-                        FileOutputStream out = new FileOutputStream(mFile);
-                        mWiFiLocationRepository.saveData(location, out);
-                    } catch (IOException | TransformerException | ParserConfigurationException ios) {
-                        ;
+                        out = new FileOutputStream(mFile);
+                        mWiFiLocationRepository.saveLocation(location, out);
+                    } catch (IOException | TransformerException | ParserConfigurationException io) {
+
                     }
                 }
                 isAlreadyScanned = false;
                 startWiFiScanning();
             }
+
         };
     }
 

@@ -1,15 +1,21 @@
 
 Y
-java:S2696…"6Make the enclosing method "static" or remove this set.(É¯”Îþÿÿÿÿ8•æð”¥.
-O
-java:S1612Ä",Replace this lambda with a method reference.(Š´ïöýÿÿÿÿ8•æð”¥.
+java:S2696ª"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8ˆ³»º¥.
+~
+java:S1450,"\Remove the "mWifiReceiver" field and declare it as a local variable in the relevant methods.(ûâÐ±ÿÿÿÿÿ8ïÃ‚½¥.
 ?
-java:S1116Ÿ"Remove this empty statement.(Åñ­õþÿÿÿÿ8•æð”¥.
-V
-java:S1128"4Remove this unused import 'java.time.LocalDateTime'.(æÃ§ƒüÿÿÿÿ8¶œ¦³¥.
+java:S1116§"Remove this empty statement.(Åñ­õþÿÿÿÿ8ˆ³»º¥.
 Y
-java:S2696¢"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8•æð”¥.
-P
-java:S1135Ó"2Complete the task associated to this TODO comment.(øç‡›8•æð”¥.
+java:S2696Š"6Make the enclosing method "static" or remove this set.(É¯”Îþÿÿÿÿ8ÿ¨Ö¹¥.
+^	java:S125À"<This block of commented-out lines of code should be removed.(œ€ºøÿÿÿÿ8ïÃ‚½¥.
+V
+java:S1144Þ"9Remove this unused private "registerWiFiReceiver" method.(¥Òôk8ÒŸ‚½¥.
 O
-java:S1612Ž",Replace this lambda with a method reference.(Š´ïöýÿÿÿÿ8•æð”¥.
+java:S1612É",Replace this lambda with a method reference.(Š´ïöýÿÿÿÿ8ÿ¨Ö¹¥.
+€
+java:S11043"cMake mWiFiLocationRepository a static final constant or non-public and provide accessors if needed.(×©ÿÍ8¹öÑ¿¥.
+O
+java:S1612“",Replace this lambda with a method reference.(Š´ïöýÿÿÿÿ8ÿ¨Ö¹¥.
+X	java:S125J"<This block of commented-out lines of code should be removed.(Ïîëê8ÒŸ‚½¥.
+P
+java:S1135Ø"2Complete the task associated to this TODO comment.(øç‡›8ÿ¨Ö¹¥.

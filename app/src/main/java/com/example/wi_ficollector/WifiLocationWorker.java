@@ -23,8 +23,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -41,7 +39,6 @@ public class WifiLocationWorker extends ListenableWorker {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Context mContext;
     private LocationCallback mLocationCallback;
-    private FileOutputStream out;
 
     public WifiLocationWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -64,7 +61,7 @@ public class WifiLocationWorker extends ListenableWorker {
     public void doWork(CallbackToFutureAdapter.Completer<Result> completer) {
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
-        mWiFiLocationRepository = new WiFiLocationRepository();
+        mWiFiLocationRepository =  new WiFiLocationRepository();
 
         createLocationRequest();
         getLocationCallbackResult(completer);
@@ -90,11 +87,7 @@ public class WifiLocationWorker extends ListenableWorker {
                 for (Location location : locationResult.getLocations()) {
                     try {
                         out = mContext.openFileOutput(FILE_NAME, mContext.MODE_APPEND);
-                    } catch (FileNotFoundException f) {
-                        ;
-                    }
-                    try {
-                        mWiFiLocationRepository.saveData(location, out);
+                        mWiFiLocationRepository.saveLocation(location, out);
                     } catch (IOException ios) {
 
                     } catch (TransformerException e) {
