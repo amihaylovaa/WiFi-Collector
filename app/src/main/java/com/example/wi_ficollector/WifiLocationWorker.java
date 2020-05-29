@@ -16,6 +16,7 @@ import androidx.work.ListenableWorker;
 import androidx.work.WorkerParameters;
 
 import com.example.wi_ficollector.repository.WiFiLocationRepository;
+import com.example.wi_ficollector.wrapper.WiFiLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -23,6 +24,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -61,7 +63,7 @@ public class WifiLocationWorker extends ListenableWorker {
     public void doWork(CallbackToFutureAdapter.Completer<Result> completer) {
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
-        mWiFiLocationRepository =  new WiFiLocationRepository();
+        mWiFiLocationRepository = new WiFiLocationRepository();
 
         createLocationRequest();
         getLocationCallbackResult(completer);
@@ -86,8 +88,15 @@ public class WifiLocationWorker extends ListenableWorker {
                 completer.set(Result.success());
                 for (Location location : locationResult.getLocations()) {
                     try {
-                        out = mContext.openFileOutput(FILE_NAME, mContext.MODE_APPEND);
-                        mWiFiLocationRepository.saveLocation(location, out);
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+                        WiFiLocation.setLatitude(latitude);
+                        WiFiLocation.setLongitude(longitude);
+                        isAlreadyScanned = false;
+                        FileOutputStream fileOutputStream = mContext.openFileOutput(FILE_NAME, Context.MODE_APPEND);
+                        mWiFiLocationRepository.saveLocation(fileOutputStream);
+                        WiFiLocation.clearFields();
+                        fileOutputStream.close();
                     } catch (IOException ios) {
 
                     } catch (TransformerException e) {
@@ -95,8 +104,6 @@ public class WifiLocationWorker extends ListenableWorker {
                     } catch (ParserConfigurationException e) {
                         e.printStackTrace();
                     }
-                    isAlreadyScanned = false;
-                    starWiFiScanning();
                 }
                 mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
             }

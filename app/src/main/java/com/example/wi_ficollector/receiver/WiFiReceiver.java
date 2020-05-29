@@ -8,8 +8,10 @@ import android.net.wifi.WifiManager;
 import android.widget.Toast;
 
 import com.example.wi_ficollector.repository.WiFiLocationRepository;
+import com.example.wi_ficollector.wrapper.WiFiLocation;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
@@ -19,7 +21,6 @@ import javax.xml.transform.TransformerException;
 
 import static com.example.wi_ficollector.utils.Constants.FILE_NAME;
 import static com.example.wi_ficollector.utils.Constants.isAlreadyScanned;
-import static com.example.wi_ficollector.utils.Constants.out;
 
 public class WiFiReceiver extends BroadcastReceiver {
 
@@ -44,6 +45,8 @@ public class WiFiReceiver extends BroadcastReceiver {
                     scanningSuccess(context);
                 } catch (FileNotFoundException | TransformerException | ParserConfigurationException e) {
 
+                } catch (IOException io) {
+
                 }
             } else {
                 Toast.makeText(context, "Error receiving scanning results", Toast.LENGTH_SHORT).show();
@@ -52,7 +55,7 @@ public class WiFiReceiver extends BroadcastReceiver {
         isAlreadyScanned = true;
     }
 
-    void scanningSuccess(Context context) throws FileNotFoundException, TransformerException, ParserConfigurationException {
+    void scanningSuccess(Context context) throws IOException, TransformerException, ParserConfigurationException {
         List<ScanResult> results = mWifiManager.getScanResults();
 
         int num = results.size();
@@ -61,8 +64,14 @@ public class WiFiReceiver extends BroadcastReceiver {
             Toast.makeText(context, "Nothing found", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(context, "Recording", Toast.LENGTH_LONG).show();
-            out = context.openFileOutput(FILE_NAME, Context.MODE_APPEND);
-            wiFiLocationRepository.saveWifi(results, out);
+            FileOutputStream fileOutputStream = context.openFileOutput(FILE_NAME, Context.MODE_APPEND);
+            WiFiLocation.setScanResults(results);
+            try {
+                wiFiLocationRepository.saveLocation(fileOutputStream);
+                fileOutputStream.close();
+            } catch (IOException io) {
+
+            }
         }
     }
 }

@@ -48,3 +48,5 @@ Kapp/src/main/java/com/example/wi_ficollector/preference/MainPreference.java,5\
 Sapp/src/main/java/com/example/wi_ficollector/repository/WiFiLocationRepository.java,e\8\e8c2cca1a1050663dfe3b31a3f332b23a24465ae
 |
 Lapp/src/main/java/com/example/wi_ficollector/repository/ExtensionParser.java,1\7\17dbc3a99f6a6eac4c14bfadb49bd6dee8114b2c
+Å
+Qapp/src/main/java/com/example/wi_ficollector/preference/RepositoryPreference.java,2\2\2282292467ab971697f5d094d1342571042d46a5

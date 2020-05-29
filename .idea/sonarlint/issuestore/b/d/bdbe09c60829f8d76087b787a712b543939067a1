@@ -1,9 +1,14 @@
 
-L
-java:S2696'"6Make the enclosing method "static" or remove this set.(ƒÎ×¹
-P
-java:S1141>"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
->
-java:S1148D"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
->
-java:S1148I"#Use a logger to log this exception.(Ú¸ÿÿÿÿÿ
+S
+java:S26964"6Make the enclosing method "static" or remove this set.(ƒÎ×¹8ÇÊÃé¥.
+T
+java:S1128"7Remove this unused import 'java.io.OutputStreamWriter'.(Ÿ“¸8ıŸ°æ¥.
+G
+java:S1068"+Remove this unused "context" private field.(êİç8ÇÊÃé¥.
+S
+java:S2696@"6Make the enclosing method "static" or remove this set.(½°şÛ8ÇÊÃé¥.
+E	java:S108-")Either remove or fill this block of code.(·Ú›»8ÇÊÃé¥.
+R
+java:S1128"0Remove this unused import 'java.io.IOException'.(ªº»Úıÿÿÿÿ8ıŸ°æ¥.
+r
+java:S1450"VRemove the "context" field and declare it as a local variable in the relevant methods.(êİç8ÇÊÃé¥.

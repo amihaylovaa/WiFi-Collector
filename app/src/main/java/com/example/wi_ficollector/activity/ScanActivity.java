@@ -23,6 +23,7 @@ import com.example.wi_ficollector.*;
 import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WiFiLocationRepository;
+import com.example.wi_ficollector.wrapper.WiFiLocation;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
@@ -55,7 +56,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFile = new File(getApplicationContext().getFilesDir(), FILE_NAME);
+        mFile = new File(this.getFilesDir(), FILE_NAME);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mWorkManager = WorkManager.getInstance(getApplicationContext());
@@ -290,16 +291,27 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                 }
                 for (Location location : locationResult.getLocations()) {
                     try {
-                        out = new FileOutputStream(mFile);
-                        mWiFiLocationRepository.saveLocation(location, out);
-                    } catch (IOException | TransformerException | ParserConfigurationException io) {
-
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+                        WiFiLocation.setLatitude(latitude);
+                        WiFiLocation.setLongitude(longitude);
+                        isAlreadyScanned = false;
+                        startWiFiScanning();
+                        FileOutputStream fileOutputStream = openFileOutput(FILE_NAME, Context.MODE_APPEND);
+                        mWiFiLocationRepository.saveLocation(fileOutputStream);
+                        WiFiLocation.clearFields();
+                        fileOutputStream.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ParserConfigurationException e) {
+                        e.printStackTrace();
+                    } catch (TransformerException e) {
+                        e.printStackTrace();
                     }
                 }
-                isAlreadyScanned = false;
-                startWiFiScanning();
             }
-
         };
     }
 
