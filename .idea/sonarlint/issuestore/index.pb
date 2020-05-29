@@ -50,3 +50,5 @@ Sapp/src/main/java/com/example/wi_ficollector/repository/WiFiLocationRepository.
 Lapp/src/main/java/com/example/wi_ficollector/repository/ExtensionParser.java,1\7\17dbc3a99f6a6eac4c14bfadb49bd6dee8114b2c
 Å
 Qapp/src/main/java/com/example/wi_ficollector/preference/RepositoryPreference.java,2\2\2282292467ab971697f5d094d1342571042d46a5
+v
+Fapp/src/main/java/com/example/wi_ficollector/wrapper/WiFiLocation.java,9\d\9da8f6d4e6c20597a75bd3970137bc93f54615b0

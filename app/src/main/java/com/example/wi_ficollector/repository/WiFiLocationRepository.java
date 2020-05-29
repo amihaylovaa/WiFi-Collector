@@ -10,19 +10,17 @@ import org.alternativevision.gpx.beans.GPX;
 import org.alternativevision.gpx.beans.Track;
 import org.alternativevision.gpx.beans.Waypoint;
 
-
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+
+import static com.example.wi_ficollector.utils.Constants.fileOutputStream;
 
 public class WiFiLocationRepository {
 
@@ -37,7 +35,7 @@ public class WiFiLocationRepository {
         extensionParser = new ExtensionParser();
     }
 
-    public void saveLocation(FileOutputStream out) throws IOException, TransformerException, ParserConfigurationException {
+    public void saveLocation() throws IOException, TransformerException, ParserConfigurationException {
         Track track = new Track();
         Waypoint waypoint = new Waypoint();
         ArrayList<Waypoint> wayPoints = new ArrayList<>();
@@ -45,23 +43,31 @@ public class WiFiLocationRepository {
         Date date = new Date();
         double latitude = WiFiLocation.getLatitude();
         double longitude = WiFiLocation.getLongitude();
-       // HashMap<String, Object> results = new HashMap<>();
-       // if (WiFiLocation.getScanResults() != null) {
-         //  for (ScanResult scanResult : WiFiLocation.getScanResults()) {
-           //     results.put("SSID", scanResult.SSID);
-             //   results.put("RSSI", scanResult.level);
-               // results.put("BSSID", scanResult.BSSID);
-               // results.put("capabilities", scanResult.capabilities);
-           // }
-       // }
-       // waypoint.setExtensionData(results);
- //       waypoint.setTime(date);
+        HashMap<String, Object> results = addResults();
+
+        waypoint.setExtensionData(results);
+        waypoint.setTime(date);
         waypoint.setLatitude(latitude);
         waypoint.setLongitude(longitude);
         wayPoints.add(waypoint);
         track.setTrackPoints(wayPoints);
         gpx.addTrack(track);
         gpxParser.addExtensionParser(extensionParser);
-        gpxParser.writeGPX(gpx, out);
+        gpxParser.writeGPX(gpx, fileOutputStream);
+    }
+
+    private HashMap<String, Object> addResults() {
+        HashMap<String, Object> results = new HashMap<>();
+        if (WiFiLocation.getScanResults() != null) {
+            int i = 0;
+            for (ScanResult scanResult : WiFiLocation.getScanResults()) {
+                results.put("SSID" + i, scanResult.SSID);
+                results.put("RSSI" + i, scanResult.level);
+                results.put("BSSID" + i, scanResult.BSSID);
+                results.put("capabilities" + i, scanResult.capabilities);
+                ++i;
+            }
+        }
+        return results;
     }
 }

@@ -42,7 +42,8 @@ public class WiFiLocation {
     }
 
     public static void setScanResults(List<ScanResult> scanResults) {
-        wifiScanResults = new ArrayList<>(scanResults);
+        wifiScanResults = new ArrayList<>();
+        wifiScanResults.addAll(scanResults);
     }
 
     public static void clearFields() {

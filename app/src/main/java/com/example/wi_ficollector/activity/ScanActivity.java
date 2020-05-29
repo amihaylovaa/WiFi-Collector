@@ -38,7 +38,6 @@ import static com.example.wi_ficollector.utils.Constants.*;
 
 public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
-    Context context = this;
     private static final int FINE_LOCATION_PERMISSION_CODE = 87;
     private static final int BACKGROUND_LOCATION_PERMISSION_CODE = 43;
     private static final int REQUEST_LOCATION_SETTINGS_CODE = 104;
@@ -56,7 +55,12 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFile = new File(this.getFilesDir(), FILE_NAME);
+        try {
+            fileOutputStream = this.openFileOutput(FILE_NAME, MODE_APPEND);
+        } catch (FileNotFoundException e) {
+            mFile = new File(this.getFilesDir(), FILE_NAME);
+        }
+
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mWorkManager = WorkManager.getInstance(getApplicationContext());
@@ -231,9 +235,9 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private void startWiFiScanning() {
         boolean isWiFiScanningSucceed = mWifiManager.startScan();
         if (isWiFiScanningSucceed) {
-            Toast.makeText(this, "Scanning ..", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Scanning ..", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Error scanning", Toast.LENGTH_SHORT).show();
+            //          Toast.makeText(this, "Error scanning", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -281,7 +285,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
     private void receiveLocationResults() {
         Toast.makeText(this, "Found result", Toast.LENGTH_SHORT).show();
-
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -290,29 +293,21 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
+                    WiFiLocation.setLatitude(location.getLatitude());
+                    WiFiLocation.setLongitude(location.getLongitude());
+                    isAlreadyScanned = false;
+                    startWiFiScanning();
                     try {
-                        double latitude = location.getLatitude();
-                        double longitude = location.getLongitude();
-                        WiFiLocation.setLatitude(latitude);
-                        WiFiLocation.setLongitude(longitude);
-                        isAlreadyScanned = false;
-                        startWiFiScanning();
-                        FileOutputStream fileOutputStream = openFileOutput(FILE_NAME, Context.MODE_APPEND);
-                        mWiFiLocationRepository.saveLocation(fileOutputStream);
-                        WiFiLocation.clearFields();
-                        fileOutputStream.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ParserConfigurationException e) {
-                        e.printStackTrace();
-                    } catch (TransformerException e) {
+                        mWiFiLocationRepository.saveLocation();
+                    } catch (TransformerException | ParserConfigurationException | IOException e) {
                         e.printStackTrace();
                     }
+                    WiFiLocation.clearFields();
                 }
             }
-        };
+        }
+
+        ;
     }
 
     @Override
@@ -332,5 +327,10 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         super.onDestroy();
         mWorkManager.cancelAllWork();
         unregisterReceiver(mWifiReceiver);
+        try {
+            fileOutputStream.close();
+        } catch (IOException e) {
+
+        }
     }
 }

@@ -93,10 +93,8 @@ public class WifiLocationWorker extends ListenableWorker {
                         WiFiLocation.setLatitude(latitude);
                         WiFiLocation.setLongitude(longitude);
                         isAlreadyScanned = false;
-                        FileOutputStream fileOutputStream = mContext.openFileOutput(FILE_NAME, Context.MODE_APPEND);
-                        mWiFiLocationRepository.saveLocation(fileOutputStream);
+                        mWiFiLocationRepository.saveLocation();
                         WiFiLocation.clearFields();
-                        fileOutputStream.close();
                     } catch (IOException ios) {
 
                     } catch (TransformerException e) {

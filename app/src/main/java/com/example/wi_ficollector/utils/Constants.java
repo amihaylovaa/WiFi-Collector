@@ -1,10 +1,14 @@
 package com.example.wi_ficollector.utils;
 
 import android.Manifest;
+import android.content.Context;
+
+import java.io.FileOutputStream;
 
 public class Constants {
     private Constants() {
     }
+    public static FileOutputStream fileOutputStream;
     public static final String ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
     public static boolean isAlreadyScanned = true;

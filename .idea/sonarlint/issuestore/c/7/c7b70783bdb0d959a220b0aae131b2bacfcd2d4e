@@ -1,12 +1,14 @@
 
+J	java:S108d")Either remove or fill this block of code.(å¾¬§ıÿÿÿÿ8Ã¸Ó¿¥.
+g
+java:S2147h"ECombine this catch with the one at line 102, which has the same body.(ÊÊÆƒüÿÿÿÿ8Ã¸Ó¿¥.
 X
-java:S2696b"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8Ã¸Ó¿¥.
-J	java:S108[")Either remove or fill this block of code.(å¾¬§ıÿÿÿÿ8Ã¸Ó¿¥.
-f
-java:S2147_"DCombine this catch with the one at line 93, which has the same body.(ÊÊÆƒüÿÿÿÿ8Ã¸Ó¿¥.
+java:S2696_"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8†ƒø¦.
 >
-java:S1116J"Remove this empty statement.(Åñ­õşÿÿÿÿ8Ã¸Ó¿¥.
+java:S1116L"Remove this empty statement.(Åñ­õşÿÿÿÿ8Ã¸Ó¿¥.
 E
-java:S1148`"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ã¸Ó¿¥.
+java:S1148i"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ã¸Ó¿¥.
+R
+java:S1144I"5Remove this unused private "starWiFiScanning" method.(Õâë–8äòø¦.
 E
-java:S1148^"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ã¸Ó¿¥.
+java:S1148g"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ã¸Ó¿¥.

@@ -44,10 +44,12 @@ public class ExtensionParser implements IExtensionParser {
     @Override
     public void writeWaypointExtensionData(Node node, Waypoint waypoint, Document document) {
         HashMap<String, Object> extensions = waypoint.getExtensionData();
+      //   Node parentNode = document.createElement("WAP");
         extensions.forEach((k, v) -> {
-            Node customNode = document.createElement(k);
-            customNode.setTextContent(v.toString());
-            node.appendChild(customNode);
+            Node child = document.createElement(k);
+            child.setTextContent(v.toString());
+          //  parentNode.appendChild(child);
+            node.appendChild(child);
         });
     }
 

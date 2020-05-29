@@ -19,7 +19,6 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import static com.example.wi_ficollector.utils.Constants.FILE_NAME;
 import static com.example.wi_ficollector.utils.Constants.isAlreadyScanned;
 
 public class WiFiReceiver extends BroadcastReceiver {
@@ -43,9 +42,7 @@ public class WiFiReceiver extends BroadcastReceiver {
                 Toast.makeText(context, "Scanning ready", Toast.LENGTH_SHORT).show();
                 try {
                     scanningSuccess(context);
-                } catch (FileNotFoundException | TransformerException | ParserConfigurationException e) {
-
-                } catch (IOException io) {
+                } catch (TransformerException | ParserConfigurationException | IOException e) {
 
                 }
             } else {
@@ -57,21 +54,13 @@ public class WiFiReceiver extends BroadcastReceiver {
 
     void scanningSuccess(Context context) throws IOException, TransformerException, ParserConfigurationException {
         List<ScanResult> results = mWifiManager.getScanResults();
-
         int num = results.size();
 
         if (num == 0) {
             Toast.makeText(context, "Nothing found", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(context, "Recording", Toast.LENGTH_LONG).show();
-            FileOutputStream fileOutputStream = context.openFileOutput(FILE_NAME, Context.MODE_APPEND);
             WiFiLocation.setScanResults(results);
-            try {
-                wiFiLocationRepository.saveLocation(fileOutputStream);
-                fileOutputStream.close();
-            } catch (IOException io) {
-
-            }
         }
     }
 }
