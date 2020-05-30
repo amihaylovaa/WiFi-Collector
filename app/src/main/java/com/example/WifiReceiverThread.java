@@ -15,7 +15,6 @@ import static com.example.wi_ficollector.utils.Constants.isAlreadyScanned;
 
 public class WifiReceiverThread implements Runnable {
 
-    private WifiManager mWifiManager;
     private Intent mIntent;
     private Context mContext;
 
@@ -26,7 +25,7 @@ public class WifiReceiverThread implements Runnable {
 
     @Override
     public void run() {
-        mWifiManager = (WifiManager) this.mContext.getSystemService(Context.WIFI_SERVICE);
+        WifiManager mWifiManager = (WifiManager) this.mContext.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = mIntent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
 
         if (!isAlreadyScanned) {

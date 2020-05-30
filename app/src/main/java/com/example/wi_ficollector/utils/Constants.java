@@ -2,7 +2,6 @@ package com.example.wi_ficollector.utils;
 
 import android.Manifest;
 
-import java.io.FileOutputStream;
 import java.util.concurrent.CountDownLatch;
 
 public class Constants {

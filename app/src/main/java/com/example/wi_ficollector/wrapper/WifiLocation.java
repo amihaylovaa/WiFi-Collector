@@ -9,7 +9,6 @@ public class WifiLocation {
     private static double locationLatitude;
     private static double locationLongitude;
     private static List<ScanResult> wifiScanResults;
-    private static WifiLocation wiFiLocation;
 
     private WifiLocation() {
     }
