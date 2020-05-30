@@ -22,13 +22,14 @@ import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.*;
 import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
-import com.example.wi_ficollector.repository.WiFiLocationRepository;
-import com.example.wi_ficollector.wrapper.WiFiLocation;
+import com.example.wi_ficollector.repository.WifiLocationRepository;
+import com.example.wi_ficollector.wrapper.WifiLocation;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
 import java.io.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -38,9 +39,7 @@ import static com.example.wi_ficollector.utils.Constants.*;
 
 public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
-    private static final int FINE_LOCATION_PERMISSION_CODE = 87;
-    private static final int BACKGROUND_LOCATION_PERMISSION_CODE = 43;
-    private static final int REQUEST_LOCATION_SETTINGS_CODE = 104;
+    private FileOutputStream mFileOutputStream;
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
     private WorkManager mWorkManager;
@@ -49,14 +48,14 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private LocationRequest mLocationRequest;
     private ScanPreference mScanPreference;
     private File mFile;
-    private WiFiLocationRepository mWiFiLocationRepository;
+    private WifiLocationRepository mWifiLocationRepository;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {
-            fileOutputStream = this.openFileOutput(FILE_NAME, MODE_APPEND);
+            mFileOutputStream = this.openFileOutput(FILE_NAME, MODE_APPEND);
         } catch (FileNotFoundException e) {
             mFile = new File(this.getFilesDir(), FILE_NAME);
         }
@@ -65,7 +64,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mWorkManager = WorkManager.getInstance(getApplicationContext());
         mScanPreference = new ScanPreference(this);
-        mWiFiLocationRepository = new WiFiLocationRepository();
+        mWifiLocationRepository = new WifiLocationRepository();
 
         if (!isBackgroundPermissionRequestRequired()) {
             createBackgroundTask();
@@ -232,15 +231,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         registerReceiver(mWifiReceiver, intentFilter);
     }
 
-    private void startWiFiScanning() {
-        boolean isWiFiScanningSucceed = mWifiManager.startScan();
-        if (isWiFiScanningSucceed) {
-//            Toast.makeText(this, "Scanning ..", Toast.LENGTH_SHORT).show();
-        } else {
-            //          Toast.makeText(this, "Error scanning", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     void createBackgroundTask() {
         PeriodicWorkRequest periodicWork = createPeriodicWorkRequest();
 
@@ -253,13 +243,14 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     private PeriodicWorkRequest createPeriodicWorkRequest() {
+        String workerRequestTag = "Background location worker ";
         Constraints constraints = new Constraints.Builder()
                 .setRequiresBatteryNotLow(true)
                 .build();
 
         return new PeriodicWorkRequest
                 .Builder(WifiLocationWorker.class, 15, TimeUnit.MINUTES)
-                .addTag(WORKER_REQUEST_TAG)
+                .addTag(workerRequestTag)
                 .setConstraints(constraints)
                 .setInitialDelay(5, TimeUnit.MINUTES)
                 .build();
@@ -293,21 +284,32 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    WiFiLocation.setLatitude(location.getLatitude());
-                    WiFiLocation.setLongitude(location.getLongitude());
-                    isAlreadyScanned = false;
-                    startWiFiScanning();
-                    try {
-                        mWiFiLocationRepository.saveLocation();
-                    } catch (TransformerException | ParserConfigurationException | IOException e) {
-                        e.printStackTrace();
-                    }
-                    WiFiLocation.clearFields();
+                    saveLocation(location);
                 }
             }
-        }
+        };
+    }
 
-        ;
+    private void saveLocation(Location location) {
+        new Thread(() ->
+        {
+            countDownLatch = new CountDownLatch(1);
+            WifiLocation.setLatitude(location.getLatitude());
+            WifiLocation.setLongitude(location.getLongitude());
+            isAlreadyScanned = false;
+            boolean isWiFiScanningSucceed = mWifiManager.startScan();
+            if (!isWiFiScanningSucceed) {
+                ;
+            }
+            try {
+                countDownLatch.await();
+                mWifiLocationRepository.saveWiFiLocation(mFileOutputStream);
+            } catch (TransformerException | ParserConfigurationException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            WifiLocation.clearFields();
+        }).start();
+        countDownLatch = null;
     }
 
     @Override
@@ -328,9 +330,8 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mWorkManager.cancelAllWork();
         unregisterReceiver(mWifiReceiver);
         try {
-            fileOutputStream.close();
+            mFileOutputStream.close();
         } catch (IOException e) {
-
         }
     }
 }

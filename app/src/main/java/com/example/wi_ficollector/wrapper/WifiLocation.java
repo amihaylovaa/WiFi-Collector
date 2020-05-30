@@ -5,20 +5,13 @@ import android.net.wifi.ScanResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WiFiLocation {
+public class WifiLocation {
     private static double locationLatitude;
     private static double locationLongitude;
     private static List<ScanResult> wifiScanResults;
-    private static WiFiLocation wiFiLocation;
+    private static WifiLocation wiFiLocation;
 
-    private WiFiLocation() {
-    }
-
-    public static WiFiLocation getWiFiLocation() {
-        if (wiFiLocation == null) {
-            wiFiLocation = new WiFiLocation();
-        }
-        return wiFiLocation;
+    private WifiLocation() {
     }
 
     public static double getLatitude() {

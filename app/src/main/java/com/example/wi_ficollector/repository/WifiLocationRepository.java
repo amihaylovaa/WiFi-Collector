@@ -1,16 +1,15 @@
 package com.example.wi_ficollector.repository;
 
-import android.location.Location;
 import android.net.wifi.ScanResult;
 
-import com.example.wi_ficollector.wrapper.WiFiLocation;
+import com.example.wi_ficollector.wrapper.WifiLocation;
 
 import org.alternativevision.gpx.GPXParser;
 import org.alternativevision.gpx.beans.GPX;
 import org.alternativevision.gpx.beans.Track;
 import org.alternativevision.gpx.beans.Waypoint;
 
-import java.io.IOException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,32 +19,30 @@ import java.util.TimeZone;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import static com.example.wi_ficollector.utils.Constants.fileOutputStream;
+public class WifiLocationRepository {
 
-public class WiFiLocationRepository {
-
-    private static WiFiLocationRepository wiFiLocationRepository;
+    private static WifiLocationRepository wiFiLocationRepository;
     private GPX gpx;
     private GPXParser gpxParser;
     private ExtensionParser extensionParser;
 
-    public WiFiLocationRepository() {
+    public WifiLocationRepository() {
         gpx = new GPX();
         gpxParser = new GPXParser();
         extensionParser = new ExtensionParser();
     }
 
-    public void saveLocation() throws IOException, TransformerException, ParserConfigurationException {
+    public void saveWiFiLocation(FileOutputStream fileOutputStream) throws TransformerException, ParserConfigurationException {
         Track track = new Track();
         Waypoint waypoint = new Waypoint();
         ArrayList<Waypoint> wayPoints = new ArrayList<>();
         TimeZone.setDefault(new SimpleTimeZone(0, "UTC"));
         Date date = new Date();
-        double latitude = WiFiLocation.getLatitude();
-        double longitude = WiFiLocation.getLongitude();
-        HashMap<String, Object> results = addResults();
+        double latitude = WifiLocation.getLatitude();
+        double longitude = WifiLocation.getLongitude();
+        HashMap<String, Object> wiFiScanResults = createWiFiScanResultsMap();
 
-        waypoint.setExtensionData(results);
+        waypoint.setExtensionData(wiFiScanResults);
         waypoint.setTime(date);
         waypoint.setLatitude(latitude);
         waypoint.setLongitude(longitude);
@@ -56,16 +53,17 @@ public class WiFiLocationRepository {
         gpxParser.writeGPX(gpx, fileOutputStream);
     }
 
-    private HashMap<String, Object> addResults() {
+    private HashMap<String, Object> createWiFiScanResultsMap() {
         HashMap<String, Object> results = new HashMap<>();
-        if (WiFiLocation.getScanResults() != null) {
-            int i = 0;
-            for (ScanResult scanResult : WiFiLocation.getScanResults()) {
-                results.put("SSID" + i, scanResult.SSID);
-                results.put("RSSI" + i, scanResult.level);
-                results.put("BSSID" + i, scanResult.BSSID);
-                results.put("capabilities" + i, scanResult.capabilities);
-                ++i;
+
+        if (WifiLocation.getScanResults() != null) {
+            int id = 0;
+            for (ScanResult scanResult : WifiLocation.getScanResults()) {
+                results.put("SSID" + id, scanResult.SSID);
+                results.put("RSSI" + id, scanResult.level);
+                results.put("BSSID" + id, scanResult.BSSID);
+                results.put("capabilities" + id, scanResult.capabilities);
+                ++id;
             }
         }
         return results;

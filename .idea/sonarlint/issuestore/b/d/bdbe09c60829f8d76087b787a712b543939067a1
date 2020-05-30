@@ -1,14 +1,17 @@
 
 T
-java:S1128"7Remove this unused import 'java.io.OutputStreamWriter'.(Ÿ“¸8ıŸ°æ¥.
-r
-java:S1450"VRemove the "context" field and declare it as a local variable in the relevant methods.(êİç8ÔÜúş¥.
-D	java:S1080")Either remove or fill this block of code.(Û°¹O8§úä¦.
-`
-java:S21470"DCombine this catch with the one at line 46, which has the same body.(Û°¹O8§úä¦.
-E	java:S108.")Either remove or fill this block of code.(·Ú›»8ÇÊÃé¥.
-D	java:S108H")Either remove or fill this block of code.(Û°¹O8¦õÃ…¦.
+java:S1128"7Remove this unused import 'java.io.OutputStreamWriter'.(Ÿ“¸8ıŸ°æ¥.
+‡
+java:S1450"eRemove the "wiFiLocationRepository" field and declare it as a local variable in the relevant methods.(×ÆÔºıÿÿÿÿ8“Âú¦.
 S
-java:S26967"6Make the enclosing method "static" or remove this set.(ƒÎ×¹8ÔÜúş¥.
-G
-java:S1068"+Remove this unused "context" private field.(êİç8ÔÜúş¥.
+java:S26963"6Make the enclosing method "static" or remove this set.(ƒÎ×¹8ÔÜúş¥.
+J	java:S108,")Either remove or fill this block of code.(§´¯ ÿÿÿÿÿ8Ü«¹‹¦.
+\
+java:S1128":Remove this unused import 'java.io.FileNotFoundException'.(·î™ùÿÿÿÿ8Ü«¹‹¦.
+\
+java:S1068":Remove this unused "wiFiLocationRepository" private field.(×ÆÔºıÿÿÿÿ8“Âú¦.
+Q
+java:S1128"5Remove this unused import 'java.io.FileOutputStream'.(˜«ªg8Å–ˆ¦.
+o
+java:S1128
+"MRemove this unused import 'com.example.wi_ficollector.activity.ScanActivity'.(à”ØÁúÿÿÿÿ8µÅÚ‘¦.

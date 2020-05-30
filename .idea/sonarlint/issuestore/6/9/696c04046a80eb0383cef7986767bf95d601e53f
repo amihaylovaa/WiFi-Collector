@@ -1,31 +1,24 @@
 
-F
-java:S1148µ"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Š‹Û¦.
-p
-java:S3776š"RRefactor this method to reduce its Cognitive Complexity from 16 to the 15 allowed.(µ§ªå8Š‹Û¦.
-F
-java:S1148³"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Š‹Û¦.
-F
-java:S1148±"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Š‹Û¦.
-h
-java:S2147¶"ECombine this catch with the one at line 304, which has the same body.(¯ş¼ ùÿÿÿÿ8Š‹Û¦.
 O
-java:S1612•",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Š‹Û¦.
+java:S1612Ï",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Ë¦.
+F	java:S108Ê")Either remove or fill this block of code.(ï­£Ä8§€Ü‘¦.
 O
-java:S1612Ë",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Š‹Û¦.
-h
-java:S2147´"ECombine this catch with the one at line 304, which has the same body.(ÊÊÆƒüÿÿÿÿ8Š‹Û¦.
-Y
-java:S2696ª"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8Š‹Û¦.
-Y
-java:S2696Œ"6Make the enclosing method "static" or remove this set.(É¯”Îşÿÿÿÿ8Š‹Û¦.
-c
-java:S2147²"ECombine this catch with the one at line 304, which has the same body.(ï­£Ä8Š‹Û¦.
+java:S1612™",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Ë¦.
 v
-java:S14504"TRemove the "mFile" field and declare it as a local variable in the relevant methods.(Œ˜‡ÿÿÿÿÿ8ûÃ£¦.
-F
-java:S1148·"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Š‹Û¦.
-P
-java:S1135Ú"2Complete the task associated to this TODO comment.(øç‡›8Š‹Û¦.
+java:S14503"TRemove the "mFile" field and declare it as a local variable in the relevant methods.(Œ˜‡ÿÿÿÿÿ8Ë¦.
 K
-java:S10684")Remove this unused "mFile" private field.(Œ˜‡ÿÿÿÿÿ8Ç›¥¦.
+java:S10683")Remove this unused "mFile" private field.(Œ˜‡ÿÿÿÿÿ8Ë¦.
+F
+java:S1148¯"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ÙÛ‘¦.
+Y
+java:S2696ª"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8ÙÀï¦.
+Y	java:S125ğ"<This block of commented-out lines of code should be removed.(™¹ò8»ˆÛ¦.
+S
+java:S2696;"6Make the enclosing method "static" or remove this set.(Âëˆµ8Ë¦.
+Y
+java:S2696"6Make the enclosing method "static" or remove this set.(É¯”Îşÿÿÿÿ8Ë¦.
+P
+java:S1135Ş"2Complete the task associated to this TODO comment.(øç‡›8Ë¦.
+Y	java:S125î"<This block of commented-out lines of code should be removed.(ùğÎ¹8»ˆÛ¦.
+~
+java:S3923í"[Remove this conditional structure or edit its code blocks so that they're not all the same.(ÑÕéùÿÿÿÿ8»ˆÛ¦.

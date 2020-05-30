@@ -15,8 +15,8 @@ import androidx.work.ListenableWorker;
 
 import androidx.work.WorkerParameters;
 
-import com.example.wi_ficollector.repository.WiFiLocationRepository;
-import com.example.wi_ficollector.wrapper.WiFiLocation;
+import com.example.wi_ficollector.repository.WifiLocationRepository;
+import com.example.wi_ficollector.wrapper.WifiLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -24,8 +24,9 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -35,16 +36,17 @@ import static com.example.wi_ficollector.utils.Constants.*;
 
 public class WifiLocationWorker extends ListenableWorker {
 
-    private WiFiLocationRepository mWiFiLocationRepository;
+    private WifiLocationRepository mWifiLocationRepository;
     private WifiManager mWifiManager;
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Context mContext;
     private LocationCallback mLocationCallback;
+    private FileOutputStream mFileOutputStream;
 
     public WifiLocationWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
-        this.mContext = context;
+        mContext = context;
     }
 
     @NonNull
@@ -63,8 +65,12 @@ public class WifiLocationWorker extends ListenableWorker {
     public void doWork(CallbackToFutureAdapter.Completer<Result> completer) {
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
-        mWiFiLocationRepository = new WiFiLocationRepository();
+        mWifiLocationRepository = new WifiLocationRepository();
+        try {
+            mFileOutputStream = mContext.openFileOutput(FILE_NAME, Context.MODE_APPEND);
+        } catch (FileNotFoundException e) {
 
+        }
         createLocationRequest();
         getLocationCallbackResult(completer);
         requestLocationUpdates(completer);
@@ -72,7 +78,7 @@ public class WifiLocationWorker extends ListenableWorker {
 
     private void starWiFiScanning() {
         boolean wifiScanningSucceed = mWifiManager.startScan();
-        if (wifiScanningSucceed) {
+        if (!wifiScanningSucceed) {
             ;
         }
     }
@@ -87,21 +93,20 @@ public class WifiLocationWorker extends ListenableWorker {
                 }
                 completer.set(Result.success());
                 for (Location location : locationResult.getLocations()) {
-                    try {
-                        double latitude = location.getLatitude();
-                        double longitude = location.getLongitude();
-                        WiFiLocation.setLatitude(latitude);
-                        WiFiLocation.setLongitude(longitude);
+                    new Thread(() -> {
+                        countDownLatch = new CountDownLatch(1);
+                        WifiLocation.setLatitude(location.getLatitude());
+                        WifiLocation.setLongitude(location.getLongitude());
                         isAlreadyScanned = false;
-                        mWiFiLocationRepository.saveLocation();
-                        WiFiLocation.clearFields();
-                    } catch (IOException ios) {
-
-                    } catch (TransformerException e) {
-                        e.printStackTrace();
-                    } catch (ParserConfigurationException e) {
-                        e.printStackTrace();
-                    }
+                        starWiFiScanning();
+                        try {
+                            countDownLatch.await();
+                            mWifiLocationRepository.saveWiFiLocation(mFileOutputStream);
+                        } catch (TransformerException | ParserConfigurationException | InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        WifiLocation.clearFields();
+                    }).start();
                 }
                 mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
             }

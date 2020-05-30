@@ -1,5 +1,5 @@
 
-y
-java:S1450"^Remove the "mMainPreference" field and declare it as a local variable in the relevant methods.(ÿ¢ô˜8”±î¾¤.
-<
-java:S1116"Remove this empty statement.(Åñ­õşÿÿÿÿ8Æîé¤.
+{
+java:S1450"^Remove the "mMainPreference" field and declare it as a local variable in the relevant methods.(ÿ¢ô˜8”±î¾¤.
+>
+java:S1116-"Remove this empty statement.(Åñ­õşÿÿÿÿ8Æîé¤.

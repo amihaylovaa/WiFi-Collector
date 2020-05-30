@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this, ScanActivity.class);
             startActivity(intent);
         } else {
-            ;
+            // under construction
         }
     }
 
