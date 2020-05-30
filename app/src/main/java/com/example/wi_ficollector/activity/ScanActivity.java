@@ -8,6 +8,7 @@ import android.location.Location;
 import android.net.wifi.WifiManager;
 import android.os.*;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -53,7 +54,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         try {
             mFileOutputStream = this.openFileOutput(FILE_NAME, MODE_APPEND);
         } catch (FileNotFoundException e) {
-            File file = new File(this.getFilesDir(), FILE_NAME);
+            new File(this.getFilesDir(), FILE_NAME);
         }
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -291,7 +292,9 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private void startWifiScanning() {
         boolean isWiFiScanningSucceed = mWifiManager.startScan();
         if (!isWiFiScanningSucceed) {
-            ;
+            Log.d(WIFI_SCANNING_FAIL_TAG, WIFI_SCANNING_FAIL_MESSAGE);
+        } else{
+            Log.d(WIFI_SCANNING_SUCCESS_TAG, WIFI_SCANNING_SUCCESS_MESSAGE);
         }
     }
 

@@ -2,13 +2,15 @@ package com.example.wi_ficollector.utils;
 
 import android.Manifest;
 
-import java.io.FileOutputStream;
 import java.util.concurrent.CountDownLatch;
 
 public class Constants {
     private Constants() {
     }
-
+    public static final String WIFI_SCANNING_FAIL_TAG = "Failed WiFi scanning";
+    public static final String WIFI_SCANNING_FAIL_MESSAGE = "WiFi scanning completed unsuccessfully";
+    public static final String WIFI_SCANNING_SUCCESS_TAG = " WiFi scanning success";
+    public static final String WIFI_SCANNING_SUCCESS_MESSAGE = " WiFi scanning completed successfully";
     public static CountDownLatch countDownLatch;
     public static final String ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;

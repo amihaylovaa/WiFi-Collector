@@ -1,24 +1,16 @@
 
-P
-java:S1135Ş"2Complete the task associated to this TODO comment.(øç‡›8Ë¦.
-g
-java:S1128%"ERemove this unused import 'javax.xml.transform.TransformerException'.(¨Û¥üÿÿÿÿ8ÒòÛ°¦.
+F
+java:S14818")Remove this unused "file" local variable.(¬ïœ­8î€â±¦.
 O
-java:S1612Ï",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Ë¦.
-m
-java:S1128$"KRemove this unused import 'javax.xml.parsers.ParserConfigurationException'.(ûıƒøÿÿÿÿ8ÒòÛ°¦.
-i
-java:S1128"LRemove this unused import 'com.example.wi_ficollector.wrapper.WifiLocation'.(“´£ë8ÒòÛ°¦.
+java:S1612”",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8ş”Ğ±¦.
 Y
-java:S2696ˆ"6Make the enclosing method "static" or remove this set.(É¯”Îşÿÿÿÿ8Ë¦.
-K
-java:S10683")Remove this unused "mFile" private field.(Œ˜‡ÿÿÿÿÿ8Ë¦.
-v
-java:S14503"TRemove the "mFile" field and declare it as a local variable in the relevant methods.(Œ˜‡ÿÿÿÿÿ8Ë¦.
-O
-java:S1612™",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Ë¦.
-F	java:S108Ã")Either remove or fill this block of code.(ï­£Ä8û¦‡¯¦.
+java:S2696ƒ"6Make the enclosing method "static" or remove this set.(É¯”Îşÿÿÿÿ8ş”Ğ±¦.
 ?
-java:S1116¬"Remove this empty statement.(Åñ­õşÿÿÿÿ8Ì¹Ä°¦.
-]
-java:S1128!"@Remove this unused import 'java.util.concurrent.CountDownLatch'.(¤ƒô§8ÒòÛ°¦.
+java:S1116¦"Remove this empty statement.(Åñ­õşÿÿÿÿ8ş”Ğ±¦.
+O
+java:S1612Ê",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8ş”Ğ±¦.
+F	java:S108½")Either remove or fill this block of code.(ï­£Ä8ş”Ğ±¦.
+U
+java:S18548"8Remove this useless assignment to local variable "file".(¬ïœ­8î€â±¦.
+P
+java:S1135Ù"2Complete the task associated to this TODO comment.(øç‡›8ş”Ğ±¦.

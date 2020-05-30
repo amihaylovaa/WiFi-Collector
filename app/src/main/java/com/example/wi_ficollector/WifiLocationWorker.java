@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.concurrent.futures.CallbackToFutureAdapter;
@@ -24,6 +26,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
@@ -58,24 +61,27 @@ public class WifiLocationWorker extends ListenableWorker {
         });
     }
 
-    public void doWork(CallbackToFutureAdapter.Completer<Result> completer) {
+    private void doWork(CallbackToFutureAdapter.Completer<Result> completer) {
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
         mWifiLocationRepository = new WifiLocationRepository();
         try {
             mFileOutputStream = mContext.openFileOutput(FILE_NAME, Context.MODE_APPEND);
         } catch (FileNotFoundException e) {
-
+            new File(mContext.getFilesDir(), FILE_NAME);
         }
         createLocationRequest();
         getLocationCallbackResult(completer);
         requestLocationUpdates(completer);
     }
 
-    private void starWiFiScanning() {
-        boolean wifiScanningSucceed = mWifiManager.startScan();
-        if (!wifiScanningSucceed) {
-            ;
+
+    private void startWifiScanning() {
+        boolean isWiFiScanningSucceed = mWifiManager.startScan();
+        if (!isWiFiScanningSucceed) {
+            Log.d(WIFI_SCANNING_FAIL_TAG, WIFI_SCANNING_FAIL_MESSAGE);
+        } else {
+            Log.d(WIFI_SCANNING_SUCCESS_TAG, WIFI_SCANNING_SUCCESS_MESSAGE);
         }
     }
 
@@ -89,7 +95,7 @@ public class WifiLocationWorker extends ListenableWorker {
                 }
                 completer.set(Result.success());
                 for (Location location : locationResult.getLocations()) {
-                    starWiFiScanning();
+                    startWifiScanning();
                     LocationThread locationThread = new LocationThread(location, mWifiLocationRepository, mFileOutputStream);
                     Thread thread = new Thread(locationThread);
                     thread.start();
@@ -112,8 +118,10 @@ public class WifiLocationWorker extends ListenableWorker {
     }
 
     private boolean hasPermission() {
-        return ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                == PackageManager.PERMISSION_GRANTED;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        } else {
+            return ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        }
     }
 }

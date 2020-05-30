@@ -1,12 +1,4 @@
 
 >
-java:S1116S"Remove this empty statement.(Åñ­õşÿÿÿÿ8¾Œ¹ª¦.
-]
-java:S1128"@Remove this unused import 'java.util.concurrent.CountDownLatch'.(¤ƒô§8¶à°¦.
-g
-java:S1128!"ERemove this unused import 'javax.xml.transform.TransformerException'.(¨Û¥üÿÿÿÿ8¶à°¦.
-m
-java:S1128 "KRemove this unused import 'javax.xml.parsers.ParserConfigurationException'.(ûıƒøÿÿÿÿ8¶à°¦.
-i
-java:S1128"LRemove this unused import 'com.example.wi_ficollector.wrapper.WifiLocation'.(“´£ë8¶à°¦.
-E	java:S108H")Either remove or fill this block of code.(‹±ÃÆ8Ù‹ğª¦.
+java:S1116N"Remove this empty statement.(Åñ­õşÿÿÿÿ8˜àİ±¦.
+E	java:S108C")Either remove or fill this block of code.(‹±ÃÆ8˜àİ±¦.

@@ -1,6 +1,5 @@
 package com.example.wi_ficollector.thread;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
