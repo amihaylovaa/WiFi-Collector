@@ -1,24 +1,24 @@
 
-O
-java:S1612Ï",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Ë¦.
-F	java:S108Ê")Either remove or fill this block of code.(ï­£Ä8§€Ü‘¦.
-O
-java:S1612™",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Ë¦.
-v
-java:S14503"TRemove the "mFile" field and declare it as a local variable in the relevant methods.(Œ˜‡ÿÿÿÿÿ8Ë¦.
-K
-java:S10683")Remove this unused "mFile" private field.(Œ˜‡ÿÿÿÿÿ8Ë¦.
-F
-java:S1148¯"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ÙÛ‘¦.
-Y
-java:S2696ª"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8ÙÀï¦.
-Y	java:S125ğ"<This block of commented-out lines of code should be removed.(™¹ò8»ˆÛ¦.
-S
-java:S2696;"6Make the enclosing method "static" or remove this set.(Âëˆµ8Ë¦.
-Y
-java:S2696"6Make the enclosing method "static" or remove this set.(É¯”Îşÿÿÿÿ8Ë¦.
 P
 java:S1135Ş"2Complete the task associated to this TODO comment.(øç‡›8Ë¦.
-Y	java:S125î"<This block of commented-out lines of code should be removed.(ùğÎ¹8»ˆÛ¦.
-~
-java:S3923í"[Remove this conditional structure or edit its code blocks so that they're not all the same.(ÑÕéùÿÿÿÿ8»ˆÛ¦.
+g
+java:S1128%"ERemove this unused import 'javax.xml.transform.TransformerException'.(¨Û¥üÿÿÿÿ8ÒòÛ°¦.
+O
+java:S1612Ï",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Ë¦.
+m
+java:S1128$"KRemove this unused import 'javax.xml.parsers.ParserConfigurationException'.(ûıƒøÿÿÿÿ8ÒòÛ°¦.
+i
+java:S1128"LRemove this unused import 'com.example.wi_ficollector.wrapper.WifiLocation'.(“´£ë8ÒòÛ°¦.
+Y
+java:S2696ˆ"6Make the enclosing method "static" or remove this set.(É¯”Îşÿÿÿÿ8Ë¦.
+K
+java:S10683")Remove this unused "mFile" private field.(Œ˜‡ÿÿÿÿÿ8Ë¦.
+v
+java:S14503"TRemove the "mFile" field and declare it as a local variable in the relevant methods.(Œ˜‡ÿÿÿÿÿ8Ë¦.
+O
+java:S1612™",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Ë¦.
+F	java:S108Ã")Either remove or fill this block of code.(ï­£Ä8û¦‡¯¦.
+?
+java:S1116¬"Remove this empty statement.(Åñ­õşÿÿÿÿ8Ì¹Ä°¦.
+]
+java:S1128!"@Remove this unused import 'java.util.concurrent.CountDownLatch'.(¤ƒô§8ÒòÛ°¦.

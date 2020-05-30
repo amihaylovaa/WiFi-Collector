@@ -1,4 +1,4 @@
-package com.example;
+package com.example.wi_ficollector.thread;
 
 
 import android.content.Context;
@@ -15,7 +15,6 @@ import static com.example.wi_ficollector.utils.Constants.isAlreadyScanned;
 
 public class WifiReceiverThread implements Runnable {
 
-    private WifiManager mWifiManager;
     private Intent mIntent;
     private Context mContext;
 
@@ -26,12 +25,12 @@ public class WifiReceiverThread implements Runnable {
 
     @Override
     public void run() {
-        mWifiManager = (WifiManager) this.mContext.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) this.mContext.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = mIntent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
 
         if (!isAlreadyScanned) {
             if (hasSuccess) {
-                List<ScanResult> results = mWifiManager.getScanResults();
+                List<ScanResult> results = wifiManager.getScanResults();
 
                 if (results.size() > 0) {
                     WifiLocation.setScanResults(results);

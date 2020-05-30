@@ -21,7 +21,6 @@ import javax.xml.transform.TransformerException;
 
 public class WifiLocationRepository {
 
-    private static WifiLocationRepository wiFiLocationRepository;
     private GPX gpx;
     private GPXParser gpxParser;
     private ExtensionParser extensionParser;

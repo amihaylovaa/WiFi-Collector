@@ -15,18 +15,16 @@ import static com.example.wi_ficollector.utils.Constants.INTRO;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private MainPreference mMainPreference;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mMainPreference = new MainPreference(this);
+        MainPreference mainPreference = new MainPreference(this);
         Button startScanningBtn = findViewById(R.id.start_scanning_button);
         Button sendDataBtn = findViewById(R.id.send_data_button);
 
-        if (mMainPreference.isFirstTimeLaunched()) {
+        if (mainPreference.isFirstTimeLaunched()) {
             showIntroDialog();
         }
 
@@ -47,10 +45,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     void showIntroDialog() {
+        MainPreference mainPreference = new MainPreference(this);
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         alertDialog.setMessage(INTRO);
-        alertDialog.setNeutralButton(R.string.OK, (dialog, id) -> mMainPreference.addSharedPreferenceKey());
+        alertDialog.setNeutralButton(R.string.OK, (dialog, id) -> mainPreference.addSharedPreferenceKey());
         alertDialog.create().show();
     }
 }

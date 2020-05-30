@@ -23,17 +23,14 @@ import com.example.wi_ficollector.*;
 import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
-import com.example.wi_ficollector.wrapper.WifiLocation;
+import com.example.wi_ficollector.thread.LocationThread;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
 import java.io.*;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
@@ -47,7 +44,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
     private ScanPreference mScanPreference;
-    private File mFile;
     private WifiLocationRepository mWifiLocationRepository;
 
     @Override
@@ -57,7 +53,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         try {
             mFileOutputStream = this.openFileOutput(FILE_NAME, MODE_APPEND);
         } catch (FileNotFoundException e) {
-            mFile = new File(this.getFilesDir(), FILE_NAME);
+            File file = new File(this.getFilesDir(), FILE_NAME);
         }
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -275,7 +271,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     private void receiveLocationResults() {
-        Toast.makeText(this, "Found result", Toast.LENGTH_SHORT).show();
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -284,32 +279,20 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    saveLocation(location);
+                    startWifiScanning();
+                    LocationThread locationThread = new LocationThread(location, mWifiLocationRepository, mFileOutputStream);
+                    Thread thread = new Thread(locationThread);
+                    thread.start();
                 }
             }
         };
     }
 
-    private void saveLocation(Location location) {
-        new Thread(() ->
-        {
-            countDownLatch = new CountDownLatch(1);
-            WifiLocation.setLatitude(location.getLatitude());
-            WifiLocation.setLongitude(location.getLongitude());
-            isAlreadyScanned = false;
-            boolean isWiFiScanningSucceed = mWifiManager.startScan();
-            if (!isWiFiScanningSucceed) {
-                ;
-            }
-            try {
-                countDownLatch.await();
-                mWifiLocationRepository.saveWiFiLocation(mFileOutputStream);
-            } catch (TransformerException | ParserConfigurationException | InterruptedException e) {
-                e.printStackTrace();
-            }
-            WifiLocation.clearFields();
-        }).start();
-        countDownLatch = null;
+    private void startWifiScanning() {
+        boolean isWiFiScanningSucceed = mWifiManager.startScan();
+        if (!isWiFiScanningSucceed) {
+            ;
+        }
     }
 
     @Override

@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.WifiReceiverThread;
+import com.example.wi_ficollector.thread.WifiReceiverThread;
 
 public class WiFiReceiver extends BroadcastReceiver {
 

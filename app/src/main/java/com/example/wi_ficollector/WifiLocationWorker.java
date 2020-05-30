@@ -16,7 +16,7 @@ import androidx.work.ListenableWorker;
 import androidx.work.WorkerParameters;
 
 import com.example.wi_ficollector.repository.WifiLocationRepository;
-import com.example.wi_ficollector.wrapper.WifiLocation;
+import com.example.wi_ficollector.thread.LocationThread;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -26,10 +26,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.concurrent.CountDownLatch;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
@@ -93,22 +89,11 @@ public class WifiLocationWorker extends ListenableWorker {
                 }
                 completer.set(Result.success());
                 for (Location location : locationResult.getLocations()) {
-                    new Thread(() -> {
-                        countDownLatch = new CountDownLatch(1);
-                        WifiLocation.setLatitude(location.getLatitude());
-                        WifiLocation.setLongitude(location.getLongitude());
-                        isAlreadyScanned = false;
-                        starWiFiScanning();
-                        try {
-                            countDownLatch.await();
-                            mWifiLocationRepository.saveWiFiLocation(mFileOutputStream);
-                        } catch (TransformerException | ParserConfigurationException | InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        WifiLocation.clearFields();
-                    }).start();
+                    starWiFiScanning();
+                    LocationThread locationThread = new LocationThread(location, mWifiLocationRepository, mFileOutputStream);
+                    Thread thread = new Thread(locationThread);
+                    thread.start();
                 }
-                mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
             }
         };
     }

@@ -48,7 +48,13 @@ Kapp/src/main/java/com/example/wi_ficollector/preference/MainPreference.java,5\
 Sapp/src/main/java/com/example/wi_ficollector/repository/WiFiLocationRepository.java,e\8\e8c2cca1a1050663dfe3b31a3f332b23a24465ae
 |
 Lapp/src/main/java/com/example/wi_ficollector/repository/ExtensionParser.java,1\7\17dbc3a99f6a6eac4c14bfadb49bd6dee8114b2c
-Å
-Qapp/src/main/java/com/example/wi_ficollector/preference/RepositoryPreference.java,2\2\2282292467ab971697f5d094d1342571042d46a5
 v
 Fapp/src/main/java/com/example/wi_ficollector/wrapper/WiFiLocation.java,9\d\9da8f6d4e6c20597a75bd3970137bc93f54615b0
+É
+Sapp/src/main/java/com/example/wi_ficollector/repository/WifiLocationRepository.java,2\7\27cb9dc4aea7ddb9ec61165da80e392b55f3aebd
+v
+Fapp/src/main/java/com/example/wi_ficollector/wrapper/WifiLocation.java,9\9\99afa2f1fbcdc109e022ae54e13e919be381674e
+{
+Kapp/src/main/java/com/example/wi_ficollector/thread/WifiReceiverThread.java,b\b\bb55a06f0f8aacb2c32dbe913b850bb32a663903
+w
+Gapp/src/main/java/com/example/wi_ficollector/thread/LocationThread.java,5\3\53bebbb8740af8c3949a5baa39b7888d0cf4eac3

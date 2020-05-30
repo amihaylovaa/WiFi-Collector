@@ -1,16 +1,12 @@
 
-R
-java:S1144I"5Remove this unused private "starWiFiScanning" method.(Õâë–8äòø¦.
-X
-java:S2696_"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8†ƒø¦.
-E
-java:S1148g"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ã¸Ó¿¥.
-J	java:S108b")Either remove or fill this block of code.(å¾¬§ıÿÿÿÿ8Ã¸Ó¿¥.
-E
-java:S1148e"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8Ã¸Ó¿¥.
-g
-java:S2147f"ECombine this catch with the one at line 100, which has the same body.(ÊÊÆƒüÿÿÿÿ8Ã¸Ó¿¥.
-Q
-java:S1128"5Remove this unused import 'java.io.FileOutputStream'.(˜«ªg8§Â˜ˆ¦.
 >
-java:S1116L"Remove this empty statement.(Åñ­õşÿÿÿÿ8Ã¸Ó¿¥.
+java:S1116S"Remove this empty statement.(Åñ­õşÿÿÿÿ8¾Œ¹ª¦.
+]
+java:S1128"@Remove this unused import 'java.util.concurrent.CountDownLatch'.(¤ƒô§8¶à°¦.
+g
+java:S1128!"ERemove this unused import 'javax.xml.transform.TransformerException'.(¨Û¥üÿÿÿÿ8¶à°¦.
+m
+java:S1128 "KRemove this unused import 'javax.xml.parsers.ParserConfigurationException'.(ûıƒøÿÿÿÿ8¶à°¦.
+i
+java:S1128"LRemove this unused import 'com.example.wi_ficollector.wrapper.WifiLocation'.(“´£ë8¶à°¦.
+E	java:S108H")Either remove or fill this block of code.(‹±ÃÆ8Ù‹ğª¦.
