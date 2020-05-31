@@ -26,10 +26,10 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import static android.content.Context.MODE_APPEND;
 import static com.example.wi_ficollector.utils.Constants.*;
 
 
@@ -66,10 +66,11 @@ public class WifiLocationWorker extends ListenableWorker {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
         mWifiLocationRepository = new WifiLocationRepository();
         try {
-            mFileOutputStream = mContext.openFileOutput(FILE_NAME, Context.MODE_APPEND);
-        } catch (FileNotFoundException e) {
-            new File(mContext.getFilesDir(), FILE_NAME);
+            mFileOutputStream = mContext.openFileOutput(FILE_NAME, MODE_APPEND);
+        } catch (FileNotFoundException exception) {
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MESSAGE);
         }
+
         createLocationRequest();
         getLocationCallbackResult(completer);
         requestLocationUpdates(completer);
@@ -106,7 +107,8 @@ public class WifiLocationWorker extends ListenableWorker {
 
     private void requestLocationUpdates(CallbackToFutureAdapter.Completer<Result> completer) {
         try {
-            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
+            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback,
+                    Looper.getMainLooper());
         } catch (SecurityException unlikely) {
             completer.set(Result.failure());
         }
@@ -119,9 +121,11 @@ public class WifiLocationWorker extends ListenableWorker {
 
     private boolean hasPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
+            return ContextCompat.checkSelfPermission(mContext,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
         } else {
-            return ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+            return ContextCompat.checkSelfPermission(mContext,
+                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         }
     }
 }

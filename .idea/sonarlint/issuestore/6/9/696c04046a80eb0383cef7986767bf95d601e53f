@@ -1,16 +1,7 @@
 
-F
-java:S14818")Remove this unused "file" local variable.(¬ïœ­8î€â±¦.
-O
-java:S1612”",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8ş”Ğ±¦.
-Y
-java:S2696ƒ"6Make the enclosing method "static" or remove this set.(É¯”Îşÿÿÿÿ8ş”Ğ±¦.
-?
-java:S1116¦"Remove this empty statement.(Åñ­õşÿÿÿÿ8ş”Ğ±¦.
-O
-java:S1612Ê",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8ş”Ğ±¦.
-F	java:S108½")Either remove or fill this block of code.(ï­£Ä8ş”Ğ±¦.
-U
-java:S18548"8Remove this useless assignment to local variable "file".(¬ïœ­8î€â±¦.
 P
-java:S1135Ù"2Complete the task associated to this TODO comment.(øç‡›8ş”Ğ±¦.
+java:S1135İ"2Complete the task associated to this TODO comment.(øç‡›8ìªÖ¦.
+U
+java:S1135ˆ"2Complete the task associated to this TODO comment.(×†‹Œşÿÿÿÿ8ìªÖ¦.
+P
+java:S1135—"2Complete the task associated to this TODO comment.(ø¬öÇ8ìªÖ¦.

@@ -27,13 +27,11 @@ public class WifiReceiverThread implements Runnable {
         WifiManager wifiManager = (WifiManager) this.mContext.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = mIntent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
 
-        if (!isAlreadyScanned) {
-            if (hasSuccess) {
-                List<ScanResult> results = wifiManager.getScanResults();
+        if (!isAlreadyScanned && hasSuccess) {
+            List<ScanResult> results = wifiManager.getScanResults();
 
-                if (results.size() > 0) {
-                    WifiLocation.setScanResults(results);
-                }
+            if (results != null && results.size() > 0) {
+                WifiLocation.setScanResults(results);
             }
         }
         isAlreadyScanned = true;

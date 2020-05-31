@@ -7,6 +7,12 @@ import java.util.concurrent.CountDownLatch;
 public class Constants {
     private Constants() {
     }
+
+    // 15;57 background
+    public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
+    public static final String FILE_NOT_FOUND_EXCEPTION_MESSAGE = "File does not exist, but is going to be created";
+    public static final String IO_EXCEPTION_THROWN_TAG = "IO exception thrown";
+    public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during closing file stream";
     public static final String WIFI_SCANNING_FAIL_TAG = "Failed WiFi scanning";
     public static final String WIFI_SCANNING_FAIL_MESSAGE = "WiFi scanning completed unsuccessfully";
     public static final String WIFI_SCANNING_SUCCESS_TAG = " WiFi scanning success";
@@ -15,7 +21,6 @@ public class Constants {
     public static final String ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
     public static boolean isAlreadyScanned = true;
-    public static boolean hasWorkFailed = false;
     public static final int ONE_MINUTE = 60 * 1000;
     public static final int TWO_MINUTES = 2 * 60 * 1000;
     public static final String FILE_NAME = "Location_Wifi.gpx";

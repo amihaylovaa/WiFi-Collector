@@ -32,7 +32,6 @@ import com.google.android.gms.tasks.Task;
 import java.io.*;
 import java.util.concurrent.TimeUnit;
 
-
 import static com.example.wi_ficollector.utils.Constants.*;
 
 public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
@@ -46,22 +45,19 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private LocationRequest mLocationRequest;
     private ScanPreference mScanPreference;
     private WifiLocationRepository mWifiLocationRepository;
+    private Thread mGPSEnablingThread;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        try {
-            mFileOutputStream = this.openFileOutput(FILE_NAME, MODE_APPEND);
-        } catch (FileNotFoundException e) {
-            new File(this.getFilesDir(), FILE_NAME);
-        }
+        openFileOutputStream();
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mWorkManager = WorkManager.getInstance(getApplicationContext());
         mScanPreference = new ScanPreference(this);
         mWifiLocationRepository = new WifiLocationRepository();
+        mGPSEnablingThread = new Thread(this::enableGPS);
 
         if (!isBackgroundPermissionRequestRequired()) {
             createBackgroundTask();
@@ -74,6 +70,14 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         requestLocationPermission();
         receiveLocationResults();
         registerWiFiReceiver();
+    }
+
+    private void openFileOutputStream() {
+        try {
+            mFileOutputStream = this.openFileOutput(FILE_NAME, MODE_APPEND);
+        } catch (FileNotFoundException exception) {
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MESSAGE);
+        }
     }
 
     public void enableGPS() {
@@ -146,7 +150,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         if (!isFineLocationPermissionGranted()) {
             requestFineLocationPermission();
         } else {
-            new Thread(() -> enableGPS()).start();
+            mGPSEnablingThread.start();
             if (isBackgroundPermissionRequestRequired()) {
                 requestBackgroundPermission();
             }
@@ -200,7 +204,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
     private void handleFineLocationPermissionRequestResult(int grantResult) {
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
-            new Thread(() -> enableGPS()).start();
+            mGPSEnablingThread.start();
             if (isBackgroundPermissionRequestRequired()) {
                 requestBackgroundPermission();
             }
@@ -229,10 +233,11 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     void createBackgroundTask() {
+        String uniqueWorkName = "Wi-Fi location collector";
         PeriodicWorkRequest periodicWork = createPeriodicWorkRequest();
 
         mWorkManager.
-                enqueueUniquePeriodicWork("Worker",
+                enqueueUniquePeriodicWork(uniqueWorkName,
                         ExistingPeriodicWorkPolicy.REPLACE,
                         periodicWork);
 
@@ -257,7 +262,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mWorkManager.getWorkInfoByIdLiveData(periodicWork.getId()).observe(
                 this, workInfo -> {
                     if (workInfo != null && workInfo.getState() == WorkInfo.State.FAILED) {
-                        hasWorkFailed = true;
+                        // TODO add notification
                     }
                 }
         );
@@ -293,7 +298,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         boolean isWiFiScanningSucceed = mWifiManager.startScan();
         if (!isWiFiScanningSucceed) {
             Log.d(WIFI_SCANNING_FAIL_TAG, WIFI_SCANNING_FAIL_MESSAGE);
-        } else{
+        } else {
             Log.d(WIFI_SCANNING_SUCCESS_TAG, WIFI_SCANNING_SUCCESS_MESSAGE);
         }
     }
@@ -318,6 +323,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         try {
             mFileOutputStream.close();
         } catch (IOException e) {
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
     }
 }

@@ -12,6 +12,7 @@ public class WiFiReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         WifiReceiverThread wiFiReceiverThread = new WifiReceiverThread(context, intent);
         Thread thread = new Thread(wiFiReceiverThread);
+
         thread.start();
     }
 }

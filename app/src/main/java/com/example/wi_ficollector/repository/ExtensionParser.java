@@ -11,9 +11,13 @@ import org.w3c.dom.Node;
 import java.util.HashMap;
 
 public class ExtensionParser implements IExtensionParser {
+
+    private static final String UNSUPPORTED_OPERATION_EXCEPTION_MESSAGE = "This operation is not supported in this application ";
+    private static final String PARSER_ID = "492";
+
     @Override
     public String getId() {
-        return "123";
+        return PARSER_ID;
     }
 
     @Override
@@ -38,28 +42,29 @@ public class ExtensionParser implements IExtensionParser {
 
     @Override
     public void writeGPXExtensionData(Node node, GPX gpx, Document document) {
-
+        //  Storing route extensions data is not supported in this application
+        throw new UnsupportedOperationException(UNSUPPORTED_OPERATION_EXCEPTION_MESSAGE);
     }
 
     @Override
     public void writeWaypointExtensionData(Node node, Waypoint waypoint, Document document) {
         HashMap<String, Object> extensions = waypoint.getExtensionData();
-      //   Node parentNode = document.createElement("WAP");
         extensions.forEach((k, v) -> {
             Node child = document.createElement(k);
             child.setTextContent(v.toString());
-          //  parentNode.appendChild(child);
             node.appendChild(child);
         });
     }
 
     @Override
     public void writeTrackExtensionData(Node node, Track track, Document document) {
-
+        //  Storing route extensions data is not supported in this application
+        throw new UnsupportedOperationException(UNSUPPORTED_OPERATION_EXCEPTION_MESSAGE);
     }
 
     @Override
     public void writeRouteExtensionData(Node node, Route route, Document document) {
-
+        //  Storing route extensions data is not supported in this application
+        throw new UnsupportedOperationException(UNSUPPORTED_OPERATION_EXCEPTION_MESSAGE);
     }
 }
