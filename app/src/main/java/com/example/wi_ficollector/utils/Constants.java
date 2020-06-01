@@ -8,7 +8,7 @@ public class Constants {
     private Constants() {
     }
 
-    // 15;57 background
+    public static int numOfWiFi = 0;
     public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
     public static final String FILE_NOT_FOUND_EXCEPTION_MESSAGE = "File does not exist, but is going to be created";
     public static final String IO_EXCEPTION_THROWN_TAG = "IO exception thrown";

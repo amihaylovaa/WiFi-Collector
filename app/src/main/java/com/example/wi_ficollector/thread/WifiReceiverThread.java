@@ -11,6 +11,7 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.countDownLatch;
 import static com.example.wi_ficollector.utils.Constants.isAlreadyScanned;
+import static com.example.wi_ficollector.utils.Constants.numOfWiFi;
 
 public class WifiReceiverThread implements Runnable {
 
@@ -31,6 +32,7 @@ public class WifiReceiverThread implements Runnable {
             List<ScanResult> results = wifiManager.getScanResults();
 
             if (results != null && results.size() > 0) {
+                numOfWiFi += results.size();
                 WifiLocation.setScanResults(results);
             }
         }

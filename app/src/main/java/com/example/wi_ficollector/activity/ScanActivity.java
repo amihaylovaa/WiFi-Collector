@@ -9,6 +9,7 @@ import android.net.wifi.WifiManager;
 import android.os.*;
 
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,10 +47,12 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private ScanPreference mScanPreference;
     private WifiLocationRepository mWifiLocationRepository;
     private Thread mGPSEnablingThread;
+    private TextView mNumberOfWifiTV;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_scan);
         openFileOutputStream();
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -58,6 +61,10 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mScanPreference = new ScanPreference(this);
         mWifiLocationRepository = new WifiLocationRepository();
         mGPSEnablingThread = new Thread(this::enableGPS);
+        mNumberOfWifiTV = (TextView) findViewById(R.id.numberOfWifiNetworks);
+
+        mNumberOfWifiTV.setText(String.valueOf(numOfWiFi));
+
 
         if (!isBackgroundPermissionRequestRequired()) {
             createBackgroundTask();
@@ -150,10 +157,16 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         if (!isFineLocationPermissionGranted()) {
             requestFineLocationPermission();
         } else {
-            mGPSEnablingThread.start();
+            startGPSEnablingThread();
             if (isBackgroundPermissionRequestRequired()) {
                 requestBackgroundPermission();
             }
+        }
+    }
+
+    private void startGPSEnablingThread() {
+        if (mGPSEnablingThread.getState() == Thread.State.NEW) {
+            mGPSEnablingThread.start();
         }
     }
 
@@ -204,7 +217,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
     private void handleFineLocationPermissionRequestResult(int grantResult) {
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
-            mGPSEnablingThread.start();
+            startGPSEnablingThread();
             if (isBackgroundPermissionRequestRequired()) {
                 requestBackgroundPermission();
             }
@@ -307,6 +320,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     protected void onRestart() {
         super.onRestart();
         requestLocationPermission();
+        mNumberOfWifiTV.invalidate();
     }
 
     @Override

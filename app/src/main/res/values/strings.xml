@@ -7,4 +7,6 @@
     <string name="OK">OK</string>
     <string name="launching_key">Show dialog intro</string>
     <string name="rationale_dialog_key">Show background permission rationale</string>
+    <string name="show_content">Number of found wireless networks:</string>
+
 </resources>
