@@ -19,6 +19,7 @@ import androidx.work.WorkerParameters;
 
 import com.example.wi_ficollector.repository.WifiLocationRepository;
 import com.example.wi_ficollector.thread.LocationTask;
+import com.example.wi_ficollector.wrapper.WifiLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -42,6 +43,7 @@ public class WifiLocationBackgroundWorker extends ListenableWorker {
     private Context mContext;
     private LocationCallback mLocationCallback;
     private FileOutputStream mFileOutputStream;
+    private WifiLocation mWifiLocation;
 
     public WifiLocationBackgroundWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -64,7 +66,8 @@ public class WifiLocationBackgroundWorker extends ListenableWorker {
     private void doWork(CallbackToFutureAdapter.Completer<Result> completer) {
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
-        mWifiLocationRepository = new WifiLocationRepository();
+      //  mWifiLocationRepository = new WifiLocationRepository();
+        mWifiLocation = new WifiLocation();
         mLocationRequest = new LocationRequest();
 
         try {
@@ -86,12 +89,13 @@ public class WifiLocationBackgroundWorker extends ListenableWorker {
                     return;
                 }
                 completer.set(Result.success());
-                for (Location location : locationResult.getLocations()) {
-                    boolean isWifiScanningSucceeded = mWifiManager.startScan();
-                    LocationTask locationTask = new LocationTask(location, mWifiLocationRepository, mFileOutputStream, isWifiScanningSucceeded);
-                    new Thread(locationTask).start();
+           //     for (Location location : locationResult.getLocations()) {
+             //       boolean isWifiScanningSucceeded = mWifiManager.startScan();
+               //     LocationTask locationTask = new LocationTask(mWifiLocationRepository,
+                 //           mFileOutputStream, isWifiScanningSucceeded);
+                  //  new Thread(locationTask).start();
                     // todo add ui thread
-                }
+            //    }
             }
         };
     }

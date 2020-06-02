@@ -26,11 +26,13 @@ import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
 import com.example.wi_ficollector.thread.*;
+import com.example.wi_ficollector.wrapper.WifiLocation;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
 import java.io.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static com.example.wi_ficollector.utils.Constants.*;
@@ -47,6 +49,8 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private ScanPreference mScanPreference;
     private WifiLocationRepository mWifiLocationRepository;
     private Thread mGPSEnablingThread;
+    private WifiLocation mWifiLocation;
+    private CountDownLatch mCountDownLatch;
     private TextView tv;
 
     @Override
@@ -220,7 +224,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     private void registerWiFiReceiver() {
-        mWifiReceiver = new WiFiReceiver();
+        mWifiReceiver = new WiFiReceiver(mCountDownLatch, mWifiLocation);
         IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 
         registerReceiver(mWifiReceiver, intentFilter);
@@ -279,11 +283,16 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
+                    mWifiLocation.setLatitude(location.getLatitude());
+                    mWifiLocation.setLongitude(location.getLongitude());
+                    mCountDownLatch = new CountDownLatch(1);
                     boolean isWifiScanningSucceeded = mWifiManager.startScan();
                     UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
-                    LocationTask locationTask = new LocationTask(location, mWifiLocationRepository, mFileOutputStream, isWifiScanningSucceeded);
+                    LocationTask locationTask = new LocationTask(mWifiLocationRepository,
+                            mFileOutputStream, isWifiScanningSucceeded, mCountDownLatch);
                     new Thread(locationTask).start();
                     new Thread(uiUpdateTask).start();
+                    mWifiLocation.clearFields();
                 }
             }
         };
@@ -295,8 +304,9 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mWorkManager = WorkManager.getInstance(getApplicationContext());
+        mWifiLocation = new WifiLocation();
         mScanPreference = new ScanPreference(this);
-        mWifiLocationRepository = new WifiLocationRepository();
+        mWifiLocationRepository = new WifiLocationRepository(mWifiLocation);
         mGPSEnablingThread = new Thread(this::enableGPS);
         tv = findViewById(R.id.numberOfWifiNetworks);
 

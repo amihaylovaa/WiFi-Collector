@@ -24,11 +24,13 @@ public class WifiLocationRepository {
     private GPX gpx;
     private GPXParser gpxParser;
     private ExtensionParser extensionParser;
+    private WifiLocation wifiLocation;
 
-    public WifiLocationRepository() {
+    public WifiLocationRepository(WifiLocation wifiLocation) {
         gpx = new GPX();
         gpxParser = new GPXParser();
         extensionParser = new ExtensionParser();
+        this.wifiLocation = wifiLocation;
     }
 
     public void saveWiFiLocation(FileOutputStream fileOutputStream) throws TransformerException, ParserConfigurationException {
@@ -37,8 +39,8 @@ public class WifiLocationRepository {
         ArrayList<Waypoint> wayPoints = new ArrayList<>();
         TimeZone.setDefault(new SimpleTimeZone(0, "UTC"));
         Date date = new Date();
-        double latitude = WifiLocation.getLatitude();
-        double longitude = WifiLocation.getLongitude();
+        double latitude = wifiLocation.getLatitude();
+        double longitude = wifiLocation.getLongitude();
         HashMap<String, Object> wiFiScanResults = createWiFiScanResultsMap();
 
         waypoint.setExtensionData(wiFiScanResults);
@@ -55,9 +57,9 @@ public class WifiLocationRepository {
     private HashMap<String, Object> createWiFiScanResultsMap() {
         HashMap<String, Object> results = new HashMap<>();
 
-        if (WifiLocation.getScanResults() != null) {
+        if (wifiLocation.getScanResults() != null) {
             int id = 0;
-            for (ScanResult scanResult : WifiLocation.getScanResults()) {
+            for (ScanResult scanResult : wifiLocation.getScanResults()) {
                 results.put("SSID" + id, scanResult.SSID);
                 results.put("RSSI" + id, scanResult.level);
                 results.put("BSSID" + id, scanResult.BSSID);

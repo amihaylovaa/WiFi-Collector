@@ -38,8 +38,6 @@ A
 gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
 w
 Gapp/src/main/java/com/example/wi_ficollector/activity/ScanActivity.java,6\9\696c04046a80eb0383cef7986767bf95d601e53f
-t
-Dapp/src/main/java/com/example/wi_ficollector/WifiLocationWorker.java,c\7\c7b70783bdb0d959a220b0aae131b2bacfcd2d4e
 {
 Kapp/src/main/java/com/example/wi_ficollector/preference/ScanPreference.java,6\5\65328b47cc1445e882d52d98438643d562bc7d3b
 {
@@ -54,7 +52,11 @@ Fapp/src/main/java/com/example/wi_ficollector/wrapper/WiFiLocation.java,9\d\9da
 Sapp/src/main/java/com/example/wi_ficollector/repository/WifiLocationRepository.java,2\7\27cb9dc4aea7ddb9ec61165da80e392b55f3aebd
 v
 Fapp/src/main/java/com/example/wi_ficollector/wrapper/WifiLocation.java,9\9\99afa2f1fbcdc109e022ae54e13e919be381674e
-{
-Kapp/src/main/java/com/example/wi_ficollector/thread/WifiReceiverThread.java,b\b\bb55a06f0f8aacb2c32dbe913b850bb32a663903
-w
-Gapp/src/main/java/com/example/wi_ficollector/thread/LocationThread.java,5\3\53bebbb8740af8c3949a5baa39b7888d0cf4eac3
+y
+Iapp/src/main/java/com/example/wi_ficollector/thread/WifiReceiverTask.java,c\b\cbf920d5411382607d5daf96f53c2f5bcca7d80f
+u
+Eapp/src/main/java/com/example/wi_ficollector/thread/UIUpdateTask.java,8\6\86a798a4c71f1e9966ab4edcac029a38dca7dde8
+u
+Eapp/src/main/java/com/example/wi_ficollector/thread/LocationTask.java,c\9\c97e2d6b64399db55baf13728c95ba52778a1500
+~
+Napp/src/main/java/com/example/wi_ficollector/WifiLocationBackgroundWorker.java,2\5\253877c612b72ea38a0e76fb4111a388c38d75d4

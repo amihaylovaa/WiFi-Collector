@@ -6,40 +6,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WifiLocation {
-    private static double locationLatitude;
-    private static double locationLongitude;
-    private static List<ScanResult> wifiScanResults;
+    private double locationLatitude;
+    private double locationLongitude;
+    private List<ScanResult> wifiScanResults;
 
-    private WifiLocation() {
-
-    }
-
-    public static double getLatitude() {
+    public double getLatitude() {
         return locationLatitude;
     }
 
-    public static double getLongitude() {
+    public double getLongitude() {
         return locationLongitude;
     }
 
-    public static List<ScanResult> getScanResults() {
+    public List<ScanResult> getScanResults() {
         return wifiScanResults;
     }
 
-    public static void setLatitude(double latitude) {
+    public void setLatitude(double latitude) {
         locationLatitude = latitude;
     }
 
-    public static void setLongitude(double longitude) {
+    public void setLongitude(double longitude) {
         locationLongitude = longitude;
     }
 
-    public static void setScanResults(List<ScanResult> scanResults) {
+    public void setScanResults(List<ScanResult> scanResults) {
         wifiScanResults = new ArrayList<>();
         wifiScanResults.addAll(scanResults);
     }
 
-    public static void clearFields() {
+    public void clearFields() {
         if (wifiScanResults != null) {
             wifiScanResults.clear();
         }

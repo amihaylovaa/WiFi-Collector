@@ -14,7 +14,6 @@ public final class Constants {
     public static final String FILE_NOT_FOUND_EXCEPTION_MESSAGE = "File does not exist, but is going to be created";
     public static final String IO_EXCEPTION_THROWN_TAG = "IO exception thrown";
     public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during closing file stream";
-    public static CountDownLatch countDownLatch;
     public static final String ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
     public static boolean isAlreadyScanned = true;
