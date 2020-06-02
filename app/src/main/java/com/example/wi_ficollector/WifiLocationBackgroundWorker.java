@@ -33,7 +33,7 @@ import static android.content.Context.MODE_APPEND;
 import static com.example.wi_ficollector.utils.Constants.*;
 
 
-public class WifiLocationWorker extends ListenableWorker {
+public class WifiLocationBackgroundWorker extends ListenableWorker {
 
     private WifiLocationRepository mWifiLocationRepository;
     private WifiManager mWifiManager;
@@ -43,7 +43,7 @@ public class WifiLocationWorker extends ListenableWorker {
     private LocationCallback mLocationCallback;
     private FileOutputStream mFileOutputStream;
 
-    public WifiLocationWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    public WifiLocationBackgroundWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         mContext = context;
     }
@@ -65,25 +65,16 @@ public class WifiLocationWorker extends ListenableWorker {
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
         mWifiLocationRepository = new WifiLocationRepository();
+        mLocationRequest = new LocationRequest();
+
         try {
             mFileOutputStream = mContext.openFileOutput(FILE_NAME, MODE_APPEND);
         } catch (FileNotFoundException exception) {
             Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MESSAGE);
         }
 
-        createLocationRequest();
         getLocationCallbackResult(completer);
         requestLocationUpdates(completer);
-    }
-
-
-    private void startWifiScanning() {
-        boolean isWiFiScanningSucceed = mWifiManager.startScan();
-        if (!isWiFiScanningSucceed) {
-            Log.d(WIFI_SCANNING_FAIL_TAG, WIFI_SCANNING_FAIL_MESSAGE);
-        } else {
-            Log.d(WIFI_SCANNING_SUCCESS_TAG, WIFI_SCANNING_SUCCESS_MESSAGE);
-        }
     }
 
     private void getLocationCallbackResult(CallbackToFutureAdapter.Completer<Result> completer) {
@@ -96,10 +87,10 @@ public class WifiLocationWorker extends ListenableWorker {
                 }
                 completer.set(Result.success());
                 for (Location location : locationResult.getLocations()) {
-                    startWifiScanning();
-                    LocationTask locationTask = new LocationTask(location, mWifiLocationRepository, mFileOutputStream);
-                    Thread thread = new Thread(locationTask);
-                    thread.start();
+                    boolean isWifiScanningSucceeded = mWifiManager.startScan();
+                    LocationTask locationTask = new LocationTask(location, mWifiLocationRepository, mFileOutputStream, isWifiScanningSucceeded);
+                    new Thread(locationTask).start();
+                    // todo add ui thread
                 }
             }
         };
@@ -107,16 +98,10 @@ public class WifiLocationWorker extends ListenableWorker {
 
     private void requestLocationUpdates(CallbackToFutureAdapter.Completer<Result> completer) {
         try {
-            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback,
-                    Looper.getMainLooper());
+            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
         } catch (SecurityException unlikely) {
             completer.set(Result.failure());
         }
-    }
-
-    private void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest = LocationRequest.create();
     }
 
     private boolean hasPermission() {

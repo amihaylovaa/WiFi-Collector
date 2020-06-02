@@ -13,13 +13,13 @@ public class MainPreference {
         mSharedPreference = context.getSharedPreferences(String.valueOf(R.string.launching_key), Context.MODE_PRIVATE);
     }
 
-    public boolean isFirstTimeLaunched() {
+    public boolean isActivityFirstTimeLaunched() {
         String showDialogIntro = String.valueOf(R.string.launching_key);
 
         return !mSharedPreference.contains(showDialogIntro);
     }
 
-    public void addSharedPreferenceKey() {
+    public void addIntroKey() {
         SharedPreferences.Editor editor = mSharedPreference.edit();
         String launchingKey = String.valueOf(R.string.launching_key);
 

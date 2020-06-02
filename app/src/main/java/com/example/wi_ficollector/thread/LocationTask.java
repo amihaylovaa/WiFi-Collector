@@ -20,26 +20,41 @@ public class LocationTask implements Runnable {
     private Location mLocation;
     private WifiLocationRepository mWifiLocationRepository;
     private FileOutputStream mFileOutputStream;
+    private boolean isWifiScanningSucceeded;
 
-    public LocationTask(Location mLocation, WifiLocationRepository mWifiLocationRepository, FileOutputStream mFileOutputStream) {
+    public LocationTask(Location mLocation, WifiLocationRepository mWifiLocationRepository,
+                        FileOutputStream mFileOutputStream, boolean isWifiScanningSucceeded) {
         this.mLocation = mLocation;
         this.mWifiLocationRepository = mWifiLocationRepository;
         this.mFileOutputStream = mFileOutputStream;
+        this.isWifiScanningSucceeded = isWifiScanningSucceeded;
     }
 
     @Override
     public void run() {
-        countDownLatch = new CountDownLatch(1);
+        if (!isWifiScanningSucceeded) {
+            setLocation();
+        } else {
+            countDownLatch = new CountDownLatch(1);
+            setLocation();
+            isAlreadyScanned = false;
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+            try {
+                mWifiLocationRepository.saveWiFiLocation(mFileOutputStream);
+            } catch (TransformerException | ParserConfigurationException e) {
+
+            }
+            WifiLocation.clearFields();
+            countDownLatch = null;
+        }
+
+    private void setLocation() {
         WifiLocation.setLatitude(mLocation.getLatitude());
         WifiLocation.setLongitude(mLocation.getLongitude());
-        isAlreadyScanned = false;
-        try {
-            countDownLatch.await();
-            mWifiLocationRepository.saveWiFiLocation(mFileOutputStream);
-        } catch (TransformerException | ParserConfigurationException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        WifiLocation.clearFields();
-        countDownLatch = null;
     }
 }

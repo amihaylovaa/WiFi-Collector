@@ -13,13 +13,13 @@ public class ScanPreference {
         mSharedPreference = context.getSharedPreferences(String.valueOf(R.string.rationale_dialog_key),Context.MODE_PRIVATE);
     }
 
-    public boolean isFirstTimeLaunched() {
+    public boolean isActivityFirstTimeLaunched() {
         String backgroundPermissionRationaleKey = String.valueOf(R.string.rationale_dialog_key);
 
         return !mSharedPreference.contains(backgroundPermissionRationaleKey);
     }
 
-    public void addFirstTimeLaunchingKey() {
+    public void addBackgroundPermissionRationaleKey() {
         String backgroundPermissionRationaleKey = String.valueOf(R.string.rationale_dialog_key);
         SharedPreferences.Editor editor = mSharedPreference.edit();
 

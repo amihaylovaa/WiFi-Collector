@@ -25,8 +25,7 @@ import com.example.wi_ficollector.*;
 import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
-import com.example.wi_ficollector.thread.LocationTask;
-import com.example.wi_ficollector.thread.UIUpdateTask;
+import com.example.wi_ficollector.thread.*;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
@@ -54,37 +53,19 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
-        openFileOutputStream();
-
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        mWorkManager = WorkManager.getInstance(getApplicationContext());
-        mScanPreference = new ScanPreference(this);
-        mWifiLocationRepository = new WifiLocationRepository();
-        mGPSEnablingThread = new Thread(this::enableGPS);
-        tv = (TextView) findViewById(R.id.numberOfWifiNetworks);
-
-        tv.setText(String.valueOf(numOfWiFi));
+        initializeFields();
 
         if (!isBackgroundPermissionRequestRequired()) {
             createBackgroundTask();
         } else {
-            if (mScanPreference.isFirstTimeLaunched()) {
-                mScanPreference.addFirstTimeLaunchingKey();
+            if (mScanPreference.isActivityFirstTimeLaunched()) {
+                mScanPreference.addBackgroundPermissionRationaleKey();
             }
         }
 
         requestLocationPermission();
         receiveLocationResults();
         registerWiFiReceiver();
-    }
-
-    private void openFileOutputStream() {
-        try {
-            mFileOutputStream = this.openFileOutput(FILE_NAME, MODE_APPEND);
-        } catch (FileNotFoundException exception) {
-            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MESSAGE);
-        }
     }
 
     public void enableGPS() {
@@ -105,7 +86,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     public void createLocationRequest() {
-        mLocationRequest = LocationRequest.create();
+        mLocationRequest = new LocationRequest();
 
         mLocationRequest.setInterval(TWO_MINUTES);
         mLocationRequest.setFastestInterval(ONE_MINUTE);
@@ -264,7 +245,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                 .build();
 
         return new PeriodicWorkRequest
-                .Builder(WifiLocationWorker.class, 15, TimeUnit.MINUTES)
+                .Builder(WifiLocationBackgroundWorker.class, 15, TimeUnit.MINUTES)
                 .addTag(workerRequestTag)
                 .setConstraints(constraints)
                 .setInitialDelay(5, TimeUnit.MINUTES)
@@ -298,24 +279,35 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    startWifiScanning();
-                    LocationTask locationTask = new LocationTask(location, mWifiLocationRepository, mFileOutputStream);
-                    Thread thread = new Thread(locationTask);
-                    thread.start();
+                    boolean isWifiScanningSucceeded = mWifiManager.startScan();
                     UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
-                    Thread threads = new Thread(uiUpdateTask);
-                    threads.start();
+                    LocationTask locationTask = new LocationTask(location, mWifiLocationRepository, mFileOutputStream, isWifiScanningSucceeded);
+                    new Thread(locationTask).start();
+                    new Thread(uiUpdateTask).start();
                 }
             }
         };
     }
 
-    private void startWifiScanning() {
-        boolean isWiFiScanningSucceed = mWifiManager.startScan();
-        if (!isWiFiScanningSucceed) {
-            Log.d(WIFI_SCANNING_FAIL_TAG, WIFI_SCANNING_FAIL_MESSAGE);
-        } else {
-            Log.d(WIFI_SCANNING_SUCCESS_TAG, WIFI_SCANNING_SUCCESS_MESSAGE);
+    private void initializeFields() {
+        openFileOutputStream();
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        mWorkManager = WorkManager.getInstance(getApplicationContext());
+        mScanPreference = new ScanPreference(this);
+        mWifiLocationRepository = new WifiLocationRepository();
+        mGPSEnablingThread = new Thread(this::enableGPS);
+        tv = findViewById(R.id.numberOfWifiNetworks);
+
+        tv.setText(String.valueOf(numberFoundWifiNetworks));
+    }
+
+    private void openFileOutputStream() {
+        try {
+            mFileOutputStream = this.openFileOutput(FILE_NAME, MODE_APPEND);
+        } catch (FileNotFoundException exception) {
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MESSAGE);
         }
     }
 
@@ -324,7 +316,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         super.onRestart();
         requestLocationPermission();
         tv.invalidate();
-        tv.setText(String.valueOf(numOfWiFi));
+        tv.setText(String.valueOf(numberFoundWifiNetworks));
     }
 
     @Override

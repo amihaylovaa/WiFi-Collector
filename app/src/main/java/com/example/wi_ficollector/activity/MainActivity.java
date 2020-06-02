@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button startScanningBtn = findViewById(R.id.start_scanning_button);
         Button sendDataBtn = findViewById(R.id.send_data_button);
 
-        if (mainPreference.isFirstTimeLaunched()) {
+        if (mainPreference.isActivityFirstTimeLaunched()) {
             showIntroDialog();
         }
 
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         alertDialog.setMessage(INTRO);
-        alertDialog.setNeutralButton(R.string.OK, (dialog, id) -> mainPreference.addSharedPreferenceKey());
+        alertDialog.setNeutralButton(R.string.OK, (dialog, id) -> mainPreference.addIntroKey());
         alertDialog.create().show();
     }
 }

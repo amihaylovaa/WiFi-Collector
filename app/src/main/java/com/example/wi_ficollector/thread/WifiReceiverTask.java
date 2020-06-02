@@ -11,7 +11,7 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.countDownLatch;
 import static com.example.wi_ficollector.utils.Constants.isAlreadyScanned;
-import static com.example.wi_ficollector.utils.Constants.numOfWiFi;
+import static com.example.wi_ficollector.utils.Constants.numberFoundWifiNetworks;
 
 public class WifiReceiverTask implements Runnable {
 
@@ -29,16 +29,19 @@ public class WifiReceiverTask implements Runnable {
         boolean hasSuccess = mIntent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
 
         if (!isAlreadyScanned && hasSuccess) {
-            List<ScanResult> results = wifiManager.getScanResults();
-
-            if (results != null && results.size() > 0) {
-                numOfWiFi += results.size();
-                WifiLocation.setScanResults(results);
-            }
+            List<ScanResult> scanResults = wifiManager.getScanResults();
+            setScanResults(scanResults);
         }
         isAlreadyScanned = true;
         if (countDownLatch != null) {
             countDownLatch.countDown();
+        }
+    }
+
+    private void setScanResults(List<ScanResult> scanResults) {
+        if (scanResults != null && scanResults.size() > 0) {
+            numberFoundWifiNetworks += scanResults.size();
+            WifiLocation.setScanResults(scanResults);
         }
     }
 }

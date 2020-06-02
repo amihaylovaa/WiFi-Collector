@@ -11,8 +11,8 @@ public class WiFiReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         WifiReceiverTask wiFiReceiverTask = new WifiReceiverTask(context, intent);
-        Thread thread = new Thread(wiFiReceiverTask);
+        Thread wifiReceiverWorker = new Thread(wiFiReceiverTask);
 
-        thread.start();
+        wifiReceiverWorker.start();
     }
 }
