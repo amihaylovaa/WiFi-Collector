@@ -18,7 +18,7 @@ import androidx.work.ListenableWorker;
 import androidx.work.WorkerParameters;
 
 import com.example.wi_ficollector.repository.WifiLocationRepository;
-import com.example.wi_ficollector.thread.LocationThread;
+import com.example.wi_ficollector.thread.LocationTask;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -97,8 +97,8 @@ public class WifiLocationWorker extends ListenableWorker {
                 completer.set(Result.success());
                 for (Location location : locationResult.getLocations()) {
                     startWifiScanning();
-                    LocationThread locationThread = new LocationThread(location, mWifiLocationRepository, mFileOutputStream);
-                    Thread thread = new Thread(locationThread);
+                    LocationTask locationTask = new LocationTask(location, mWifiLocationRepository, mFileOutputStream);
+                    Thread thread = new Thread(locationTask);
                     thread.start();
                 }
             }

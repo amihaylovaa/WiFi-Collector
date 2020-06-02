@@ -13,12 +13,12 @@ import static com.example.wi_ficollector.utils.Constants.countDownLatch;
 import static com.example.wi_ficollector.utils.Constants.isAlreadyScanned;
 import static com.example.wi_ficollector.utils.Constants.numOfWiFi;
 
-public class WifiReceiverThread implements Runnable {
+public class WifiReceiverTask implements Runnable {
 
     private Intent mIntent;
     private Context mContext;
 
-    public WifiReceiverThread(Context mContext, Intent mIntent) {
+    public WifiReceiverTask(Context mContext, Intent mIntent) {
         this.mContext = mContext;
         this.mIntent = mIntent;
     }

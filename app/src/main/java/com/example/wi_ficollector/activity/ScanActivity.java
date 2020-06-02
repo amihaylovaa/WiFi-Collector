@@ -25,7 +25,8 @@ import com.example.wi_ficollector.*;
 import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
-import com.example.wi_ficollector.thread.LocationThread;
+import com.example.wi_ficollector.thread.LocationTask;
+import com.example.wi_ficollector.thread.UIUpdateTask;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
@@ -47,7 +48,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private ScanPreference mScanPreference;
     private WifiLocationRepository mWifiLocationRepository;
     private Thread mGPSEnablingThread;
-    private TextView mNumberOfWifiTV;
+    private TextView tv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,10 +62,9 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mScanPreference = new ScanPreference(this);
         mWifiLocationRepository = new WifiLocationRepository();
         mGPSEnablingThread = new Thread(this::enableGPS);
-        mNumberOfWifiTV = (TextView) findViewById(R.id.numberOfWifiNetworks);
+        tv = (TextView) findViewById(R.id.numberOfWifiNetworks);
 
-        mNumberOfWifiTV.setText(String.valueOf(numOfWiFi));
-
+        tv.setText(String.valueOf(numOfWiFi));
 
         if (!isBackgroundPermissionRequestRequired()) {
             createBackgroundTask();
@@ -299,9 +299,12 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                 }
                 for (Location location : locationResult.getLocations()) {
                     startWifiScanning();
-                    LocationThread locationThread = new LocationThread(location, mWifiLocationRepository, mFileOutputStream);
-                    Thread thread = new Thread(locationThread);
+                    LocationTask locationTask = new LocationTask(location, mWifiLocationRepository, mFileOutputStream);
+                    Thread thread = new Thread(locationTask);
                     thread.start();
+                    UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
+                    Thread threads = new Thread(uiUpdateTask);
+                    threads.start();
                 }
             }
         };
@@ -320,7 +323,8 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     protected void onRestart() {
         super.onRestart();
         requestLocationPermission();
-        mNumberOfWifiTV.invalidate();
+        tv.invalidate();
+        tv.setText(String.valueOf(numOfWiFi));
     }
 
     @Override

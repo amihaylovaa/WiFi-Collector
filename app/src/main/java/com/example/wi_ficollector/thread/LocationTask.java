@@ -15,13 +15,13 @@ import javax.xml.transform.TransformerException;
 import static com.example.wi_ficollector.utils.Constants.countDownLatch;
 import static com.example.wi_ficollector.utils.Constants.isAlreadyScanned;
 
-public class LocationThread implements Runnable {
+public class LocationTask implements Runnable {
 
     private Location mLocation;
     private WifiLocationRepository mWifiLocationRepository;
     private FileOutputStream mFileOutputStream;
 
-    public LocationThread(Location mLocation, WifiLocationRepository mWifiLocationRepository, FileOutputStream mFileOutputStream) {
+    public LocationTask(Location mLocation, WifiLocationRepository mWifiLocationRepository, FileOutputStream mFileOutputStream) {
         this.mLocation = mLocation;
         this.mWifiLocationRepository = mWifiLocationRepository;
         this.mFileOutputStream = mFileOutputStream;
