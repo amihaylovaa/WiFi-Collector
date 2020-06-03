@@ -2,7 +2,7 @@ package com.example.wi_ficollector.thread;
 
 import android.widget.TextView;
 
-import static com.example.wi_ficollector.utils.Constants.FIVE_SECONDS;
+import static com.example.wi_ficollector.utils.Constants.TEN_SECONDS;
 import static com.example.wi_ficollector.utils.Constants.numberFoundWifiNetworks;
 
 public class UIUpdateTask implements Runnable {
@@ -16,7 +16,7 @@ public class UIUpdateTask implements Runnable {
     @Override
     public void run() {
         try {
-            Thread.sleep(FIVE_SECONDS);
+            Thread.sleep(TEN_SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

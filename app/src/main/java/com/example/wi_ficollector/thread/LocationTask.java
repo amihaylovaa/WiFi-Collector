@@ -1,7 +1,10 @@
 package com.example.wi_ficollector.thread;
 
 
+import android.location.Location;
+
 import com.example.wi_ficollector.repository.WifiLocationRepository;
+import com.example.wi_ficollector.wrapper.WifiLocation;
 
 import java.io.FileOutputStream;
 import java.util.concurrent.CountDownLatch;
@@ -19,7 +22,8 @@ public class LocationTask implements Runnable {
     private boolean isWifiScanningSucceeded;
 
     public LocationTask(WifiLocationRepository mWifiLocationRepository,
-                        FileOutputStream mFileOutputStream, boolean isWifiScanningSucceeded, CountDownLatch mCountDownLatch) {
+                        FileOutputStream mFileOutputStream, boolean isWifiScanningSucceeded,
+                        CountDownLatch mCountDownLatch) {
         this.mWifiLocationRepository = mWifiLocationRepository;
         this.mFileOutputStream = mFileOutputStream;
         this.isWifiScanningSucceeded = isWifiScanningSucceeded;
@@ -32,11 +36,17 @@ public class LocationTask implements Runnable {
             isAlreadyScanned = false;
             try {
                 mCountDownLatch.await();
-                mWifiLocationRepository.saveWiFiLocation(mFileOutputStream);
-            } catch (InterruptedException | TransformerException | ParserConfigurationException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            mCountDownLatch = null;
+        }
+        try {
+            mWifiLocationRepository.saveWiFiLocation(mFileOutputStream);
+        } catch (TransformerException | ParserConfigurationException e) {
+
+        }
+        if (mCountDownLatch.getCount() == 0) {
+            mCountDownLatch = new CountDownLatch(1);
         }
     }
 }

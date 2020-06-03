@@ -1,7 +1,8 @@
 
 X
-java:S2696#"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8óî›¶§.
-i
-java:S1128"LRemove this unused import 'com.example.wi_ficollector.wrapper.WifiLocation'.(“´£ë8÷·¶§.
+java:S2696$"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8âê×Ì§.
+J	java:S108-")Either remove or fill this block of code.(¥’Ÿ‘ûÿÿÿÿ8»½ŸÍ§.
 X
-java:S1128"6Remove this unused import 'android.location.Location'.(›¡ì®øÿÿÿÿ8è°Ÿ¶§.
+java:S1128"6Remove this unused import 'android.location.Location'.(›¡ì®øÿÿÿÿ8Ö—Û§.
+i
+java:S1128"LRemove this unused import 'com.example.wi_ficollector.wrapper.WifiLocation'.(“´£ë8Ö—Û§.

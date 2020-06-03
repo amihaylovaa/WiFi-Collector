@@ -21,26 +21,26 @@ import javax.xml.transform.TransformerException;
 
 public class WifiLocationRepository {
 
-    private GPX gpx;
-    private GPXParser gpxParser;
-    private ExtensionParser extensionParser;
-    private WifiLocation wifiLocation;
+    private GPX mGPX;
+    private GPXParser mGPXParser;
+    private ExtensionParser mExtensionParser;
+    private WifiLocation mWifiLocation;
 
-    public WifiLocationRepository(WifiLocation wifiLocation) {
-        gpx = new GPX();
-        gpxParser = new GPXParser();
-        extensionParser = new ExtensionParser();
-        this.wifiLocation = wifiLocation;
+    public WifiLocationRepository(WifiLocation mWifiLocation) {
+        mGPX = new GPX();
+        mGPXParser = new GPXParser();
+        mExtensionParser = new ExtensionParser();
+        this.mWifiLocation = mWifiLocation;
     }
 
-    public void saveWiFiLocation(FileOutputStream fileOutputStream) throws TransformerException, ParserConfigurationException {
+    public synchronized void saveWiFiLocation(FileOutputStream fileOutputStream) throws TransformerException, ParserConfigurationException {
         Track track = new Track();
         Waypoint waypoint = new Waypoint();
         ArrayList<Waypoint> wayPoints = new ArrayList<>();
         TimeZone.setDefault(new SimpleTimeZone(0, "UTC"));
         Date date = new Date();
-        double latitude = wifiLocation.getLatitude();
-        double longitude = wifiLocation.getLongitude();
+        double latitude = mWifiLocation.getLatitude();
+        double longitude = mWifiLocation.getLongitude();
         HashMap<String, Object> wiFiScanResults = createWiFiScanResultsMap();
 
         waypoint.setExtensionData(wiFiScanResults);
@@ -49,17 +49,18 @@ public class WifiLocationRepository {
         waypoint.setLongitude(longitude);
         wayPoints.add(waypoint);
         track.setTrackPoints(wayPoints);
-        gpx.addTrack(track);
-        gpxParser.addExtensionParser(extensionParser);
-        gpxParser.writeGPX(gpx, fileOutputStream);
+        mGPX.addTrack(track);
+        mGPXParser.addExtensionParser(mExtensionParser);
+        mGPXParser.writeGPX(mGPX, fileOutputStream);
+        mWifiLocation.clearFields();
     }
 
     private HashMap<String, Object> createWiFiScanResultsMap() {
         HashMap<String, Object> results = new HashMap<>();
 
-        if (wifiLocation.getScanResults() != null) {
+        if (mWifiLocation.getScanResults() != null) {
             int id = 0;
-            for (ScanResult scanResult : wifiLocation.getScanResults()) {
+            for (ScanResult scanResult : mWifiLocation.getScanResults()) {
                 results.put("SSID" + id, scanResult.SSID);
                 results.put("RSSI" + id, scanResult.level);
                 results.put("BSSID" + id, scanResult.BSSID);

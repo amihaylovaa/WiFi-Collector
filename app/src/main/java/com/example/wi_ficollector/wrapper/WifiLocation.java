@@ -9,6 +9,18 @@ public class WifiLocation {
     private double locationLatitude;
     private double locationLongitude;
     private List<ScanResult> wifiScanResults;
+    private static WifiLocation wifiLocation;
+
+    private WifiLocation() {
+
+    }
+
+    public static synchronized WifiLocation getWifiLocation() {
+        if (wifiLocation == null) {
+            wifiLocation = new WifiLocation();
+        }
+        return wifiLocation;
+    }
 
     public double getLatitude() {
         return locationLatitude;

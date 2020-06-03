@@ -67,7 +67,7 @@ public class WifiLocationBackgroundWorker extends ListenableWorker {
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
       //  mWifiLocationRepository = new WifiLocationRepository();
-        mWifiLocation = new WifiLocation();
+    //    mWifiLocation = new WifiLocation();
         mLocationRequest = new LocationRequest();
 
         try {

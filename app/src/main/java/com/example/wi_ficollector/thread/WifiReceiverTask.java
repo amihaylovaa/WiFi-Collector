@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 
-import com.example.wi_ficollector.activity.ScanActivity;
 import com.example.wi_ficollector.wrapper.WifiLocation;
 
 import java.util.List;
@@ -25,21 +24,20 @@ public class WifiReceiverTask implements Runnable {
         this.mIntent = mIntent;
         this.mContext = mContext;
         this.mCountDownLatch = mCountDownLatch;
-        this.mWifiLocation = mWifiLocation;
+        this.mWifiLocation =  mWifiLocation;
     }
 
     @Override
     public void run() {
         WifiManager wifiManager = (WifiManager) this.mContext.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = mIntent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
-// todo fix bug with countdownlatch - (always is null)
         if (!isAlreadyScanned && hasSuccess) {
             List<ScanResult> scanResults = wifiManager.getScanResults();
             setScanResults(scanResults);
-        }
-        isAlreadyScanned = true;
-        if (mCountDownLatch != null) {
-            mCountDownLatch.countDown();
+            isAlreadyScanned = true;
+            if (mCountDownLatch != null) {
+                mCountDownLatch.countDown();
+            }
         }
     }
 

@@ -1,24 +1,21 @@
 
-ƒ
-java:S1450'"fRemove the "mWifiLocationRepository" field and declare it as a local variable in the relevant methods.(¦õÙ‹8‹—«¶§.
-]	java:S125_"<This block of commented-out lines of code should be removed.(À“Úåÿÿÿÿÿ8‹—«¶§.
 N
 java:S1068."1Remove this unused "mWifiLocation" private field.(±ø¥8åÚáµ§.
-I
-java:S2440F",Remove this instantiation of "WifiLocation".(¤Ç¯¹8 ³âµ§.
-]	java:S125\"<This block of commented-out lines of code should be removed.(½Ó÷üÿÿÿÿ8‹—«¶§.
-T
-java:S1135a"2Complete the task associated to this TODO comment.(ñ¬òÆùÿÿÿÿ8 ³âµ§.
-}
-java:S1450("[Remove the "mWifiManager" field and declare it as a local variable in the relevant methods.(£°›ðþÿÿÿÿ8‹—«¶§.
-]	java:S125b"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ8‹—«¶§.
-y
-java:S1450."\Remove the "mWifiLocation" field and declare it as a local variable in the relevant methods.(±ø¥8 ³âµ§.
-R
-java:S1068("0Remove this unused "mWifiManager" private field.(£°›ðþÿÿÿÿ8‹—«¶§.
 R
 java:S1068-"5Remove this unused "mFileOutputStream" private field.(ª²û8‹—«¶§.
-X
-java:S1068'";Remove this unused "mWifiLocationRepository" private field.(¦õÙ‹8‹—«¶§.
+}
+java:S1450("[Remove the "mWifiManager" field and declare it as a local variable in the relevant methods.(£°›ðþÿÿÿÿ8‹—«¶§.
 }
 java:S1450-"`Remove the "mFileOutputStream" field and declare it as a local variable in the relevant methods.(ª²û8‹—«¶§.
+]	java:S125_"<This block of commented-out lines of code should be removed.(À“Úåÿÿÿÿÿ8‹—«¶§.
+]	java:S125b"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ8‹—«¶§.
+]	java:S125E"<This block of commented-out lines of code should be removed.(‰ÒÇ›þÿÿÿÿ8ëÀµ·§.
+]	java:S125\"<This block of commented-out lines of code should be removed.(½Ó÷üÿÿÿÿ8‹—«¶§.
+y
+java:S1450."\Remove the "mWifiLocation" field and declare it as a local variable in the relevant methods.(±ø¥8 ³âµ§.
+T
+java:S1135a"2Complete the task associated to this TODO comment.(ñ¬òÆùÿÿÿÿ8 ³âµ§.
+R
+java:S1068("0Remove this unused "mWifiManager" private field.(£°›ðþÿÿÿÿ8‹—«¶§.
+X
+java:S1068'";Remove this unused "mWifiLocationRepository" private field.(¦õÙ‹8‹—«¶§.

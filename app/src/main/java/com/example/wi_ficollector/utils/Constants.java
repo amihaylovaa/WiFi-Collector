@@ -1,8 +1,9 @@
 package com.example.wi_ficollector.utils;
 
 import android.Manifest;
+import android.os.Build;
 
-import java.util.concurrent.CountDownLatch;
+import androidx.annotation.RequiresApi;
 
 public final class Constants {
 
@@ -19,7 +20,7 @@ public final class Constants {
     public static boolean isAlreadyScanned = true;
     public static final int ONE_MINUTE = 60 * 1000;
     public static final int TWO_MINUTES = 2 * 60 * 1000;
-    public static final int FIVE_SECONDS = 5000;
+    public static final int TEN_SECONDS = 10_000;
     public static final String FILE_NAME = "Location_Wifi.gpx";
     public static final int FINE_LOCATION_PERMISSION_CODE = 87;
     public static final int BACKGROUND_LOCATION_PERMISSION_CODE = 43;
