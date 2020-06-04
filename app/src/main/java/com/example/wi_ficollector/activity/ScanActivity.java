@@ -253,7 +253,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                         try {
                             // wifi scan - null
                             mWifiLocationRepository.saveWiFiLocation(mFileOutputStream);
-                        } catch (TransformerException | ParserConfigurationException e) {
+                        } catch (IOException | TransformerException | ParserConfigurationException e) {
 
                         }
                     } else {

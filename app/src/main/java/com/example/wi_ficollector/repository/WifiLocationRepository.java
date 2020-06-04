@@ -2,6 +2,7 @@ package com.example.wi_ficollector.repository;
 
 import android.location.Location;
 import android.net.wifi.ScanResult;
+import android.util.Log;
 
 import com.example.wi_ficollector.wrapper.WifiLocation;
 
@@ -11,6 +12,9 @@ import org.alternativevision.gpx.beans.Track;
 import org.alternativevision.gpx.beans.Waypoint;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,16 +38,15 @@ public class WifiLocationRepository {
         this.mWifiLocation = WifiLocation.getWifiLocation();
     }
 
-    public synchronized void saveWiFiLocation(FileOutputStream fileOutputStream) throws TransformerException, ParserConfigurationException {
-        Track track = new Track();
+    public synchronized void saveWiFiLocation(FileOutputStream fileOutputStream) throws TransformerException, ParserConfigurationException, IOException {
+      /*  Track track = new Track();
         Waypoint waypoint = new Waypoint();
         ArrayList<Waypoint> wayPoints = new ArrayList<>();
         TimeZone.setDefault(new SimpleTimeZone(0, "UTC"));
         Date date = new Date();
-        Location location = mWifiLocation.getLocation();
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
+
         HashMap<String, Object> wiFiScanResults = createWiFiScanResultsMap();
+
 
         waypoint.setExtensionData(wiFiScanResults);
         waypoint.setTime(date);
@@ -54,9 +57,37 @@ public class WifiLocationRepository {
         mGPX.addTrack(track);
         mGPXParser.addExtensionParser(mExtensionParser);
         mGPXParser.writeGPX(mGPX, fileOutputStream);
-        mWifiLocation.clearFields();
-    }
+        mWifiLocation.clearFields();*/
+        Location location = mWifiLocation.getLocation();
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
 
+        OutputStreamWriter osw = new OutputStreamWriter(fileOutputStream);
+        String fileContent = "Latitude :" + latitude + "\n Longitude : " + longitude + "\n";
+        LocalDateTime localDateTime = LocalDateTime.now();
+        try {
+            osw.write(fileContent);
+            osw.write(String.valueOf(localDateTime));
+            osw.write("\n\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        osw.flush();
+
+        Log.d("Storing data", String.valueOf(mWifiLocation.getScanResults().size()));
+
+        for (ScanResult scanResult : mWifiLocation.getScanResults()) {
+            String file = "\nSSID: :" + scanResult.SSID + "\nFrequency : " + scanResult.frequency + "\n";
+            try {
+                osw.write(file);
+                osw.write("\n\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            osw.flush();
+        }
+        osw.close();
+    }
     private HashMap<String, Object> createWiFiScanResultsMap() {
         HashMap<String, Object> results = new HashMap<>();
 
@@ -70,6 +101,7 @@ public class WifiLocationRepository {
                 ++id;
             }
         }
+        Log.d("Storing data", String.valueOf(results.size()));
         return results;
     }
 
