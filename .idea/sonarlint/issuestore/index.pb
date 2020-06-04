@@ -52,11 +52,5 @@ Fapp/src/main/java/com/example/wi_ficollector/wrapper/WiFiLocation.java,9\d\9da
 Sapp/src/main/java/com/example/wi_ficollector/repository/WifiLocationRepository.java,2\7\27cb9dc4aea7ddb9ec61165da80e392b55f3aebd
 v
 Fapp/src/main/java/com/example/wi_ficollector/wrapper/WifiLocation.java,9\9\99afa2f1fbcdc109e022ae54e13e919be381674e
-y
-Iapp/src/main/java/com/example/wi_ficollector/thread/WifiReceiverTask.java,c\b\cbf920d5411382607d5daf96f53c2f5bcca7d80f
 u
 Eapp/src/main/java/com/example/wi_ficollector/thread/UIUpdateTask.java,8\6\86a798a4c71f1e9966ab4edcac029a38dca7dde8
-u
-Eapp/src/main/java/com/example/wi_ficollector/thread/LocationTask.java,c\9\c97e2d6b64399db55baf13728c95ba52778a1500
-~
-Napp/src/main/java/com/example/wi_ficollector/WifiLocationBackgroundWorker.java,2\5\253877c612b72ea38a0e76fb4111a388c38d75d4

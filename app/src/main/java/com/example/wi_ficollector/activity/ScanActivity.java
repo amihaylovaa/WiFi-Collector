@@ -30,8 +30,12 @@ import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
 import java.io.*;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
@@ -47,7 +51,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private WifiLocationRepository mWifiLocationRepository;
     private Thread mGPSEnablingThread;
     private WifiLocation mWifiLocation;
-    private CountDownLatch mCountDownLatch;
     private TextView tv;
 
     @Override
@@ -217,7 +220,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     private void registerWiFiReceiver() {
-        mWifiReceiver = new WiFiReceiver(mCountDownLatch, mWifiLocation);
+        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mFileOutputStream);
         IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 
         registerReceiver(mWifiReceiver, intentFilter);
@@ -240,25 +243,26 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                     return;
                 }
                 List<Location> locations = locationResult.getLocations();
-                int lastElementIndex = locations.size() - 1;
-                Location location = locations.get(lastElementIndex);
-                setLocation(location);
-                isWifiScanningSucceeded = mWifiManager.startScan();
-                UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
-                LocationTask locationTask = new LocationTask(mWifiLocationRepository, mFileOutputStream,
-                        isWifiScanningSucceeded, mCountDownLatch);
-                new Thread(locationTask).start();
-                new Thread(uiUpdateTask).start();
+                LocalTime localTime = LocalTime.now();
+
+                mWifiLocation.setLocalTime(localTime);
+                for (Location location : locations) {
+                    mWifiLocation.setLocation(location);
+                    isWifiScanningSucceeded = mWifiManager.startScan();
+                    if (!isWifiScanningSucceeded) {
+                        try {
+                            // wifi scan - null
+                            mWifiLocationRepository.saveWiFiLocation(mFileOutputStream);
+                        } catch (TransformerException | ParserConfigurationException e) {
+
+                        }
+                    } else {
+                        UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
+                        new Thread(uiUpdateTask).start();
+                    }
+                }
             }
         };
-    }
-
-    private void setLocation(Location location) {
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-
-        mWifiLocation.setLatitude(latitude);
-        mWifiLocation.setLongitude(longitude);
     }
 
     private void initializeFields() {
@@ -270,7 +274,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mGPSEnablingThread = new Thread(this::enableGPS);
         mWifiLocation = WifiLocation.getWifiLocation();
         mWifiLocationRepository = new WifiLocationRepository(mWifiLocation);
-        mCountDownLatch = new CountDownLatch(1);
         tv = findViewById(R.id.numberOfWifiNetworks);
 
         tv.setText(String.valueOf(numberFoundWifiNetworks));

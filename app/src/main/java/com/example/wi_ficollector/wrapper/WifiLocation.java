@@ -1,13 +1,15 @@
 package com.example.wi_ficollector.wrapper;
 
+import android.location.Location;
 import android.net.wifi.ScanResult;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WifiLocation {
-    private double locationLatitude;
-    private double locationLongitude;
+    private Location location;
+    private LocalTime localTime;
     private List<ScanResult> wifiScanResults;
     private static WifiLocation wifiLocation;
 
@@ -22,24 +24,24 @@ public class WifiLocation {
         return wifiLocation;
     }
 
-    public double getLatitude() {
-        return locationLatitude;
-    }
-
-    public double getLongitude() {
-        return locationLongitude;
-    }
-
     public List<ScanResult> getScanResults() {
         return wifiScanResults;
     }
 
-    public void setLatitude(double latitude) {
-        locationLatitude = latitude;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setLongitude(double longitude) {
-        locationLongitude = longitude;
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public LocalTime getLocalTime() {
+        return localTime;
+    }
+
+    public void setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
     }
 
     public void setScanResults(List<ScanResult> scanResults) {
@@ -51,7 +53,7 @@ public class WifiLocation {
         if (wifiScanResults != null) {
             wifiScanResults.clear();
         }
-        locationLatitude = 0.00;
-        locationLongitude = 0.00;
+        location.setLatitude(0.0);
+        location.setLongitude(0.0);
     }
 }

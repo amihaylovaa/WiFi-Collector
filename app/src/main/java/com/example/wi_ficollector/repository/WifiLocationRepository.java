@@ -1,5 +1,6 @@
 package com.example.wi_ficollector.repository;
 
+import android.location.Location;
 import android.net.wifi.ScanResult;
 
 import com.example.wi_ficollector.wrapper.WifiLocation;
@@ -30,7 +31,7 @@ public class WifiLocationRepository {
         mGPX = new GPX();
         mGPXParser = new GPXParser();
         mExtensionParser = new ExtensionParser();
-        this.mWifiLocation = mWifiLocation;
+        this.mWifiLocation = WifiLocation.getWifiLocation();
     }
 
     public synchronized void saveWiFiLocation(FileOutputStream fileOutputStream) throws TransformerException, ParserConfigurationException {
@@ -39,8 +40,9 @@ public class WifiLocationRepository {
         ArrayList<Waypoint> wayPoints = new ArrayList<>();
         TimeZone.setDefault(new SimpleTimeZone(0, "UTC"));
         Date date = new Date();
-        double latitude = mWifiLocation.getLatitude();
-        double longitude = mWifiLocation.getLongitude();
+        Location location = mWifiLocation.getLocation();
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
         HashMap<String, Object> wiFiScanResults = createWiFiScanResultsMap();
 
         waypoint.setExtensionData(wiFiScanResults);
@@ -69,5 +71,9 @@ public class WifiLocationRepository {
             }
         }
         return results;
+    }
+
+    public WifiLocation getmWifiLocation() {
+        return mWifiLocation;
     }
 }

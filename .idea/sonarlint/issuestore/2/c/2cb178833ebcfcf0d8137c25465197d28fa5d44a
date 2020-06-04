@@ -1,13 +1,7 @@
 
 Z
-java:S1444"=Make this "public static numberFoundWifiNetworks" field final(óÓƒÙ8ùçÍË§.
-X
-java:S1444"6Make this "public static isAlreadyScanned" field final(ŸÕœÉüÿÿÿÿ8ùçÍË§.
+java:S1444
+"=Make this "public static numberFoundWifiNetworks" field final(óÓƒÙ8ùçÍË§.
 €
-java:S1104"cMake numberFoundWifiNetworks a static final constant or non-public and provide accessors if needed.(óÓƒÙ8ùçÍË§.
-~
-java:S1104"\Make isAlreadyScanned a static final constant or non-public and provide accessors if needed.(ŸÕœÉüÿÿÿÿ8ùçÍË§.
-Y
-java:S1128"<Remove this unused import 'androidx.annotation.RequiresApi'.(å„» 8ùçÍË§.
-O
-java:S1128"-Remove this unused import 'android.os.Build'.(ãÇ¤Úıÿÿÿÿ8ùçÍË§.
+java:S1104
+"cMake numberFoundWifiNetworks a static final constant or non-public and provide accessors if needed.(óÓƒÙ8ùçÍË§.
