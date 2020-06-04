@@ -1,21 +1,19 @@
 
-N
-java:S1068."1Remove this unused "mWifiLocation" private field.(±ψ¥8εΪαµ§.
+]	java:S125\"<This block of commented-out lines of code should be removed.(½Σχόÿÿÿÿ8‹—«¶§.
+]	java:S125E"<This block of commented-out lines of code should be removed.(‰ÒΗ›ώÿÿÿÿ8λΐµ·§.
 R
 java:S1068-"5Remove this unused "mFileOutputStream" private field.(ª²ϋ8‹—«¶§.
-}
-java:S1450("[Remove the "mWifiManager" field and declare it as a local variable in the relevant methods.(£°›πώÿÿÿÿ8‹—«¶§.
-}
-java:S1450-"`Remove the "mFileOutputStream" field and declare it as a local variable in the relevant methods.(ª²ϋ8‹—«¶§.
 ]	java:S125_"<This block of commented-out lines of code should be removed.(ΐ“Ϊεÿÿÿÿÿ8‹—«¶§.
-]	java:S125b"<This block of commented-out lines of code should be removed.(ιΨ»Ϊϋÿÿÿÿ8‹—«¶§.
-]	java:S125E"<This block of commented-out lines of code should be removed.(‰ÒΗ›ώÿÿÿÿ8λΐµ·§.
-]	java:S125\"<This block of commented-out lines of code should be removed.(½Σχόÿÿÿÿ8‹—«¶§.
-y
-java:S1450."\Remove the "mWifiLocation" field and declare it as a local variable in the relevant methods.(±ψ¥8 ³βµ§.
 T
 java:S1135a"2Complete the task associated to this TODO comment.(ρ¬ςΖωÿÿÿÿ8 ³βµ§.
+N
+java:S1068."1Remove this unused "mWifiLocation" private field.(±ψ¥8εΪαµ§.
+}
+java:S1450-"`Remove the "mFileOutputStream" field and declare it as a local variable in the relevant methods.(ª²ϋ8‹—«¶§.
 R
 java:S1068("0Remove this unused "mWifiManager" private field.(£°›πώÿÿÿÿ8‹—«¶§.
+]	java:S125b"<This block of commented-out lines of code should be removed.(ιΨ»Ϊϋÿÿÿÿ8‹—«¶§.
 X
 java:S1068'";Remove this unused "mWifiLocationRepository" private field.(¦υΩ‹8‹—«¶§.
+}
+java:S1450("[Remove the "mWifiManager" field and declare it as a local variable in the relevant methods.(£°›πώÿÿÿÿ8‹—«¶§.

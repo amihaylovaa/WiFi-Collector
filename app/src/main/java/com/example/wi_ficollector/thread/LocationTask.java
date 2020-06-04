@@ -1,10 +1,7 @@
 package com.example.wi_ficollector.thread;
 
 
-import android.location.Location;
-
 import com.example.wi_ficollector.repository.WifiLocationRepository;
-import com.example.wi_ficollector.wrapper.WifiLocation;
 
 import java.io.FileOutputStream;
 import java.util.concurrent.CountDownLatch;
@@ -12,7 +9,6 @@ import java.util.concurrent.CountDownLatch;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import static com.example.wi_ficollector.utils.Constants.isAlreadyScanned;
 
 public class LocationTask implements Runnable {
 
@@ -33,7 +29,6 @@ public class LocationTask implements Runnable {
     @Override
     public void run() {
         if (isWifiScanningSucceeded) {
-            isAlreadyScanned = false;
             try {
                 mCountDownLatch.await();
             } catch (InterruptedException e) {

@@ -18,10 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.work.*;
 
 import com.example.wi_ficollector.R;
-import com.example.wi_ficollector.*;
 import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
@@ -34,7 +32,6 @@ import com.google.android.gms.tasks.Task;
 import java.io.*;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
@@ -43,7 +40,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private FileOutputStream mFileOutputStream;
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
-    private WorkManager mWorkManager;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
@@ -60,12 +56,8 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         setContentView(R.layout.activity_scan);
         initializeFields();
 
-        if (!isBackgroundPermissionRequestRequired()) {
-            createBackgroundTask();
-        } else {
-            if (mScanPreference.isActivityFirstTimeLaunched()) {
-                mScanPreference.addBackgroundPermissionRationaleKey();
-            }
+        if (isBackgroundPermissionRequestRequired() && mScanPreference.isActivityFirstTimeLaunched()) {
+            mScanPreference.addBackgroundPermissionRationaleKey();
         }
 
         requestLocationPermission();
@@ -93,8 +85,8 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     public void createLocationRequest() {
         mLocationRequest = new LocationRequest();
 
-        mLocationRequest.setInterval(TWO_MINUTES);
-        mLocationRequest.setFastestInterval(ONE_MINUTE);
+        mLocationRequest.setInterval(FIVE_SECONDS);
+        mLocationRequest.setFastestInterval(THREE_SECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -158,7 +150,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
     public void requestBackgroundPermission() {
         if (isBackgroundLocationPermissionGranted()) {
-            createBackgroundTask();
+            // todo handling
         } else {
             if (mScanPreference.shouldShowBackgroundPermissionRequestRationale()) {
                 showBackgroundPermissionRequestRationale();
@@ -192,11 +184,11 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
     private void handleBackgroundPermissionRequestResult(int grantResult, String permission) {
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
-            createBackgroundTask();
+            // todo handling
         } else {
             if (!shouldShowRequestPermissionRationale(permission)) {
                 mScanPreference.stopShowBackgroundPermissionRequestRationale();
-                mWorkManager.cancelAllWork();
+                // todo handling
             }
         }
     }
@@ -231,42 +223,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         registerReceiver(mWifiReceiver, intentFilter);
     }
 
-    void createBackgroundTask() {
-        String uniqueWorkName = "Wi-Fi location collector";
-        PeriodicWorkRequest periodicWork = createPeriodicWorkRequest();
-
-        mWorkManager.
-                enqueueUniquePeriodicWork(uniqueWorkName,
-                        ExistingPeriodicWorkPolicy.REPLACE,
-                        periodicWork);
-
-        findBackgroundWorkRequest(periodicWork);
-    }
-
-    private PeriodicWorkRequest createPeriodicWorkRequest() {
-        String workerRequestTag = "Background location worker ";
-        Constraints constraints = new Constraints.Builder()
-                .setRequiresBatteryNotLow(true)
-                .build();
-
-        return new PeriodicWorkRequest
-                .Builder(WifiLocationBackgroundWorker.class, 15, TimeUnit.MINUTES)
-                .addTag(workerRequestTag)
-                .setConstraints(constraints)
-                .setInitialDelay(5, TimeUnit.MINUTES)
-                .build();
-    }
-
-    private void findBackgroundWorkRequest(PeriodicWorkRequest periodicWork) {
-        mWorkManager.getWorkInfoByIdLiveData(periodicWork.getId()).observe(
-                this, workInfo -> {
-                    if (workInfo != null && workInfo.getState() == WorkInfo.State.FAILED) {
-                        // TODO add notification
-                    }
-                }
-        );
-    }
-
     private void requestLocationUpdates() {
         try {
             mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
@@ -290,7 +246,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                 isWifiScanningSucceeded = mWifiManager.startScan();
                 UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
                 LocationTask locationTask = new LocationTask(mWifiLocationRepository, mFileOutputStream,
-                         isWifiScanningSucceeded, mCountDownLatch);
+                        isWifiScanningSucceeded, mCountDownLatch);
                 new Thread(locationTask).start();
                 new Thread(uiUpdateTask).start();
             }
@@ -310,7 +266,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        mWorkManager = WorkManager.getInstance(getApplicationContext());
         mScanPreference = new ScanPreference(this);
         mGPSEnablingThread = new Thread(this::enableGPS);
         mWifiLocation = WifiLocation.getWifiLocation();
@@ -338,16 +293,10 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
-        mWorkManager.cancelAllWork();
         unregisterReceiver(mWifiReceiver);
+        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         try {
             mFileOutputStream.close();
         } catch (IOException e) {

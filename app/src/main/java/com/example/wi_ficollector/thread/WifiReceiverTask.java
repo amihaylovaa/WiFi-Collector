@@ -9,8 +9,6 @@ import com.example.wi_ficollector.wrapper.WifiLocation;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-
-import static com.example.wi_ficollector.utils.Constants.isAlreadyScanned;
 import static com.example.wi_ficollector.utils.Constants.numberFoundWifiNetworks;
 
 public class WifiReceiverTask implements Runnable {
@@ -24,17 +22,16 @@ public class WifiReceiverTask implements Runnable {
         this.mIntent = mIntent;
         this.mContext = mContext;
         this.mCountDownLatch = mCountDownLatch;
-        this.mWifiLocation =  mWifiLocation;
+        this.mWifiLocation = mWifiLocation;
     }
 
     @Override
     public void run() {
         WifiManager wifiManager = (WifiManager) this.mContext.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = mIntent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
-        if (!isAlreadyScanned && hasSuccess) {
+        if (hasSuccess) {
             List<ScanResult> scanResults = wifiManager.getScanResults();
             setScanResults(scanResults);
-            isAlreadyScanned = true;
             if (mCountDownLatch != null) {
                 mCountDownLatch.countDown();
             }

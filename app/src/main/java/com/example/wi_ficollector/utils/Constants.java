@@ -1,9 +1,6 @@
 package com.example.wi_ficollector.utils;
 
 import android.Manifest;
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
 
 public final class Constants {
 
@@ -17,9 +14,8 @@ public final class Constants {
     public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during closing file stream";
     public static final String ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
-    public static boolean isAlreadyScanned = true;
-    public static final int ONE_MINUTE = 60 * 1000;
-    public static final int TWO_MINUTES = 2 * 60 * 1000;
+    public static final int FIVE_SECONDS = 5000;
+    public static final int THREE_SECONDS = 3000;
     public static final int TEN_SECONDS = 10_000;
     public static final String FILE_NAME = "Location_Wifi.gpx";
     public static final int FINE_LOCATION_PERMISSION_CODE = 87;
