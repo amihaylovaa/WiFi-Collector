@@ -29,10 +29,9 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
-import java.io.*;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -41,7 +40,6 @@ import static com.example.wi_ficollector.utils.Constants.*;
 
 public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     boolean isWifiScanningSucceeded;
-    private FileOutputStream mFileOutputStream;
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -220,7 +218,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     private void registerWiFiReceiver() {
-        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mFileOutputStream);
+        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository);
         IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 
         registerReceiver(mWifiReceiver, intentFilter);
@@ -250,12 +248,16 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                     mWifiLocation.setLocation(location);
                     isWifiScanningSucceeded = mWifiManager.startScan();
                     if (!isWifiScanningSucceeded) {
-                        try {
+                       // try {
                             // wifi scan - null
-                            mWifiLocationRepository.saveWiFiLocation(mFileOutputStream, ScanActivity.this);
-                        } catch (IOException | TransformerException | ParserConfigurationException e) {
-
+                        try {
+                            mWifiLocationRepository.saveWiFiLocation(ScanActivity.this);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
+                        // } catch (TransformerException | ParserConfigurationException e) {
+
+                        //}
                     } else {
                         UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
                         new Thread(uiUpdateTask).start();
@@ -266,8 +268,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     private void initializeFields() {
-        openFileOutputStream();
-
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mScanPreference = new ScanPreference(this);
@@ -277,14 +277,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         tv = findViewById(R.id.numberOfWifiNetworks);
 
         tv.setText(String.valueOf(numberFoundWifiNetworks));
-    }
-
-    private void openFileOutputStream() {
-        try {
-            mFileOutputStream = this.openFileOutput(FILE_NAME, MODE_APPEND);
-        } catch (FileNotFoundException exception) {
-            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MESSAGE);
-        }
     }
 
     @Override
@@ -300,10 +292,5 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         super.onDestroy();
         unregisterReceiver(mWifiReceiver);
         mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-        try {
-            mFileOutputStream.close();
-        } catch (IOException e) {
-            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-        }
     }
 }

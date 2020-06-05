@@ -17,7 +17,7 @@ public final class Constants {
     public static final int FIVE_SECONDS = 5000;
     public static final int THREE_SECONDS = 3000;
     public static final int TEN_SECONDS = 10_000;
-    public static final String FILE_NAME = "Location_Wifi.txt";
+    public static final String FILE_NAME = "Location_Wifi.gpx";
     public static final int FINE_LOCATION_PERMISSION_CODE = 87;
     public static final int BACKGROUND_LOCATION_PERMISSION_CODE = 43;
     public static final int REQUEST_LOCATION_SETTINGS_CODE = 104;

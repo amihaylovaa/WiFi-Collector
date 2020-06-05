@@ -24,14 +24,12 @@ import static com.example.wi_ficollector.utils.Constants.numberFoundWifiNetworks
 public class WiFiReceiver extends BroadcastReceiver {
 
     private WifiLocation mWifiLocation;
-    private FileOutputStream fileOutputStream;
     private WifiLocationRepository mWifiLocationRepository;
     private Context context;
 
-    public WiFiReceiver(WifiLocationRepository mWifiLocationRepository, FileOutputStream fileOutputStream) {
+    public WiFiReceiver(WifiLocationRepository mWifiLocationRepository) {
         this.mWifiLocationRepository = mWifiLocationRepository;
-        this.fileOutputStream = fileOutputStream;
-        this.mWifiLocation = mWifiLocationRepository.getmWifiLocation();
+        this.mWifiLocation = mWifiLocationRepository.getWifiLocation();
     }
 
     @Override
@@ -53,14 +51,13 @@ public class WiFiReceiver extends BroadcastReceiver {
             LocalTime savedLocationTime = mWifiLocation.getLocalTime();
             if (savedLocationTime != null) {
                 // when there's no location (location null)
-                // todo fix bug with time
                 long difference = ChronoUnit.SECONDS.between(savedLocationTime, foundNetworksTime);
 
                 if (difference <= 3) {
                     try {
                         numberFoundWifiNetworks += scanResults.size();
-                        mWifiLocationRepository.saveWiFiLocation(fileOutputStream, context);
-                    } catch (IOException | TransformerException | ParserConfigurationException e) {
+                        mWifiLocationRepository.saveWiFiLocation(context);
+                    } catch (IOException e) {
 
                     }
                 }

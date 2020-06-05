@@ -1,12 +1,12 @@
 
-]
-java:S1128#"@Remove this unused import 'java.util.concurrent.CountDownLatch'.(¤ƒτ§8«Πϊ§.
 P
-java:S1135Ύ"2Complete the task associated to this TODO comment.(ƒ’¥8½ψω§.
+java:S1135™"2Complete the task associated to this TODO comment.(ƒ’¥8­›ω§.
 P
-java:S1135Β"2Complete the task associated to this TODO comment.(ƒ’¥8ΙΊω§.
+java:S1135Ώ"2Complete the task associated to this TODO comment.(ƒ’¥8ΙΊω§.
+O
+java:S1128"-Remove this unused import 'android.util.Log'.(Τ¦Ψ²ψÿÿÿÿ8Γ‰Ϋ¨.
 P
-java:S1135"2Complete the task associated to this TODO comment.(ƒ’¥8­›ω§.
-K	java:S108€")Either remove or fill this block of code.(ΉΨΩύÿÿÿÿ8Γφό§.
+java:S1135»"2Complete the task associated to this TODO comment.(ƒ’¥8½ψω§.
 P
-java:S1135Ψ"2Complete the task associated to this TODO comment.(ψη‡›8­›ω§.
+java:S1135Υ"2Complete the task associated to this TODO comment.(ψη‡›8­›ω§.
+K	java:S108ύ")Either remove or fill this block of code.(¥’‘ϋÿÿÿÿ8Γφό§.
