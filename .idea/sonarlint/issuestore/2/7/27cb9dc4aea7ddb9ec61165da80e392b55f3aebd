@@ -1,3 +1,12 @@
 
 V
-java:S1172"4Remove this unused method parameter "mWifiLocation".(ù ˜”úÿÿÿÿ8««ü§.
+java:S1172""4Remove this unused method parameter "mWifiLocation".(ù ˜”úÿÿÿÿ8««ü§.
+Z
+java:S1144["=Remove this unused private "createWiFiScanResultsMap" method.(Øüü¯8ßôÔ‰¨.
+P
+java:S1068".Remove this unused "mGPXParser" private field.(ê¾æâúÿÿÿÿ8ºØø‡¨.
+Q
+java:S1068"4Remove this unused "mExtensionParser" private field.(ºÇÕÕ8ºØø‡¨.
+E
+java:S1068"(Remove this unused "mGPX" private field.(‹ ®ò8ºØø‡¨.
+]	java:S125*"<This block of commented-out lines of code should be removed.(¶ÊÈ¨şÿÿÿÿ8ºØø‡¨.

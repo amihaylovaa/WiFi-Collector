@@ -13,6 +13,7 @@ import com.example.wi_ficollector.wrapper.WifiLocation;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,6 +26,7 @@ public class WiFiReceiver extends BroadcastReceiver {
     private WifiLocation mWifiLocation;
     private FileOutputStream fileOutputStream;
     private WifiLocationRepository mWifiLocationRepository;
+    private Context context;
 
     public WiFiReceiver(WifiLocationRepository mWifiLocationRepository, FileOutputStream fileOutputStream) {
         this.mWifiLocationRepository = mWifiLocationRepository;
@@ -34,6 +36,7 @@ public class WiFiReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        this.context = context;
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
         if (hasSuccess) {
@@ -46,18 +49,17 @@ public class WiFiReceiver extends BroadcastReceiver {
         Log.d("Receiver data", String.valueOf(scanResults.size()));
         if (scanResults != null && scanResults.size() > 0) {
             mWifiLocation.setScanResults(scanResults);
-            LocalTime localTime = LocalTime.now();
-            if (mWifiLocation.getLocalTime() != null) {
+            LocalTime foundNetworksTime = LocalTime.now();
+            LocalTime savedLocationTime = mWifiLocation.getLocalTime();
+            if (savedLocationTime != null) {
                 // when there's no location (location null)
                 // todo fix bug with time
-                // 4
-                int secondLocation = mWifiLocation.getLocalTime().getSecond();
-                int difference = localTime.getSecond() - secondLocation;
+                long difference = ChronoUnit.SECONDS.between(savedLocationTime, foundNetworksTime);
 
                 if (difference <= 3) {
                     try {
                         numberFoundWifiNetworks += scanResults.size();
-                        mWifiLocationRepository.saveWiFiLocation(fileOutputStream);
+                        mWifiLocationRepository.saveWiFiLocation(fileOutputStream, context);
                     } catch (IOException | TransformerException | ParserConfigurationException e) {
 
                     }

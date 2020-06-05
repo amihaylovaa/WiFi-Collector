@@ -1,5 +1,6 @@
 package com.example.wi_ficollector.repository;
 
+import android.content.Context;
 import android.location.Location;
 import android.net.wifi.ScanResult;
 import android.util.Log;
@@ -24,6 +25,8 @@ import java.util.TimeZone;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import static com.example.wi_ficollector.utils.Constants.FILE_NAME;
+
 public class WifiLocationRepository {
 
     private GPX mGPX;
@@ -38,7 +41,7 @@ public class WifiLocationRepository {
         this.mWifiLocation = WifiLocation.getWifiLocation();
     }
 
-    public synchronized void saveWiFiLocation(FileOutputStream fileOutputStream) throws TransformerException, ParserConfigurationException, IOException {
+    public synchronized void saveWiFiLocation(FileOutputStream fileOutputStream, Context context) throws TransformerException, ParserConfigurationException, IOException {
       /*  Track track = new Track();
         Waypoint waypoint = new Waypoint();
         ArrayList<Waypoint> wayPoints = new ArrayList<>();
@@ -62,7 +65,7 @@ public class WifiLocationRepository {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
 
-        OutputStreamWriter osw = new OutputStreamWriter(fileOutputStream);
+        OutputStreamWriter osw = new OutputStreamWriter(context.openFileOutput(FILE_NAME, context.MODE_APPEND));
         String fileContent = "Latitude :" + latitude + "\n Longitude : " + longitude + "\n";
         LocalDateTime localDateTime = LocalDateTime.now();
         try {
