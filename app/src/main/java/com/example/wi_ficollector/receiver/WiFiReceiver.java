@@ -10,22 +10,21 @@ import android.util.Log;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
 import com.example.wi_ficollector.wrapper.WifiLocation;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
+import static com.example.wi_ficollector.utils.Constants.IO_EXCEPTION_THROWN_MESSAGE;
+import static com.example.wi_ficollector.utils.Constants.IO_EXCEPTION_THROWN_TAG;
 import static com.example.wi_ficollector.utils.Constants.numberFoundWifiNetworks;
 
 public class WiFiReceiver extends BroadcastReceiver {
 
     private WifiLocation mWifiLocation;
     private WifiLocationRepository mWifiLocationRepository;
-    private Context context;
+    private Context mContext;
 
     public WiFiReceiver(WifiLocationRepository mWifiLocationRepository) {
         this.mWifiLocationRepository = mWifiLocationRepository;
@@ -34,34 +33,44 @@ public class WiFiReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        this.context = context;
+        mContext = context;
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
-        if (hasSuccess) {
+
+        if (hasSuccess && wifiManager != null) {
             List<ScanResult> scanResults = wifiManager.getScanResults();
             setScanResults(scanResults);
         }
     }
 
     private void setScanResults(List<ScanResult> scanResults) {
-        Log.d("Receiver data", String.valueOf(scanResults.size()));
         if (scanResults != null && scanResults.size() > 0) {
             mWifiLocation.setScanResults(scanResults);
-            LocalTime foundNetworksTime = LocalTime.now();
-            LocalTime savedLocationTime = mWifiLocation.getLocalTime();
-            if (savedLocationTime != null) {
-                // when there's no location (location null)
-                long difference = ChronoUnit.SECONDS.between(savedLocationTime, foundNetworksTime);
-
-                if (difference <= 3) {
-                    try {
-                        numberFoundWifiNetworks += scanResults.size();
-                        mWifiLocationRepository.saveWiFiLocation(context);
-                    } catch (IOException e) {
-
-                    }
-                }
+            if (shouldStoreScanResults()) {
+                storeScanResults(scanResults);
             }
+        }
+    }
+
+    private boolean shouldStoreScanResults() {
+        LocalTime foundNetworksTime = LocalTime.now();
+        LocalTime savedLocationTime = mWifiLocation.getLocalTime();
+        long difference = 0L;
+
+        // location null
+        if (savedLocationTime != null) {
+            difference = ChronoUnit.SECONDS.between(savedLocationTime, foundNetworksTime);
+        }
+
+        return difference <= 3L;
+    }
+
+    private void storeScanResults(List<ScanResult> scanResults) {
+        try {
+            numberFoundWifiNetworks += scanResults.size();
+            mWifiLocationRepository.saveWiFiLocation(mContext);
+        } catch (IOException e) {
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
     }
 }

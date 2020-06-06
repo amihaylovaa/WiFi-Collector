@@ -8,112 +8,147 @@ import android.util.Xml;
 
 import com.example.wi_ficollector.wrapper.WifiLocation;
 
-import org.alternativevision.gpx.GPXParser;
-import org.alternativevision.gpx.beans.GPX;
-import org.alternativevision.gpx.beans.Track;
-import org.alternativevision.gpx.beans.Waypoint;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.nio.channels.FileChannel;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.SimpleTimeZone;
-import java.util.TimeZone;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import java.util.List;
 
 import static android.content.Context.MODE_APPEND;
-import static com.example.wi_ficollector.utils.Constants.FILE_NAME;
-import static com.example.wi_ficollector.utils.Constants.FILE_NOT_FOUND_EXCEPTION_MESSAGE;
-import static com.example.wi_ficollector.utils.Constants.FILE_NOT_FOUND_EXCEPTION_TAG;
-import static com.example.wi_ficollector.utils.Constants.IO_EXCEPTION_THROWN_MESSAGE;
-import static com.example.wi_ficollector.utils.Constants.IO_EXCEPTION_THROWN_TAG;
+import static com.example.wi_ficollector.utils.Constants.*;
 
 public class WifiLocationRepository {
 
     private FileOutputStream mFileOutputStream;
     private WifiLocation mWifiLocation;
+    private boolean isAppLaunched;
+    private XmlSerializer serializer;
     private Context mContext;
 
-    public WifiLocationRepository(WifiLocation mWifiLocation) {
+    public WifiLocationRepository(boolean isAppLaunched) {
         this.mWifiLocation = WifiLocation.getWifiLocation();
+        this.isAppLaunched = isAppLaunched;
+        serializer = Xml.newSerializer();
     }
 
     public synchronized void saveWiFiLocation(Context context) throws IOException {
         mContext = context;
-        openFileOutputStream();
         Location location = mWifiLocation.getLocation();
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        List<ScanResult> scanResults = mWifiLocation.getScanResults();
-        FileInputStream fIn = mContext.openFileInput(FILE_NAME);
-        FileChannel channel = fIn.getChannel();
-        if (channel.size() == 0) {
-            fIn.close();
-            addTags();
-        } else {
-            addData(latitude, longitude, scanResults);
+
+        if (location != null) {
+            openFileOutputStream();
+
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            List<ScanResult> scanResults = mWifiLocation.getScanResults();
+
+            if (isFileEmpty()) {
+                addGPXDeclaration();
+                addBasicGPXTags(latitude, longitude, scanResults);
+            } else {
+                saveWifiLocationInNonEmptyFile(latitude, longitude, scanResults);
+            }
+            mWifiLocation.clearFields();
+            closeFileOutputStream();
         }
-
-        mWifiLocation.clearFields();
-        closeFileOutputStream();
     }
 
-    private void addTags() throws IOException {
-        XmlSerializer serializer = Xml.newSerializer();
-        serializer.setOutput(mFileOutputStream, "UTF-8");
-        serializer.startDocument("UTF-8", null);
-        serializer.startTag("", "gpx")
-                .attribute("", "xmlns", "http://www.topografix.com/GPX/1/1")
-                .attribute("", "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
-                .attribute("", "xsi:schemaLocation", "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd");
-        serializer.endTag("", "gpx");
-        serializer.endDocument();
-    }
-
-    private void addData(double latitude, double longitude, List<ScanResult> scanResults) throws IOException {
-        XmlSerializer serializer = Xml.newSerializer();
-        serializer.setOutput(mFileOutputStream, "UTF-8");
-        serializer.startDocument("", null);
-        serializer.startTag("", "trk");
-        serializer.startTag("", "trkseg");
-        serializer.startTag("", "trkpt")
-                .attribute("", "lat", String.valueOf(latitude))
-                .attribute("", "lon", String.valueOf(longitude));
-        serializer.endTag("", "trkpt");
-        serializer.endTag("", "trkseg");
-        serializer.endTag("", "trk");
-        serializer.endTag("", "gpx");
-        serializer.endDocument();
-    }
-
-    private HashMap<String, Object> createWiFiScanResultsMap() {
-        HashMap<String, Object> results = new HashMap<>();
-
-        if (mWifiLocation.getScanResults() != null) {
-            int id = 0;
-            for (ScanResult scanResult : mWifiLocation.getScanResults()) {
-                results.put("SSID" + id, scanResult.SSID);
-                results.put("RSSI" + id, scanResult.level);
-                results.put("BSSID" + id, scanResult.BSSID);
-                results.put("capabilities" + id, scanResult.capabilities);
-                ++id;
+    private void saveWifiLocationInNonEmptyFile(double latitude, double longitude, List<ScanResult> scanResults) throws IOException {
+        if (isAppLaunched) {
+            if (areLocationLatitudeValid(latitude, longitude)) {
+                addBasicGPXTags(latitude, longitude, scanResults);
+            }
+        } else {
+            if (areLocationLatitudeValid(latitude, longitude)) {
+                addTrackPoints(latitude, longitude, scanResults);
             }
         }
-        Log.d("Storing data", String.valueOf(results.size()));
-        return results;
+    }
+
+    private boolean areLocationLatitudeValid(double latitude, double longitude) {
+        return (latitude != 0.0 && longitude != 0.0);
+    }
+
+    private boolean isFileEmpty() throws IOException {
+        FileInputStream fileInputStream = mContext.openFileInput(FILE_NAME);
+        FileChannel channel = fileInputStream.getChannel();
+
+        return channel.size() == 0;
+    }
+
+    private void addGPXDeclaration() throws IOException {
+        serializer.setOutput(mFileOutputStream, ENCODING);
+        serializer.startDocument(ENCODING, false);
+        serializer.startTag(NO_NAMESPACE, GPX_TAG)
+                // todo check what is it
+                .attribute(NO_NAMESPACE, XML_NAMESPACE, GPX_NAMESPACE)
+                .attribute(NO_NAMESPACE, XMLNS_XSI, XML_INSTANCE)
+                .attribute(NO_NAMESPACE, XSI_SCHEMA_LOCATION, SCHEMA_LOCATION);
+        serializer.endDocument();
+
+        isAppLaunched = false;
+    }
+
+    private void addBasicGPXTags(double latitude, double longitude, List<ScanResult> scanResults) throws IOException {
+        LocalDateTime now = LocalDateTime.now();
+
+        serializer.setOutput(mFileOutputStream, ENCODING);
+        serializer.startTag(NO_NAMESPACE, TRACK_TAG);
+        serializer.startTag(NO_NAMESPACE, TRACK_SEGMENT_TAG);
+        serializer.startTag(NO_NAMESPACE, TRACK_POINT_TAG)
+                .attribute(NO_NAMESPACE, LATITUDE, String.valueOf(latitude))
+                .attribute(NO_NAMESPACE, LONGITUDE, String.valueOf(longitude));
+        serializer.startTag(NO_NAMESPACE, TIME_TAG);
+        serializer.text(String.valueOf(now));
+        serializer.endTag(NO_NAMESPACE, TIME_TAG);
+        serializer.startTag(NO_NAMESPACE, EXTENSIONS_TAG);
+        if (scanResults != null) {
+            for (ScanResult scanResult : scanResults) {
+                serializer.startTag(NO_NAMESPACE, WIFI_TAG);
+                serializer.startTag(NO_NAMESPACE, SSID_TAG).text(scanResult.SSID).endTag(NO_NAMESPACE, SSID_TAG);
+                serializer.startTag(NO_NAMESPACE, BSSID_TAG).text(scanResult.BSSID).endTag(NO_NAMESPACE, BSSID_TAG);
+                serializer.startTag(NO_NAMESPACE, RSSI_TAG).text(String.valueOf(scanResult.level)).endTag(NO_NAMESPACE, RSSI_TAG);
+                serializer.startTag(NO_NAMESPACE, FREQUENCY_TAG).text(String.valueOf(scanResult.frequency)).endTag(NO_NAMESPACE, FREQUENCY_TAG);
+                serializer.endTag(NO_NAMESPACE, WIFI_TAG);
+            }
+        }
+        serializer.endTag(NO_NAMESPACE, EXTENSIONS_TAG);
+        serializer.endTag(NO_NAMESPACE, TRACK_POINT_TAG);
+    }
+
+    private void addTrackPoints(double latitude, double longitude, List<ScanResult> scanResults) throws IOException {
+        LocalDateTime now = LocalDateTime.now();
+
+        serializer.setOutput(mFileOutputStream, ENCODING);
+        serializer.startTag(NO_NAMESPACE, TRACK_POINT_TAG)
+                .attribute(NO_NAMESPACE, LATITUDE, String.valueOf(latitude))
+                .attribute(NO_NAMESPACE, LONGITUDE, String.valueOf(longitude));
+        serializer.startTag(NO_NAMESPACE, TIME_TAG);
+        serializer.text(String.valueOf(now));
+        serializer.endTag(NO_NAMESPACE, TIME_TAG);
+        addWifiNetworks(scanResults);
+    }
+
+    private void addWifiNetworks(List<ScanResult> scanResults) throws IOException {
+        serializer.startTag(NO_NAMESPACE, EXTENSIONS_TAG);
+        if (scanResults != null) {
+            for (ScanResult scanResult : scanResults) {
+                serializer.startTag(NO_NAMESPACE, WIFI_TAG);
+                serializer.startTag(NO_NAMESPACE, SSID_TAG).text(scanResult.SSID).endTag(NO_NAMESPACE, SSID_TAG);
+                serializer.startTag(NO_NAMESPACE, BSSID_TAG).text(scanResult.BSSID).endTag(NO_NAMESPACE, BSSID_TAG);
+                serializer.startTag(NO_NAMESPACE, RSSI_TAG).text(String.valueOf(scanResult.level)).endTag(NO_NAMESPACE, RSSI_TAG);
+                serializer.startTag(NO_NAMESPACE, FREQUENCY_TAG).text(String.valueOf(scanResult.frequency)).endTag(NO_NAMESPACE, FREQUENCY_TAG);
+                serializer.endTag(NO_NAMESPACE, WIFI_TAG);
+            }
+        }
+        serializer.endTag(NO_NAMESPACE, EXTENSIONS_TAG);
+        serializer.endTag(NO_NAMESPACE, TRACK_POINT_TAG);
+        serializer.endDocument();
     }
 
     public WifiLocation getWifiLocation() {
