@@ -7,7 +7,6 @@ public final class Constants {
     private Constants() {
     }
 
-    public static boolean isAppLaunched = true;
     public static int numberFoundWifiNetworks = 0;
     public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
     public static final String FILE_NOT_FOUND_EXCEPTION_MESSAGE = "File does not exist, but is going to be created";
@@ -34,7 +33,7 @@ public final class Constants {
     public static final String RSSI_TAG = "RSSI";
     public static final String FREQUENCY_TAG = "frequency";
     public static final String FILE_NAME = "Location_Wifi.gpx";
-    public static final String XML_NAMESPACE = "xmlns";
+    public static final String XMLNS_ATTRIBUTE = "xmlns";
     public static final String GPX_NAMESPACE = "http://www.topografix.com/GPX/1/1";
     public static final String XSI_SCHEMA_LOCATION = "xsi:schemaLocation";
     public static final String SCHEMA_LOCATION = "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd";

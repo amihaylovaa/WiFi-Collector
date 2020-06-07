@@ -1,39 +1,3 @@
 
-V
-java:S11722"4Remove this unused method parameter "mWifiLocation".(ù ˜”úÿÿÿÿ8şäÖ¨.
-P
-java:S1128"3Remove this unused import 'java.io.BufferedReader'.(€é²Å8¹Áó²¨.
-_
-java:S1128"BRemove this unused import 'org.alternativevision.gpx.beans.Track'.(¸Åá¿8òÍ ¥¨.
-H
-java:S1128"+Remove this unused import 'java.util.Date'.(¸…¼ü8òÍ ¥¨.
-T
-java:S1172V"2Remove this unused method parameter "scanResults".(ÜŒìÇşÿÿÿÿ8‰¶¯³¨.
-b
-java:S1128"@Remove this unused import 'org.alternativevision.gpx.beans.GPX'.(ìæİäûÿÿÿÿ8Íú¥¥¨.
-b
-java:S1128"ERemove this unused import 'org.alternativevision.gpx.beans.Waypoint'.(¸€ÎÕ8òÍ ¥¨.
-Q
-java:S1128 "/Remove this unused import 'java.util.TimeZone'.(à‡Õùÿÿÿÿ8òÍ ¥¨.
-b
-java:S1128"@Remove this unused import 'org.alternativevision.gpx.GPXParser'.(¬ºÒ›ùÿÿÿÿ8Íú¥¥¨.
-Q
-java:S1128"/Remove this unused import 'java.io.FileReader'.(Â¡¢äşÿÿÿÿ8´ú¢³¨.
-g
-java:S1128#"ERemove this unused import 'javax.xml.transform.TransformerException'.(¨Û¥üÿÿÿÿ8çßÎ¨¨.
-W
-java:S1128"5Remove this unused import 'java.util.SimpleTimeZone'.(¨Ñö‹úÿÿÿÿ8òÍ ¥¨.
-T
-java:S1128"7Remove this unused import 'java.io.OutputStreamWriter'.(Ÿ“¸8°Øá¨.
-Z
-java:S1144f"=Remove this unused private "createWiFiScanResultsMap" method.(Øüü¯8‰¶¯³¨.
-b
-java:S1192L"FDefine a constant instead of duplicating this literal "UTF-8" 3 times.(Ô°‰8ÕíÀ³¨.
-V
-java:S1128"4Remove this unused import 'java.time.LocalDateTime'.(æÃ§ƒüÿÿÿÿ8°Øá¨.
-m
-java:S1128""KRemove this unused import 'javax.xml.parsers.ParserConfigurationException'.(ûıƒøÿÿÿÿ8çßÎ¨¨.
-M
-java:S1128"0Remove this unused import 'java.util.ArrayList'.(÷‰îƒ8òÍ ¥¨.
-F
-java:S1128")Remove this unused import 'java.io.File'.(†Ğ¥Å8´ú¢³¨.
+O
+java:S1135X"2Complete the task associated to this TODO comment.(†ìéã8à°şÛ¨.

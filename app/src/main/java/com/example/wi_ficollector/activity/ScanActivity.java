@@ -9,6 +9,7 @@ import android.net.wifi.WifiManager;
 import android.os.*;
 
 import android.util.Log;
+import android.util.Xml;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,9 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
+import org.alternativevision.gpx.beans.GPX;
+import org.xmlpull.v1.XmlSerializer;
+
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
@@ -36,7 +40,7 @@ import java.util.List;
 import static com.example.wi_ficollector.utils.Constants.*;
 
 public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
-
+    private XmlSerializer serializer;
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -269,7 +273,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mScanPreference = new ScanPreference(this);
         mGPSEnablingThread = new Thread(this::enableGPS);
         mWifiLocation = WifiLocation.getWifiLocation();
-        mWifiLocationRepository = new WifiLocationRepository(isAppLaunched);
+        mWifiLocationRepository = new WifiLocationRepository(true);
         tv = findViewById(R.id.numberOfWifiNetworks);
 
         tv.setText(String.valueOf(numberFoundWifiNetworks));
@@ -278,6 +282,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     @Override
     protected void onRestart() {
         super.onRestart();
+        mWifiLocationRepository = new WifiLocationRepository(true);
         requestLocationPermission();
         tv.invalidate();
         tv.setText(String.valueOf(numberFoundWifiNetworks));

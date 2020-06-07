@@ -1,12 +1,3 @@
 
-Q
-java:S1128"5Remove this unused import 'java.io.FileOutputStream'.(˜«ªg8†¶è¨.
-g
-java:S1128"ERemove this unused import 'javax.xml.transform.TransformerException'.(¨Û¥üÿÿÿÿ8Õüä¨¨.
 X
-java:S2696:"6Make the enclosing method "static" or remove this set.(ğºÔŸøÿÿÿÿ8¬ïà‰¨.
-m
-java:S1128"KRemove this unused import 'javax.xml.parsers.ParserConfigurationException'.(ûıƒøÿÿÿÿ8Õüä¨¨.
-Y
-java:S25890"7Remove this expression which always evaluates to "true"(ÜºÖÚÿÿÿÿÿ8ğ¹Ó‰¨.
-E	java:S108<")Either remove or fill this block of code.(ï­£Ä8¼Ôä¨¨.
+java:S2696F"6Make the enclosing method "static" or remove this set.(ğºÔŸøÿÿÿÿ8º¬”×¨.
