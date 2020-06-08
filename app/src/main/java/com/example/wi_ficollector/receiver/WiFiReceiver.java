@@ -26,9 +26,9 @@ public class WiFiReceiver extends BroadcastReceiver {
     private WifiLocationRepository mWifiLocationRepository;
     private Context mContext;
 
-    public WiFiReceiver(WifiLocationRepository mWifiLocationRepository) {
+    public WiFiReceiver(WifiLocationRepository mWifiLocationRepository, WifiLocation mWifiLocation) {
         this.mWifiLocationRepository = mWifiLocationRepository;
-        this.mWifiLocation = mWifiLocationRepository.getWifiLocation();
+        this.mWifiLocation = mWifiLocation;
     }
 
     @Override

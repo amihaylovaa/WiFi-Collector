@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.example.wi_ficollector.R;
+import com.example.wi_ficollector.ScanActivityLifecycleObserver;
 import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
@@ -33,6 +34,8 @@ import com.google.android.gms.tasks.Task;
 import org.alternativevision.gpx.beans.GPX;
 import org.xmlpull.v1.XmlSerializer;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
@@ -40,7 +43,7 @@ import java.util.List;
 import static com.example.wi_ficollector.utils.Constants.*;
 
 public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
-    private XmlSerializer serializer;
+
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -65,6 +68,8 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         requestLocationPermission();
         receiveLocationResults();
         registerWiFiReceiver();
+        getLifecycle().addObserver(new ScanActivityLifecycleObserver(ScanActivity.this, mWifiLocationRepository));
+
     }
 
     public void enableGPS() {
@@ -219,7 +224,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     private void registerWiFiReceiver() {
-        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository);
+        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
         IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 
         registerReceiver(mWifiReceiver, intentFilter);
@@ -272,8 +277,8 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mScanPreference = new ScanPreference(this);
         mGPSEnablingThread = new Thread(this::enableGPS);
-        mWifiLocation = WifiLocation.getWifiLocation();
-        mWifiLocationRepository = new WifiLocationRepository(true);
+        mWifiLocation = new WifiLocation();
+        mWifiLocationRepository = new WifiLocationRepository(mWifiLocation,false);
         tv = findViewById(R.id.numberOfWifiNetworks);
 
         tv.setText(String.valueOf(numberFoundWifiNetworks));
@@ -282,7 +287,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     @Override
     protected void onRestart() {
         super.onRestart();
-        mWifiLocationRepository = new WifiLocationRepository(true);
         requestLocationPermission();
         tv.invalidate();
         tv.setText(String.valueOf(numberFoundWifiNetworks));

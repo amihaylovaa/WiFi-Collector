@@ -11,18 +11,6 @@ public class WifiLocation {
     private Location location;
     private LocalTime localTime;
     private List<ScanResult> wifiScanResults;
-    private static WifiLocation wifiLocation;
-
-    private WifiLocation() {
-
-    }
-
-    public static synchronized WifiLocation getWifiLocation() {
-        if (wifiLocation == null) {
-            wifiLocation = new WifiLocation();
-        }
-        return wifiLocation;
-    }
 
     public List<ScanResult> getScanResults() {
         return wifiScanResults;
@@ -49,11 +37,8 @@ public class WifiLocation {
         wifiScanResults.addAll(scanResults);
     }
 
-    public void clearFields() {
-        if (wifiScanResults != null) {
-            wifiScanResults.clear();
-        }
-        location.setLatitude(0.0);
-        location.setLongitude(0.0);
+    public void clearResults() {
+        location = null;
+
     }
 }

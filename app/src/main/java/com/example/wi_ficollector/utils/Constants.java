@@ -8,8 +8,9 @@ public final class Constants {
     }
 
     public static int numberFoundWifiNetworks = 0;
+    public static final String TRACK_POINTS_FILE_NAME = "TrackPoints.gpx";
     public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
-    public static final String FILE_NOT_FOUND_EXCEPTION_MESSAGE = "File does not exist, but is going to be created";
+    public static final String FILE_NOT_FOUND_EXCEPTION_MESSAGE = "File does not exist,  but is going to be created";
     public static final String IO_EXCEPTION_THROWN_TAG = "IO exception thrown";
     public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during working with file stream";
     public static final String ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
