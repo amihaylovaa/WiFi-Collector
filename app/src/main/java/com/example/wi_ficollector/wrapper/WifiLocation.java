@@ -12,6 +12,15 @@ public class WifiLocation {
     private LocalTime localTime;
     private List<ScanResult> wifiScanResults;
 
+    public WifiLocation(WifiLocation wifiLocation) {
+        this.location = wifiLocation.getLocation();
+        this.localTime = wifiLocation.getLocalTime();
+        this.wifiScanResults = new ArrayList<>(wifiLocation.getScanResults());
+    }
+
+    public WifiLocation() {
+    }
+
     public List<ScanResult> getScanResults() {
         return wifiScanResults;
     }
@@ -33,12 +42,11 @@ public class WifiLocation {
     }
 
     public void setScanResults(List<ScanResult> scanResults) {
-        wifiScanResults = new ArrayList<>();
-        wifiScanResults.addAll(scanResults);
+        wifiScanResults = new ArrayList<>(scanResults);
     }
 
     public void clearResults() {
         location = null;
-
+        wifiScanResults.clear();
     }
 }

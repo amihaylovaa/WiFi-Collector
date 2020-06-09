@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.preference.MainPreference;
+import com.example.wi_ficollector.repository.WifiLocationRepository;
 
 import static com.example.wi_ficollector.utils.Constants.INTRO;
 
@@ -40,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this, ScanActivity.class);
             startActivity(intent);
         } else {
-            // under construction
+         //   WifiLocationRepository wifiLocationRepository = new WifiLocationRepository();
+       //     wifiLocationRepository.endDocument();
         }
     }
 

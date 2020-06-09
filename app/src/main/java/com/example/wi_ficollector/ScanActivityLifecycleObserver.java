@@ -9,8 +9,6 @@ import androidx.lifecycle.OnLifecycleEvent;
 
 import com.example.wi_ficollector.repository.WifiLocationRepository;
 
-import java.io.IOException;
-
 public class ScanActivityLifecycleObserver implements LifecycleObserver {
 
     Context context;
@@ -21,12 +19,4 @@ public class ScanActivityLifecycleObserver implements LifecycleObserver {
         this.wifiLocationRepository = wifiLocationRepository;
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    public void onStopActivity() {
-        try {
-            wifiLocationRepository.endDocument();
-        } catch (IOException e) {
-
-        }
-    }
 }

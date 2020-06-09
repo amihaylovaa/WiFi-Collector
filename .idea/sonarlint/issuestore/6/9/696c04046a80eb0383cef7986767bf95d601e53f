@@ -1,15 +1,19 @@
 
 P
-java:S1135À"2Complete the task associated to this TODO comment.(Ÿƒ’¥8Ù¬‚™©.
+java:S1135Æ"2Complete the task associated to this TODO comment.(Ÿƒ’¥8Ù¬‚™©.
 P
-java:S1135Ä"2Complete the task associated to this TODO comment.(Ÿƒ’¥8Ù¬‚™©.
-P
-java:S1135Ú"2Complete the task associated to this TODO comment.(øç‡›8Ù¬‚™©.
-P
-java:S1068,".Remove this unused "serializer" private field.(Ÿµ©íøÿÿÿÿ8Ù¬‚™©.
+java:S1135Ü"2Complete the task associated to this TODO comment.(øç‡›8Ù¬‚™©.
 O
 java:S1128"-Remove this unused import 'android.util.Xml'.(ğ›¶Ûüÿÿÿÿ8´ùõƒ©.
-P
-java:S1135"2Complete the task associated to this TODO comment.(Ÿƒ’¥8Ù¬‚™©.
+Q
+java:S1128&"5Remove this unused import 'java.io.FileOutputStream'.(˜«ªg8ÛÆ¡®©.
 b
-java:S1128""@Remove this unused import 'org.alternativevision.gpx.beans.GPX'.(ìæİäûÿÿÿÿ8Ù¬‚™©.
+java:S1128""@Remove this unused import 'org.alternativevision.gpx.beans.GPX'.(ìæİäûÿÿÿÿ8ÛÆ¡®©.
+[
+java:S1128#"9Remove this unused import 'org.xmlpull.v1.XmlSerializer'.(Ñáİ¹ûÿÿÿÿ8ÛÆ¡®©.
+\
+java:S1128%":Remove this unused import 'java.io.FileNotFoundException'.(·î™ùÿÿÿÿ8ÛÆ¡®©.
+P
+java:S1135 "2Complete the task associated to this TODO comment.(Ÿƒ’¥8Ù¬‚™©.
+P
+java:S1135Â"2Complete the task associated to this TODO comment.(Ÿƒ’¥8Ù¬‚™©.

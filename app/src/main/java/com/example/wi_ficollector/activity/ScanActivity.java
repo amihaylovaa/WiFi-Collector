@@ -31,11 +31,6 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
-import org.alternativevision.gpx.beans.GPX;
-import org.xmlpull.v1.XmlSerializer;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
@@ -278,7 +273,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mScanPreference = new ScanPreference(this);
         mGPSEnablingThread = new Thread(this::enableGPS);
         mWifiLocation = new WifiLocation();
-        mWifiLocationRepository = new WifiLocationRepository(mWifiLocation,false);
+        mWifiLocationRepository = new WifiLocationRepository(mWifiLocation,true);
         tv = findViewById(R.id.numberOfWifiNetworks);
 
         tv.setText(String.valueOf(numberFoundWifiNetworks));
