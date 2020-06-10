@@ -9,7 +9,6 @@ import android.net.wifi.WifiManager;
 import android.os.*;
 
 import android.util.Log;
-import android.util.Xml;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -245,7 +244,10 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                 mWifiLocation.setLocalTime(LocalTime.now());
 
                 for (Location location : locations) {
-                    mWifiLocation.setLocation(location);
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    mWifiLocation.setLongitude(longitude);
+                    mWifiLocation.setLatitude(latitude);
                     startWifiScanning();
                 }
             }
@@ -254,10 +256,11 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
     private void startWifiScanning() {
         boolean isWifiScanningSucceeded = mWifiManager.startScan();
+
         if (!isWifiScanningSucceeded) {
             // wifi scan - null
             try {
-                mWifiLocationRepository.saveWiFiLocation(ScanActivity.this);
+                mWifiLocationRepository.saveWifiLocation();
             } catch (IOException e) {
                 Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
             }
@@ -273,7 +276,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mScanPreference = new ScanPreference(this);
         mGPSEnablingThread = new Thread(this::enableGPS);
         mWifiLocation = new WifiLocation();
-        mWifiLocationRepository = new WifiLocationRepository(mWifiLocation,true);
+        mWifiLocationRepository = new WifiLocationRepository(mWifiLocation, ScanActivity.this);
         tv = findViewById(R.id.numberOfWifiNetworks);
 
         tv.setText(String.valueOf(numberFoundWifiNetworks));
@@ -292,5 +295,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         super.onDestroy();
         unregisterReceiver(mWifiReceiver);
         mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        mWifiLocationRepository.closeFileOutputStream();
     }
 }

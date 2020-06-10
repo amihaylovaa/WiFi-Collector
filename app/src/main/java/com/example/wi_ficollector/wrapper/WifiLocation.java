@@ -8,14 +8,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WifiLocation {
-    private Location location;
+    private double latitude;
+    private double longitude;
     private LocalTime localTime;
     private List<ScanResult> wifiScanResults;
 
     public WifiLocation(WifiLocation wifiLocation) {
-        this.location = wifiLocation.getLocation();
+        this.latitude = wifiLocation.getLatitude();
+        this.longitude = wifiLocation.getLongitude();
         this.localTime = wifiLocation.getLocalTime();
         this.wifiScanResults = new ArrayList<>(wifiLocation.getScanResults());
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public WifiLocation() {
@@ -23,14 +41,6 @@ public class WifiLocation {
 
     public List<ScanResult> getScanResults() {
         return wifiScanResults;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
     }
 
     public LocalTime getLocalTime() {
@@ -46,7 +56,8 @@ public class WifiLocation {
     }
 
     public void clearResults() {
-        location = null;
+        latitude = 0.00;
+        longitude = 0.00;
         wifiScanResults.clear();
     }
 }

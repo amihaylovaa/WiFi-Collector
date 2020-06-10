@@ -1,5 +1,5 @@
 
-[
-java:S1128"9Remove this unused import 'androidx.lifecycle.Lifecycle'.(üÚûÁıÿÿÿÿ8Í¹×©.
 ]
 java:S1128"@Remove this unused import 'androidx.lifecycle.OnLifecycleEvent'.(ø®Üš8Í¹×©.
+[
+java:S1128"9Remove this unused import 'androidx.lifecycle.Lifecycle'.(üÚûÁıÿÿÿÿ8Í¹×©.

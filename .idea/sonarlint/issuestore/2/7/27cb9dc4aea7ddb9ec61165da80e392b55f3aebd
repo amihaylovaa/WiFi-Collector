@@ -1,10 +1,18 @@
 
-T
-java:S1135"2Complete the task associated to this TODO comment.(£Ç²úÿÿÿÿ8ïçÛÖ©.
-N
-java:S1068"1Remove this unused "isAppLaunched" private field.(¡ĞÛŠ8°¦ˆ×©.
-T
-java:S1135"2Complete the task associated to this TODO comment.(ÈüÔçÿÿÿÿÿ8Ëá×©.
-X	java:S125~"<This block of commented-out lines of code should be removed.(Ëƒ½8®ñá×©.
+Q
+java:S1144•"3Remove this unused private "addTrackPoints" method.(Şû¡8‡õ–ó©.
 _
-java:S1144F"=Remove this unused private "areLocationLatitudeValid" method.(£«Éûÿÿÿÿ8®ñá×©.
+java:S1144W"=Remove this unused private "areLocationLatitudeValid" method.(£«Éûÿÿÿÿ8«àÚñ©.
+T
+java:S1128"7Remove this unused import 'java.io.OutputStreamWriter'.(Ÿ“¸8Ûüİó©.
+X	java:S125R"<This block of commented-out lines of code should be removed.(îøú·8«àÚñ©.
+Y	java:S125"<This block of commented-out lines of code should be removed.(·ÎÂµ8Òö—ó©.
+K	java:S108Î")Either remove or fill this block of code.(âœ„Äúÿÿÿÿ8Ûüİó©.
+^	java:S125’"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ8©ÿ¨ó©.
+T
+java:S1135"2Complete the task associated to this TODO comment.(£Ç²úÿÿÿÿ8ïçÛÖ©.
+Y	java:S125¶"<This block of commented-out lines of code should be removed.(şú¥×8‡õ–ó©.
+I
+java:S1481‘"&Remove this unused "i" local variable.(ùó›Ìøÿÿÿÿ8éµ°ó©.
+T
+java:S1135"2Complete the task associated to this TODO comment.(ÈüÔçÿÿÿÿÿ8«àÚñ©.

@@ -8,6 +8,7 @@ public final class Constants {
     }
 
     public static int numberFoundWifiNetworks = 0;
+    public static final double ZERO = 0.00;
     public static final String TRACK_POINTS_FILE_NAME = "TrackPoints.gpx";
     public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
     public static final String FILE_NOT_FOUND_EXCEPTION_MESSAGE = "File does not exist,  but is going to be created";

@@ -37,7 +37,7 @@ public class WiFiReceiver extends BroadcastReceiver {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
 
-        if (hasSuccess && wifiManager != null) {
+        if (wifiManager != null && hasSuccess) {
             List<ScanResult> scanResults = wifiManager.getScanResults();
             setScanResults(scanResults);
         }
@@ -46,13 +46,13 @@ public class WiFiReceiver extends BroadcastReceiver {
     private void setScanResults(List<ScanResult> scanResults) {
         if (scanResults != null && scanResults.size() > 0) {
             mWifiLocation.setScanResults(scanResults);
-            if (shouldStoreScanResults()) {
-                storeScanResults(scanResults);
+            if (shouldSaveScanResults()) {
+                saveScanResults(scanResults);
             }
         }
     }
 
-    private boolean shouldStoreScanResults() {
+    private boolean shouldSaveScanResults() {
         LocalTime foundNetworksTime = LocalTime.now();
         LocalTime savedLocationTime = mWifiLocation.getLocalTime();
         long difference = 0L;
@@ -65,10 +65,10 @@ public class WiFiReceiver extends BroadcastReceiver {
         return difference <= 3L;
     }
 
-    private void storeScanResults(List<ScanResult> scanResults) {
+    private void saveScanResults(List<ScanResult> scanResults) {
         try {
             numberFoundWifiNetworks += scanResults.size();
-            mWifiLocationRepository.saveWiFiLocation(mContext);
+            mWifiLocationRepository.saveWifiLocation();
         } catch (IOException e) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
