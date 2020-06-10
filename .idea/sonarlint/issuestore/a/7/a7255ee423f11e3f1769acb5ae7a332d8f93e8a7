@@ -1,2 +1,5 @@
 
-E	java:S108")Either remove or fill this block of code.(ï­£Ä8Ì’Í«©.
+[
+java:S1128"9Remove this unused import 'androidx.lifecycle.Lifecycle'.(üÚûÁıÿÿÿÿ8Í¹×©.
+]
+java:S1128"@Remove this unused import 'androidx.lifecycle.OnLifecycleEvent'.(ø®Üš8Í¹×©.

@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.channels.FileChannel;
 import java.time.LocalDateTime;
 
@@ -29,14 +30,18 @@ public class WifiLocationRepository {
     private FileOutputStream mFileOutputStream;
     private WifiLocation mWifiLocation;
     private boolean isAppLaunched;
+    boolean isSet;
     private boolean isStreamerOpened;
     private XmlSerializer serializer;
+    private boolean areTagsAdded;
     private Context mContext;
 
     public WifiLocationRepository(WifiLocation wifiLocation, boolean isAppLaunched) {
         this.mWifiLocation = wifiLocation;
         this.isAppLaunched = isAppLaunched;
         this.serializer = Xml.newSerializer();
+        areTagsAdded = false;
+        isSet = false;
         isStreamerOpened = false;
     }
 
@@ -59,10 +64,22 @@ public class WifiLocationRepository {
 
             if (isFileEmpty()) {
                 addGPXDeclaration();
-                //??
+                serializer.setOutput(mFileOutputStream, null);
+                isSet = true;
                 addBasicGPXTags(latitude, longitude, scanResults);
+                areTagsAdded = true;
+                isAppLaunched = false;
             } else {
-                addTrackPoints(latitude, longitude, scanResults);
+                if (isAppLaunched) {
+                    closetags();
+                    addBasicGPXTags(latitude, longitude, scanResults);
+                    isSet = true;
+                    areTagsAdded = true;
+                    isAppLaunched = false;
+                } else {
+                    addBasicGPXTags(latitude, longitude, scanResults);
+                }
+                //      addTrackPoints(latitude, longitude, scanResults);
             }
         }
     }
@@ -89,9 +106,13 @@ public class WifiLocationRepository {
     }
 
     private void addBasicGPXTags(double latitude, double longitude, List<ScanResult> scanResults) throws IOException {
-        serializer.setOutput(mFileOutputStream, ENCODING);
-        serializer.startTag(NO_NAMESPACE, TRACK_TAG);
-        serializer.startTag(NO_NAMESPACE, TRACK_SEGMENT_TAG);
+        if (!isSet) {
+            serializer.setOutput(mFileOutputStream, null);
+        }
+        if (!areTagsAdded) {
+            serializer.startTag(NO_NAMESPACE, TRACK_TAG);
+            serializer.startTag(NO_NAMESPACE, TRACK_SEGMENT_TAG);
+        }
         LocalDateTime now = LocalDateTime.now();
         serializer.startTag(NO_NAMESPACE, TRACK_POINT_TAG)
                 .attribute(NO_NAMESPACE, LATITUDE, String.valueOf(latitude))
@@ -119,11 +140,15 @@ public class WifiLocationRepository {
         }
         serializer.endTag(NO_NAMESPACE, EXTENSIONS_TAG)
                 .endTag(NO_NAMESPACE, TRACK_POINT_TAG);
+        //  if (areTagsAdded) {
+        serializer.flush();
+        int i = 0;
+        // }
     }
 
     private void addTrackPoints(double latitude, double longitude, List<ScanResult> scanResults) throws IOException {
         LocalDateTime now = LocalDateTime.now();
-       // serializer.setOutput(mFileOutputStream, ENCODING);
+        serializer.setOutput(mFileOutputStream, ENCODING);
         serializer.startTag(NO_NAMESPACE, TRACK_POINT_TAG)
                 .attribute(NO_NAMESPACE, LATITUDE, String.valueOf(latitude))
                 .attribute(NO_NAMESPACE, LONGITUDE, String.valueOf(longitude));
@@ -154,7 +179,7 @@ public class WifiLocationRepository {
         }
         serializer.endTag(NO_NAMESPACE, EXTENSIONS_TAG)
                 .endTag(NO_NAMESPACE, TRACK_POINT_TAG);
-        serializer.endDocument();
+        //serializer.endDocument();
     }
 
     public void openFileOutputStream() {
@@ -172,5 +197,14 @@ public class WifiLocationRepository {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
         isStreamerOpened = false;
+    }
+
+    synchronized void closetags() {
+        try {
+            serializer.setOutput(mFileOutputStream, null);
+            serializer.endDocument();
+        } catch (IOException i) {
+
+        }
     }
 }
