@@ -10,7 +10,6 @@ import android.os.*;
 
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +19,6 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.example.wi_ficollector.R;
-import com.example.wi_ficollector.ScanActivityLifecycleObserver;
 import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
@@ -45,9 +43,11 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private LocationRequest mLocationRequest;
     private ScanPreference mScanPreference;
     private WifiLocationRepository mWifiLocationRepository;
-    private Thread mGPSEnablingThread;
     private WifiLocation mWifiLocation;
     private TextView tv;
+    private boolean isBackgroundPermissionRequestRequired;
+    private boolean isBackgroundPermissionLocationGranted;
+    private boolean isWifiReceiverRegistered;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,15 +55,11 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         setContentView(R.layout.activity_scan);
         initializeFields();
 
-        if (isBackgroundPermissionRequestRequired() && mScanPreference.isActivityFirstTimeLaunched()) {
+        if (mScanPreference.isActivityFirstTimeLaunched()) {
             mScanPreference.addBackgroundPermissionRationaleKey();
         }
 
         requestLocationPermission();
-        receiveLocationResults();
-        registerWiFiReceiver();
-        getLifecycle().addObserver(new ScanActivityLifecycleObserver(ScanActivity.this, mWifiLocationRepository));
-
     }
 
     public void enableGPS() {
@@ -79,8 +75,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                 showGPSRequirements(resolvable);
             }
         });
-
-        task.addOnSuccessListener(this, locationSettingsResponse -> requestLocationUpdates());
+        task.addOnSuccessListener(this, locationSettingsResponse -> handleEnabledGPS());
     }
 
     public void createLocationRequest() {
@@ -104,7 +99,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
-            requestLocationUpdates();
+            handleEnabledGPS();
         }
     }
 
@@ -128,30 +123,20 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                 ACCESS_BACKGROUND_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    private boolean isBackgroundPermissionRequestRequired() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
-    }
-
     public void requestLocationPermission() {
         if (!isFineLocationPermissionGranted()) {
             requestFineLocationPermission();
         } else {
-            startGPSEnablingThread();
-            if (isBackgroundPermissionRequestRequired()) {
+            enableGPS();
+            if (isBackgroundPermissionRequestRequired) {
                 requestBackgroundPermission();
             }
         }
     }
 
-    private void startGPSEnablingThread() {
-        if (mGPSEnablingThread.getState() == Thread.State.NEW) {
-            mGPSEnablingThread.start();
-        }
-    }
-
     public void requestBackgroundPermission() {
         if (isBackgroundLocationPermissionGranted()) {
-            // todo handling
+            isBackgroundPermissionLocationGranted = true;
         } else {
             if (mScanPreference.shouldShowBackgroundPermissionRequestRationale()) {
                 showBackgroundPermissionRequestRationale();
@@ -178,26 +163,31 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                     handleBackgroundPermissionRequestResult(grantResults[i], permissions[i]);
                     break;
                 default:
-                    Toast.makeText(this, "Unrecognized permission", Toast.LENGTH_SHORT).show();
+                    Log.d("tag", "Unrecognized permission");
             }
         }
     }
 
+    private void handleEnabledGPS() {
+        registerWiFiReceiver();
+        receiveLocationResults();
+        requestLocationUpdates();
+    }
+
     private void handleBackgroundPermissionRequestResult(int grantResult, String permission) {
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
-            // todo handling
+            isBackgroundPermissionLocationGranted = true;
         } else {
             if (!shouldShowRequestPermissionRationale(permission)) {
                 mScanPreference.stopShowBackgroundPermissionRequestRationale();
-                // todo handling
             }
         }
     }
 
     private void handleFineLocationPermissionRequestResult(int grantResult) {
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
-            startGPSEnablingThread();
-            if (isBackgroundPermissionRequestRequired()) {
+            enableGPS();
+            if (isBackgroundPermissionRequestRequired) {
                 requestBackgroundPermission();
             }
         }
@@ -258,9 +248,8 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         boolean isWifiScanningSucceeded = mWifiManager.startScan();
 
         if (!isWifiScanningSucceeded) {
-            // wifi scan - null
             try {
-                mWifiLocationRepository.saveWifiLocation();
+                mWifiLocationRepository.save();
             } catch (IOException e) {
                 Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
             }
@@ -274,9 +263,11 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mScanPreference = new ScanPreference(this);
-        mGPSEnablingThread = new Thread(this::enableGPS);
         mWifiLocation = new WifiLocation();
         mWifiLocationRepository = new WifiLocationRepository(mWifiLocation, ScanActivity.this);
+        isBackgroundPermissionRequestRequired = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
+        isBackgroundPermissionLocationGranted = false;
+        isWifiReceiverRegistered = false;
         tv = findViewById(R.id.numberOfWifiNetworks);
 
         tv.setText(String.valueOf(numberFoundWifiNetworks));
@@ -291,10 +282,25 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            if (isBackgroundPermissionRequestRequired && !isBackgroundPermissionLocationGranted) {
+                unregisterReceiver(mWifiReceiver);
+                mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+            }
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mWifiReceiver);
-        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        if (!isBackgroundPermissionRequestRequired) {
+            unregisterReceiver(mWifiReceiver);
+            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        }
         mWifiLocationRepository.closeFileOutputStream();
     }
 }

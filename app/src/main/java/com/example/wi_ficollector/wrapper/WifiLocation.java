@@ -1,6 +1,5 @@
 package com.example.wi_ficollector.wrapper;
 
-import android.location.Location;
 import android.net.wifi.ScanResult;
 
 import java.time.LocalTime;

@@ -24,7 +24,6 @@ public class WiFiReceiver extends BroadcastReceiver {
 
     private WifiLocation mWifiLocation;
     private WifiLocationRepository mWifiLocationRepository;
-    private Context mContext;
 
     public WiFiReceiver(WifiLocationRepository mWifiLocationRepository, WifiLocation mWifiLocation) {
         this.mWifiLocationRepository = mWifiLocationRepository;
@@ -33,7 +32,6 @@ public class WiFiReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mContext = context;
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
 
@@ -67,8 +65,7 @@ public class WiFiReceiver extends BroadcastReceiver {
 
     private void saveScanResults(List<ScanResult> scanResults) {
         try {
-            numberFoundWifiNetworks += scanResults.size();
-            mWifiLocationRepository.saveWifiLocation();
+            mWifiLocationRepository.save();
         } catch (IOException e) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }

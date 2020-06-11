@@ -1,18 +1,8 @@
 
-Q
-java:S1144•"3Remove this unused private "addTrackPoints" method.(Şû¡8‡õ–ó©.
-_
-java:S1144W"=Remove this unused private "areLocationLatitudeValid" method.(£«Éûÿÿÿÿ8«àÚñ©.
+K	java:S108Ÿ")Either remove or fill this block of code.(âœ„Äúÿÿÿÿ8éÁ•ª.
 T
-java:S1128"7Remove this unused import 'java.io.OutputStreamWriter'.(Ÿ“¸8Ûüİó©.
-X	java:S125R"<This block of commented-out lines of code should be removed.(îøú·8«àÚñ©.
-Y	java:S125"<This block of commented-out lines of code should be removed.(·ÎÂµ8Òö—ó©.
-K	java:S108Î")Either remove or fill this block of code.(âœ„Äúÿÿÿÿ8Ûüİó©.
-^	java:S125’"<This block of commented-out lines of code should be removed.(éØ»Úûÿÿÿÿ8©ÿ¨ó©.
+java:S1135"2Complete the task associated to this TODO comment.(ÈüÔçÿÿÿÿÿ8«àÚñ©.
 T
-java:S1135"2Complete the task associated to this TODO comment.(£Ç²úÿÿÿÿ8ïçÛÖ©.
-Y	java:S125¶"<This block of commented-out lines of code should be removed.(şú¥×8‡õ–ó©.
-I
-java:S1481‘"&Remove this unused "i" local variable.(ùó›Ìøÿÿÿÿ8éµ°ó©.
-T
-java:S1135"2Complete the task associated to this TODO comment.(ÈüÔçÿÿÿÿÿ8«àÚñ©.
+java:S1135"2Complete the task associated to this TODO comment.(£Ç²úÿÿÿÿ8ïçÛÖ©.
+X
+java:S1128"6Remove this unused import 'android.location.Location'.(›¡ì®øÿÿÿÿ8ùãÁÿ©.

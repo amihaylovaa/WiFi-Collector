@@ -2,8 +2,7 @@ package com.example.wi_ficollector.thread;
 
 import android.widget.TextView;
 
-import static com.example.wi_ficollector.utils.Constants.TEN_SECONDS;
-import static com.example.wi_ficollector.utils.Constants.numberFoundWifiNetworks;
+import static com.example.wi_ficollector.utils.Constants.*;
 
 public class UIUpdateTask implements Runnable {
 

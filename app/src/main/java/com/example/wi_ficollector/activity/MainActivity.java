@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this, ScanActivity.class);
             startActivity(intent);
         } else {
-         //   WifiLocationRepository wifiLocationRepository = new WifiLocationRepository();
-       //     wifiLocationRepository.endDocument();
         }
     }
 
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
         alertDialog.setMessage(INTRO);
-        alertDialog.setNeutralButton(R.string.OK, (dialog, id) -> mainPreference.addIntroKey());
+        alertDialog.setPositiveButton(R.string.OK, (dialog, id) -> mainPreference.addIntroKey());
         alertDialog.create().show();
     }
 }
