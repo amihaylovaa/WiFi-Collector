@@ -32,8 +32,8 @@ public class WifiLocationRepository {
     private XmlSerializer serializer;
     private Context mContext;
 
-    public WifiLocationRepository(WifiLocation wifiLocation, Context mContext) {
-        this.mWifiLocation = wifiLocation;
+    public WifiLocationRepository(Context mContext) {
+        this.mWifiLocation = WifiLocation.getWifiLocation();
         this.mContext = mContext;
         this.serializer = Xml.newSerializer();
         this.areBasicTagsAdded = false;

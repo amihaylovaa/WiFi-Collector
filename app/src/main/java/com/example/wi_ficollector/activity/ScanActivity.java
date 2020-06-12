@@ -22,6 +22,7 @@ import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
+import com.example.wi_ficollector.service.ForegroundWifiLocationService;
 import com.example.wi_ficollector.thread.*;
 import com.example.wi_ficollector.wrapper.WifiLocation;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -46,7 +47,10 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private WifiLocation mWifiLocation;
     private TextView tv;
     private boolean isBackgroundPermissionRequestRequired;
-    private boolean isBackgroundPermissionLocationGranted;
+    private boolean isBackgroundPermissionGranted;
+    private boolean isFineLocationPermissionGranted;
+    private boolean isServiceStarted;
+    private Intent intent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,10 +78,11 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                 showGPSRequirements(resolvable);
             }
         });
-        task.addOnSuccessListener(this, locationSettingsResponse -> {
+
+        task.addOnSuccessListener(e -> {
             receiveLocationResults();
-            registerWiFiReceiver();
             requestLocationUpdates();
+            registerWiFiReceiver();
         });
     }
 
@@ -103,8 +108,8 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
         if (requestCode == REQUEST_LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
             receiveLocationResults();
-            registerWiFiReceiver();
             requestLocationUpdates();
+            registerWiFiReceiver();
         }
     }
 
@@ -132,16 +137,17 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         if (!isFineLocationPermissionGranted()) {
             requestFineLocationPermission();
         } else {
+            isFineLocationPermissionGranted = true;
             enableGPS();
             if (isBackgroundPermissionRequestRequired) {
                 requestBackgroundPermission();
             }
         }
     }
-// 14;23
+
     public void requestBackgroundPermission() {
         if (isBackgroundLocationPermissionGranted()) {
-            isBackgroundPermissionLocationGranted = true;
+            isBackgroundPermissionGranted = true;
         } else {
             if (mScanPreference.shouldShowBackgroundPermissionRequestRationale()) {
                 showBackgroundPermissionRequestRationale();
@@ -175,7 +181,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
     private void handleBackgroundPermissionRequestResult(int grantResult, String permission) {
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
-            isBackgroundPermissionLocationGranted = true;
+            isBackgroundPermissionGranted = true;
         } else {
             if (!shouldShowRequestPermissionRationale(permission)) {
                 mScanPreference.stopShowBackgroundPermissionRequestRationale();
@@ -185,6 +191,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
     private void handleFineLocationPermissionRequestResult(int grantResult) {
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
+            isFineLocationPermissionGranted = true;
             enableGPS();
             if (isBackgroundPermissionRequestRequired) {
                 requestBackgroundPermission();
@@ -252,29 +259,44 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
             } catch (IOException e) {
                 Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
             }
-        } else {
-            UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
-            new Thread(uiUpdateTask).start();
         }
+        UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
+        new Thread(uiUpdateTask).start();
     }
 
     private void initializeFields() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mScanPreference = new ScanPreference(this);
-        mWifiLocation = new WifiLocation();
-        mWifiLocationRepository = new WifiLocationRepository(mWifiLocation, ScanActivity.this);
+        mWifiLocation = WifiLocation.getWifiLocation();
+        mWifiLocationRepository = new WifiLocationRepository(ScanActivity.this);
+        intent = new Intent(this, ForegroundWifiLocationService.class);
         isBackgroundPermissionRequestRequired = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
-        isBackgroundPermissionLocationGranted = false;
+        isBackgroundPermissionGranted = false;
+        isServiceStarted = false;
         tv = findViewById(R.id.numberOfWifiNetworks);
 
         tv.setText(String.valueOf(numberFoundWifiNetworks));
     }
 
+    private void stopActivityWork() {
+        try {
+            unregisterReceiver(mWifiReceiver);
+            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+            mWifiLocationRepository.closeFileOutputStream();
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
+        }
+    }
+
     @Override
     protected void onRestart() {
         super.onRestart();
+        if (isServiceStarted) {
+            stopService(intent);
+        }
         requestLocationPermission();
+        mWifiLocationRepository.openFileOutputStream();
         tv.invalidate();
         tv.setText(String.valueOf(numberFoundWifiNetworks));
     }
@@ -282,23 +304,20 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     @Override
     protected void onStop() {
         super.onStop();
-        try {
-            if (isBackgroundPermissionRequestRequired && !isBackgroundPermissionLocationGranted) {
-                unregisterReceiver(mWifiReceiver);
-                mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-            }
-        } catch (IllegalArgumentException illegalArgumentException) {
-            Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
+        if (!isBackgroundPermissionRequestRequired || isBackgroundPermissionGranted) {
+            stopActivityWork();
+            ContextCompat.startForegroundService(this, intent);
+            isServiceStarted = true;
+        }
+        if (isBackgroundPermissionRequestRequired && !isBackgroundPermissionGranted) {
+            stopActivityWork();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (!isBackgroundPermissionRequestRequired) {
-            unregisterReceiver(mWifiReceiver);
-            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-        }
-        mWifiLocationRepository.closeFileOutputStream();
+        stopActivityWork();
+        stopService(intent);
     }
 }
