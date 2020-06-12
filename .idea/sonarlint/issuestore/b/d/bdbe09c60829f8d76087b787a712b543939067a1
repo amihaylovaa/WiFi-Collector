@@ -1,7 +1,5 @@
 
-X
-java:S2696F"6Make the enclosing method "static" or remove this set.(ðºÔŸøÿÿÿÿ8ûš³ý©.
-N
-java:S1068",Remove this unused "mContext" private field.(»úÅ¾øÿÿÿÿ8ŠÖºû©.
-y
-java:S1450"WRemove the "mContext" field and declare it as a local variable in the relevant methods.(»úÅ¾øÿÿÿÿ8ŠÖºû©.
+|
+java:S1128"_Remove this unused import 'com.example.wi_ficollector.utils.Constants.numberFoundWifiNetworks'.(ûŠøÀ8íÁ»¦ª.
+O
+java:S1172B"2Remove this unused method parameter "scanResults".(ýÕµ·8íÁ»¦ª.

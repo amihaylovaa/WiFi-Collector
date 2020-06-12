@@ -47,7 +47,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private TextView tv;
     private boolean isBackgroundPermissionRequestRequired;
     private boolean isBackgroundPermissionLocationGranted;
-    private boolean isWifiReceiverRegistered;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +74,11 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                 showGPSRequirements(resolvable);
             }
         });
-        task.addOnSuccessListener(this, locationSettingsResponse -> handleEnabledGPS());
+        task.addOnSuccessListener(this, locationSettingsResponse -> {
+            receiveLocationResults();
+            registerWiFiReceiver();
+            requestLocationUpdates();
+        });
     }
 
     public void createLocationRequest() {
@@ -99,7 +102,9 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
-            handleEnabledGPS();
+            receiveLocationResults();
+            registerWiFiReceiver();
+            requestLocationUpdates();
         }
     }
 
@@ -133,7 +138,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
             }
         }
     }
-
+// 14;23
     public void requestBackgroundPermission() {
         if (isBackgroundLocationPermissionGranted()) {
             isBackgroundPermissionLocationGranted = true;
@@ -166,12 +171,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                     Log.d("tag", "Unrecognized permission");
             }
         }
-    }
-
-    private void handleEnabledGPS() {
-        registerWiFiReceiver();
-        receiveLocationResults();
-        requestLocationUpdates();
     }
 
     private void handleBackgroundPermissionRequestResult(int grantResult, String permission) {
@@ -267,7 +266,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         mWifiLocationRepository = new WifiLocationRepository(mWifiLocation, ScanActivity.this);
         isBackgroundPermissionRequestRequired = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
         isBackgroundPermissionLocationGranted = false;
-        isWifiReceiverRegistered = false;
         tv = findViewById(R.id.numberOfWifiNetworks);
 
         tv.setText(String.valueOf(numberFoundWifiNetworks));

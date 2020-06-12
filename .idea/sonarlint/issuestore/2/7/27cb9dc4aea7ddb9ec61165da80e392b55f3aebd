@@ -1,8 +1,8 @@
 
-K	java:S108Ÿ")Either remove or fill this block of code.(âœ„Äúÿÿÿÿ8éÁ•ª.
+^	java:S125–"<This block of commented-out lines of code should be removed.(ÿ¸éşøÿÿÿÿ8“Ëëšª.
 T
-java:S1135"2Complete the task associated to this TODO comment.(ÈüÔçÿÿÿÿÿ8«àÚñ©.
+java:S1135"2Complete the task associated to this TODO comment.(ÈüÔçÿÿÿÿÿ8«àÚñ©.
 T
-java:S1135"2Complete the task associated to this TODO comment.(£Ç²úÿÿÿÿ8ïçÛÖ©.
+java:S1135"2Complete the task associated to this TODO comment.(£Ç²úÿÿÿÿ8ïçÛÖ©.
 X
-java:S1128"6Remove this unused import 'android.location.Location'.(›¡ì®øÿÿÿÿ8ùãÁÿ©.
+java:S26960"6Make the enclosing method "static" or remove this set.(ğºÔŸøÿÿÿÿ8£õº¦ª.
