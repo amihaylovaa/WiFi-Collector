@@ -9,10 +9,12 @@ public final class Constants {
 
     public static int numberFoundWifiNetworks = 0;
     public static final double ZERO = 0.00;
-    public static final String TRACK_POINTS_FILE_NAME = "TrackPoints.gpx";
+    public static boolean areBasicTagsAdded = false;
+    public static final String FOREGROUND_CHANNEL_ID = "Foreground service";
+    public static final int FOREGROUND_SERVICE_NOTIFICATION_ID = 482;
     public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
     public static final String FILE_NOT_FOUND_EXCEPTION_MESSAGE = "File does not exist,  but is going to be created";
-   public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG = "Illegal argument exception thrown";
+    public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG = "Illegal argument exception thrown";
     public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE = "Broadcast receiver has not been registered";
     public static final String IO_EXCEPTION_THROWN_TAG = "IO exception thrown";
     public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during working with file stream";

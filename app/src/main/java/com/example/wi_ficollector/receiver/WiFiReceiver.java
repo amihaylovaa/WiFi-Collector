@@ -18,7 +18,6 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.IO_EXCEPTION_THROWN_MESSAGE;
 import static com.example.wi_ficollector.utils.Constants.IO_EXCEPTION_THROWN_TAG;
-import static com.example.wi_ficollector.utils.Constants.numberFoundWifiNetworks;
 
 public class WiFiReceiver extends BroadcastReceiver {
 
@@ -45,7 +44,7 @@ public class WiFiReceiver extends BroadcastReceiver {
         if (scanResults != null && scanResults.size() > 0) {
             mWifiLocation.setScanResults(scanResults);
             if (shouldSaveScanResults()) {
-                saveScanResults(scanResults);
+                saveScanResults();
             }
         }
     }
@@ -63,7 +62,7 @@ public class WiFiReceiver extends BroadcastReceiver {
         return difference <= 3L;
     }
 
-    private void saveScanResults(List<ScanResult> scanResults) {
+    private void saveScanResults() {
         try {
             mWifiLocationRepository.save();
         } catch (IOException e) {

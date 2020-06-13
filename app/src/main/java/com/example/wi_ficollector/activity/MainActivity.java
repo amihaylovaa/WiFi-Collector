@@ -10,7 +10,6 @@ import android.widget.Button;
 
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.preference.MainPreference;
-import com.example.wi_ficollector.repository.WifiLocationRepository;
 
 import static com.example.wi_ficollector.utils.Constants.INTRO;
 

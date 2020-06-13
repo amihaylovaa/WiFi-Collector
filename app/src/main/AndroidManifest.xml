@@ -23,9 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.ScanActivity" />
-
         <service
             android:name=".service.ForegroundWifiLocationService"
-            android:stopWithTask="true" />
+            android:stopWithTask="false" />
     </application>
 </manifest>

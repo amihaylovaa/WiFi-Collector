@@ -52,3 +52,5 @@ v
 Fapp/src/main/java/com/example/wi_ficollector/wrapper/WifiLocation.java,9\9\99afa2f1fbcdc109e022ae54e13e919be381674e
 u
 Eapp/src/main/java/com/example/wi_ficollector/thread/UIUpdateTask.java,8\6\86a798a4c71f1e9966ab4edcac029a38dca7dde8
+‡
+Wapp/src/main/java/com/example/wi_ficollector/service/ForegroundWifiLocationService.java,a\3\a3895828d845a55b940f0500be5ebc8af0e21937

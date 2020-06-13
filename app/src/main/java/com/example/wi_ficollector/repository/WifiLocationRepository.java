@@ -27,7 +27,6 @@ public class WifiLocationRepository {
 
     private FileOutputStream mFileOutputStream;
     private WifiLocation mWifiLocation;
-    private boolean areBasicTagsAdded;
     boolean isOutputSet;
     private XmlSerializer serializer;
     private Context mContext;
@@ -36,7 +35,6 @@ public class WifiLocationRepository {
         this.mWifiLocation = WifiLocation.getWifiLocation();
         this.mContext = mContext;
         this.serializer = Xml.newSerializer();
-        this.areBasicTagsAdded = false;
         this.isOutputSet = false;
         openFileOutputStream();
     }
@@ -147,12 +145,11 @@ public class WifiLocationRepository {
         }
     }
 
-  /*  synchronized void closetags() {
+    public synchronized void closetags() {
         try {
-            serializer.setOutput(mFileOutputStream, null);
             serializer.endDocument();
         } catch (IOException i) {
 
         }
-    }*/
+    }
 }

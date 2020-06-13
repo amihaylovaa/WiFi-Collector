@@ -8,5 +8,7 @@
     <string name="launching_key">Show dialog intro</string>
     <string name="rationale_dialog_key">Show background permission rationale</string>
     <string name="show_content">Number of found wireless networks:</string>
+    <string name="channel_name">Foreground service execution</string>
+    <string name="foreground_service_notification_text">\"The app continues to collect your location and wireless access points around you</string>
 
 </resources>

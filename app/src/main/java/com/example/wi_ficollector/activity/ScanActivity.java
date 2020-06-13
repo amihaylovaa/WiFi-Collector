@@ -294,6 +294,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         super.onRestart();
         if (isServiceStarted) {
             stopService(intent);
+            isServiceStarted = false;
         }
         requestLocationPermission();
         mWifiLocationRepository.openFileOutputStream();
@@ -318,6 +319,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     protected void onDestroy() {
         super.onDestroy();
         stopActivityWork();
-        stopService(intent);
     }
+
 }
