@@ -54,12 +54,11 @@ public class WiFiReceiver extends BroadcastReceiver {
         LocalTime savedLocationTime = mWifiLocation.getLocalTime();
         long difference = 0L;
 
-        // location null
         if (savedLocationTime != null) {
             difference = ChronoUnit.SECONDS.between(savedLocationTime, foundNetworksTime);
         }
 
-        return difference <= 3L;
+        return (difference <= 5L && difference != 0);
     }
 
     private void saveScanResults() {

@@ -43,7 +43,6 @@ public class WifiLocationRepository {
         double latitude = mWifiLocation.getLatitude();
         double longitude = mWifiLocation.getLongitude();
         List<ScanResult> scanResults = mWifiLocation.getScanResults();
-        numberFoundWifiNetworks += scanResults.size();
 
         if (latitude != ZERO && longitude != ZERO) {
             saveValidWifiLocation(latitude, longitude, scanResults);
@@ -108,6 +107,7 @@ public class WifiLocationRepository {
     private void saveExtensions(List<ScanResult> scanResults) throws IOException {
         serializer.startTag(NO_NAMESPACE, EXTENSIONS_TAG);
         if (scanResults != null) {
+            numberFoundWifiNetworks += scanResults.size();
             for (ScanResult scanResult : scanResults) {
                 serializer.startTag(NO_NAMESPACE, WIFI_TAG);
                 serializer.startTag(NO_NAMESPACE, SSID_TAG)

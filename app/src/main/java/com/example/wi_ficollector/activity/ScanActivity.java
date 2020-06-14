@@ -48,7 +48,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
     private TextView tv;
     private boolean isBackgroundPermissionRequestRequired;
     private boolean isBackgroundPermissionGranted;
-    private boolean isFineLocationPermissionGranted;
     private boolean isServiceStarted;
     private Intent intent;
 
@@ -61,7 +60,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         if (mScanPreference.isActivityFirstTimeLaunched()) {
             mScanPreference.addBackgroundPermissionRationaleKey();
         }
-
         requestLocationPermission();
     }
 
@@ -80,7 +78,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         });
 
         task.addOnSuccessListener(e -> {
-            receiveLocationResults();
+            implementLocationResultCallback();
             requestLocationUpdates();
             registerWiFiReceiver();
         });
@@ -107,7 +105,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
-            receiveLocationResults();
+            implementLocationResultCallback();
             requestLocationUpdates();
             registerWiFiReceiver();
         }
@@ -137,7 +135,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         if (!isFineLocationPermissionGranted()) {
             requestFineLocationPermission();
         } else {
-            isFineLocationPermissionGranted = true;
             enableGPS();
             if (isBackgroundPermissionRequestRequired) {
                 requestBackgroundPermission();
@@ -191,7 +188,6 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
     private void handleFineLocationPermissionRequestResult(int grantResult) {
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
-            isFineLocationPermissionGranted = true;
             enableGPS();
             if (isBackgroundPermissionRequestRequired) {
                 requestBackgroundPermission();
@@ -228,7 +224,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         }
     }
 
-    private void receiveLocationResults() {
+    private void implementLocationResultCallback() {
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -320,5 +316,4 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         super.onDestroy();
         stopActivityWork();
     }
-
 }

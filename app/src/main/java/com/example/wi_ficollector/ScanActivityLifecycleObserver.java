@@ -8,6 +8,9 @@ import androidx.lifecycle.LifecycleObserver;
 
 import com.example.wi_ficollector.repository.WifiLocationRepository;
 
+/**
+ * Under construction
+ */
 public class ScanActivityLifecycleObserver implements LifecycleObserver {
 
     Context context;

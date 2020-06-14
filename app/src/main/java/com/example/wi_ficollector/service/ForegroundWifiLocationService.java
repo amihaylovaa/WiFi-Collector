@@ -1,8 +1,6 @@
 package com.example.wi_ficollector.service;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,15 +8,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 
-import com.example.wi_ficollector.R;
+import com.example.wi_ficollector.notification.ForegroundServiceNotification;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
 import com.example.wi_ficollector.wrapper.WifiLocation;
@@ -34,8 +30,6 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
-
-// todo add notification class
 public class ForegroundWifiLocationService extends Service {
 
     private WifiManager mWifiManager;
@@ -51,7 +45,8 @@ public class ForegroundWifiLocationService extends Service {
         super.onCreate();
 
         Context context = this;
-        Notification notification = createNotification(context);
+        ForegroundServiceNotification foregroundServiceNotification = new ForegroundServiceNotification(context);
+        Notification notification = foregroundServiceNotification.createNotification();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         mWifiLocationRepository = new WifiLocationRepository(context);
@@ -63,11 +58,11 @@ public class ForegroundWifiLocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         createLocationRequest();
-        receiveLocationResults();
+        implementLocationResultCallback();
         requestLocationUpdates();
         registerWiFiReceiver();
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     public void createLocationRequest() {
@@ -87,7 +82,7 @@ public class ForegroundWifiLocationService extends Service {
         }
     }
 
-    public void receiveLocationResults() {
+    public void implementLocationResultCallback() {
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -99,7 +94,6 @@ public class ForegroundWifiLocationService extends Service {
                 mWifiLocation.setLocalTime(LocalTime.now());
 
                 for (Location location : locations) {
-                    Log.d("Found location", "Service");
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
                     mWifiLocation.setLongitude(longitude);
@@ -146,29 +140,6 @@ public class ForegroundWifiLocationService extends Service {
         unregisterReceiver(mWifiReceiver);
         mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         mWifiLocationRepository.closeFileOutputStream();
-    }
-
-    private Notification createNotification(Context context) {
-        CharSequence contentText = getString(R.string.foreground_service_notification_text);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel();
-        }
-
-        return new NotificationCompat.Builder(context, FOREGROUND_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .build();
-    }
-
-    private void createNotificationChannel() {
-        CharSequence channelName = getString(R.string.channel_name);
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel channel = new NotificationChannel(FOREGROUND_CHANNEL_ID, channelName, importance);
-        NotificationManager notificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
-
-        notificationManager.createNotificationChannel(channel);
     }
 
     @Override

@@ -1,7 +1,5 @@
 
-m	java:S1175"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(·¿¢”8×¥êÌª.
-D	java:S108[")Either remove or fill this block of code.(åæõ78ˆ¨¹Èª.
-^	java:S125‘"<This block of commented-out lines of code should be removed.(§ëÍÝúÿÿÿÿ8Ã²ƒÍª.
-y
-java:S14500"WRemove the "mContext" field and declare it as a local variable in the relevant methods.(»úÅ¾øÿÿÿÿ8íúäÌª.
-X	java:S125"<This block of commented-out lines of code should be removed.(ˆýîù8ˆ¨¹Èª.
+O
+java:S1135V"2Complete the task associated to this TODO comment.(›È…Ç8Ê§¦ìª.
+O
+java:S1135&"2Complete the task associated to this TODO comment.(üªÖƒ8ŒÏåòª.
