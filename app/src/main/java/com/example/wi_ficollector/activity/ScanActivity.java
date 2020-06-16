@@ -29,7 +29,6 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
-import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -75,9 +74,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                 ResolvableApiException resolvable = (ResolvableApiException) e;
                 showGPSRequirements(resolvable);
             }
-        });
-
-        task.addOnSuccessListener(e -> {
+        }).addOnSuccessListener(e -> {
             implementLocationResultCallback();
             requestLocationUpdates();
             registerWiFiReceiver();
@@ -135,10 +132,10 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         if (!isFineLocationPermissionGranted()) {
             requestFineLocationPermission();
         } else {
-            enableGPS();
             if (isBackgroundPermissionRequestRequired) {
                 requestBackgroundPermission();
             }
+            enableGPS();
         }
     }
 
@@ -171,7 +168,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
                     handleBackgroundPermissionRequestResult(grantResults[i], permissions[i]);
                     break;
                 default:
-                    Log.d("tag", "Unrecognized permission");
+                    Log.d(UNRECOGNIZED_PERMISSION_TAG, UNRECOGNIZED_PERMISSION_MESSAGE);
             }
         }
     }
@@ -250,11 +247,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
         boolean isWifiScanningSucceeded = mWifiManager.startScan();
 
         if (!isWifiScanningSucceeded) {
-            try {
-                mWifiLocationRepository.save();
-            } catch (IOException e) {
-                Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-            }
+            mWifiLocationRepository.save();
         }
         UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
         new Thread(uiUpdateTask).start();

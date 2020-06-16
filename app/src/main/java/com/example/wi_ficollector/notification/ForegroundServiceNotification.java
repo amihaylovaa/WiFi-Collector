@@ -12,14 +12,13 @@ import com.example.wi_ficollector.R;
 
 import static com.example.wi_ficollector.utils.Constants.FOREGROUND_CHANNEL_ID;
 
-public class ForegroundServiceNotification {
+public class ForegroundServiceNotification extends ApplicationNotification {
 
-    Context context;
-
-    public ForegroundServiceNotification(Context context) {
-        this.context = context;
+    public ForegroundServiceNotification(Context mContext) {
+        super(mContext);
     }
 
+    @Override
     public Notification createNotification() {
         CharSequence contentText = "The app continues to collect your location and wireless access points around you";
 
@@ -27,18 +26,19 @@ public class ForegroundServiceNotification {
             createNotificationChannel();
         }
 
-        return new NotificationCompat.Builder(context, FOREGROUND_CHANNEL_ID)
+        return new NotificationCompat.Builder(mContext, FOREGROUND_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .build();
     }
 
+    @Override
     public void createNotificationChannel() {
         CharSequence channelName = "Foreground service execution";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
         NotificationChannel channel = new NotificationChannel(FOREGROUND_CHANNEL_ID, channelName, importance);
-        NotificationManager notificationManager = ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE));
+        NotificationManager notificationManager = ((NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE));
 
         notificationManager.createNotificationChannel(channel);
     }

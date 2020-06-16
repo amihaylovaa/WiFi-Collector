@@ -39,14 +39,18 @@ public class WifiLocationRepository {
         openFileOutputStream();
     }
 
-    public void save() throws IOException {
+    public void save() {
         double latitude = mWifiLocation.getLatitude();
         double longitude = mWifiLocation.getLongitude();
         List<ScanResult> scanResults = mWifiLocation.getScanResults();
 
-        if (latitude != ZERO && longitude != ZERO) {
-            saveValidWifiLocation(latitude, longitude, scanResults);
-            mWifiLocation.clearResults();
+        try {
+            if (latitude != ZERO && longitude != ZERO) {
+                saveValidWifiLocation(latitude, longitude, scanResults);
+                mWifiLocation.clearResults();
+            }
+        } catch (IOException IOexception) {
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
     }
 

@@ -54,3 +54,5 @@ u
 Eapp/src/main/java/com/example/wi_ficollector/thread/UIUpdateTask.java,8\6\86a798a4c71f1e9966ab4edcac029a38dca7dde8
 ‡
 Wapp/src/main/java/com/example/wi_ficollector/service/ForegroundWifiLocationService.java,a\3\a3895828d845a55b940f0500be5ebc8af0e21937
+Œ
+\app/src/main/java/com/example/wi_ficollector/notification/ForegroundServiceNotification.java,9\4\94718323dad1fa03b97a8f471025b958796cd77a

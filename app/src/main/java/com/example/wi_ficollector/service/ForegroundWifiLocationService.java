@@ -14,6 +14,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.wi_ficollector.notification.ApplicationNotification;
 import com.example.wi_ficollector.notification.ForegroundServiceNotification;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
@@ -45,8 +46,8 @@ public class ForegroundWifiLocationService extends Service {
         super.onCreate();
 
         Context context = this;
-        ForegroundServiceNotification foregroundServiceNotification = new ForegroundServiceNotification(context);
-        Notification notification = foregroundServiceNotification.createNotification();
+        ApplicationNotification applicationNotification = new ForegroundServiceNotification(context);
+        Notification notification = applicationNotification.createNotification();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         mWifiLocationRepository = new WifiLocationRepository(context);
@@ -128,11 +129,7 @@ public class ForegroundWifiLocationService extends Service {
         boolean isWifiScanningSucceeded = mWifiManager.startScan();
 
         if (!isWifiScanningSucceeded) {
-            try {
-                mWifiLocationRepository.save();
-            } catch (IOException e) {
-                Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-            }
+            mWifiLocationRepository.save();
         }
     }
 

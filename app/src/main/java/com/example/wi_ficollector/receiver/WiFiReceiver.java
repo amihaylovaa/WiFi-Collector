@@ -15,10 +15,6 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-
-import static com.example.wi_ficollector.utils.Constants.IO_EXCEPTION_THROWN_MESSAGE;
-import static com.example.wi_ficollector.utils.Constants.IO_EXCEPTION_THROWN_TAG;
-
 public class WiFiReceiver extends BroadcastReceiver {
 
     private WifiLocation mWifiLocation;
@@ -44,7 +40,7 @@ public class WiFiReceiver extends BroadcastReceiver {
         if (scanResults != null && scanResults.size() > 0) {
             mWifiLocation.setScanResults(scanResults);
             if (shouldSaveScanResults()) {
-                saveScanResults();
+                mWifiLocationRepository.save();
             }
         }
     }
@@ -59,13 +55,5 @@ public class WiFiReceiver extends BroadcastReceiver {
         }
 
         return (difference <= 5L && difference != 0);
-    }
-
-    private void saveScanResults() {
-        try {
-            mWifiLocationRepository.save();
-        } catch (IOException e) {
-            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-        }
     }
 }
