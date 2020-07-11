@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.preference.ScanPreference;
@@ -34,7 +33,7 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
-public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
+public class ScanActivity extends AppCompatActivity {
 
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
@@ -270,6 +269,7 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
     private void stopActivityWork() {
         try {
+    // todo add handling for npe
             mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
             mWifiLocationRepository.closeFileOutputStream();
             unregisterReceiver(mWifiReceiver);

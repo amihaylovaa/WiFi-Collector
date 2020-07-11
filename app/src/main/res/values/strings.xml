@@ -12,5 +12,7 @@
     <string name="foreground_service_notification_content_text">The app continues to collect your location and wireless access points around you</string>
     <string name="disabled_gps_notification_channel_name">Disabled GPS</string>
     <string name="disabled_gps_notification_content_text">Application stopped due to disabled GPS. Tap go enable GPS.</string>
+    <string name="denied_location_permission_channel_name">Previously granted location permission has been denied</string>
+    <string name="denied_location_permission_content_text">Application has been terminated due to denied location permission. Tap to grant permission.</string>
 
 </resources>

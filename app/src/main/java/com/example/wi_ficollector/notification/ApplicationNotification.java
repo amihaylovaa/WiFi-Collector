@@ -1,6 +1,5 @@
 package com.example.wi_ficollector.notification;
 
-import android.app.Notification;
 import android.content.Context;
 import android.os.Build;
 

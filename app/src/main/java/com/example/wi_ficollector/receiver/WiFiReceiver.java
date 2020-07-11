@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.util.Log;
+
 
 import com.example.wi_ficollector.repository.WifiLocationRepository;
 import com.example.wi_ficollector.wrapper.WifiLocation;
 
-import java.io.IOException;
+
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -37,7 +37,7 @@ public class WiFiReceiver extends BroadcastReceiver {
     }
 
     private void setScanResults(List<ScanResult> scanResults) {
-        if (scanResults != null && scanResults.size() > 0) {
+        if (scanResults != null && !scanResults.isEmpty()) {
             mWifiLocation.setScanResults(scanResults);
             if (shouldSaveScanResults()) {
                 mWifiLocationRepository.save();

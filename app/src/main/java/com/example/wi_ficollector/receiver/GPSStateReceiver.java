@@ -1,6 +1,5 @@
 package com.example.wi_ficollector.receiver;
 
-import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.wi_ficollector.notification.ApplicationNotification;
-import com.example.wi_ficollector.notification.DisabledGSPNotification;
+import com.example.wi_ficollector.notification.GSPNotification;
 
 public class GPSStateReceiver extends BroadcastReceiver {
 
@@ -21,7 +20,7 @@ public class GPSStateReceiver extends BroadcastReceiver {
         boolean isProviderEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
         if (action.equals("android.location.PROVIDERS_CHANGED") && !isProviderEnabled) {
-            ApplicationNotification disabledGPSNotification = new DisabledGSPNotification(context);
+            ApplicationNotification disabledGPSNotification = new GSPNotification(context);
             NotificationCompat.Builder builder = disabledGPSNotification.createNotification();
             int notificationId=182;
 

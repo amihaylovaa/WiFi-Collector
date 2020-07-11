@@ -56,3 +56,9 @@ Eapp/src/main/java/com/example/wi_ficollector/thread/UIUpdateTask.java,8\6\86a7
 Wapp/src/main/java/com/example/wi_ficollector/service/ForegroundWifiLocationService.java,a\3\a3895828d845a55b940f0500be5ebc8af0e21937
 Œ
 \app/src/main/java/com/example/wi_ficollector/notification/ForegroundServiceNotification.java,9\4\94718323dad1fa03b97a8f471025b958796cd77a
+†
+Vapp/src/main/java/com/example/wi_ficollector/notification/ApplicationNotification.java,9\6\96850575ded400027cb9957a887e152a68fd54d4
+†
+Vapp/src/main/java/com/example/wi_ficollector/notification/DisabledGSPNotification.java,d\2\d280751e7afa1f344bd1755a20843829678d2e2d
+{
+Kapp/src/main/java/com/example/wi_ficollector/receiver/GPSStateReceiver.java,f\1\f1edaa4f16056d4a2edcbab11425899b83a6a40d

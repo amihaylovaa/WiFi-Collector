@@ -21,8 +21,6 @@ import java.util.List;
 import static android.content.Context.MODE_APPEND;
 import static com.example.wi_ficollector.utils.Constants.*;
 
-// todo service
-// todo finalize
 public class WifiLocationRepository {
 
     private FileOutputStream mFileOutputStream;

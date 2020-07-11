@@ -1,7 +1,9 @@
 
+~
+java:S1128"\Remove this unused import 'com.example.wi_ficollector.notification.DisabledGSPNotification'.(ÿζψÿÿÿÿ8°ϋυρ³.
 O
-java:S1135Q"2Complete the task associated to this TODO comment.(›Θ…Η8Γ’¤«.
-R
-java:S1128"0Remove this unused import 'java.io.IOException'.(ªΊ»Ϊύÿÿÿÿ8ÿ™ΰυ«.
-O
-java:S1128"-Remove this unused import 'android.util.Log'.(Τ¦Ψ²ψÿÿÿÿ8ÿ™ΰυ«.
+java:S1874"1Remove this use of "startScan"; it is deprecated.(»ψ8°¥©κ³.
+…
+java:S1450)"hRemove the "mDisabledGPSStateReceiver" field and declare it as a local variable in the relevant methods.(®Οϋ8Ξ©τρ³.
+Q
+java:S1128"5Remove this unused import 'android.app.Notification'.(ΈΣ†98¥ψ„σ³.
