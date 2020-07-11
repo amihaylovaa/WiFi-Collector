@@ -270,9 +270,9 @@ public class ScanActivity extends AppCompatActivity implements LifecycleOwner {
 
     private void stopActivityWork() {
         try {
-            unregisterReceiver(mWifiReceiver);
             mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
             mWifiLocationRepository.closeFileOutputStream();
+            unregisterReceiver(mWifiReceiver);
         } catch (IllegalArgumentException illegalArgumentException) {
             Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
         }

@@ -8,5 +8,9 @@
     <string name="launching_key">Show dialog intro</string>
     <string name="rationale_dialog_key">Show background permission rationale</string>
     <string name="show_content">Number of found wireless networks:</string>
+    <string name="foreground_service_channel_name">Foreground service execution</string>
+    <string name="foreground_service_notification_content_text">The app continues to collect your location and wireless access points around you</string>
+    <string name="disabled_gps_notification_channel_name">Disabled GPS</string>
+    <string name="disabled_gps_notification_content_text">Application stopped due to disabled GPS. Tap go enable GPS.</string>
 
 </resources>

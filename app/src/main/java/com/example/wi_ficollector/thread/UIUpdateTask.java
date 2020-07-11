@@ -14,11 +14,6 @@ public class UIUpdateTask implements Runnable {
 
     @Override
     public void run() {
-        try {
-            Thread.sleep(TEN_SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         tv.post(() -> {
             tv.invalidate();
             tv.setText(String.valueOf(numberFoundWifiNetworks));

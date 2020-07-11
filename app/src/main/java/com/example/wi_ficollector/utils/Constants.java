@@ -12,8 +12,6 @@ public final class Constants {
     public static boolean areBasicTagsAdded = false;
     public static final String UNRECOGNIZED_PERMISSION_TAG = "Unrecognized tag";
     public static final String UNRECOGNIZED_PERMISSION_MESSAGE = "Permission request can not be processed";
-    public static final String FOREGROUND_CHANNEL_ID = "Foreground service";
-    public static final int FOREGROUND_SERVICE_NOTIFICATION_ID = 482;
     public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
     public static final String FILE_NOT_FOUND_EXCEPTION_MESSAGE = "File does not exist,  but is going to be created";
     public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG = "Illegal argument exception thrown";

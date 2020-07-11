@@ -7,15 +7,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.example.wi_ficollector.notification.ApplicationNotification;
+import com.example.wi_ficollector.notification.DisabledGSPNotification;
 import com.example.wi_ficollector.notification.ForegroundServiceNotification;
+import com.example.wi_ficollector.receiver.GPSStateReceiver;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
 import com.example.wi_ficollector.wrapper.WifiLocation;
@@ -25,7 +29,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
-import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -35,6 +38,7 @@ public class ForegroundWifiLocationService extends Service {
 
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
+    private BroadcastReceiver mDisabledGPSStateReceiver;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
@@ -47,13 +51,14 @@ public class ForegroundWifiLocationService extends Service {
 
         Context context = this;
         ApplicationNotification applicationNotification = new ForegroundServiceNotification(context);
-        Notification notification = applicationNotification.createNotification();
+        NotificationCompat.Builder notificationBuilder = applicationNotification.createNotification();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         mWifiLocationRepository = new WifiLocationRepository(context);
         mWifiLocation = WifiLocation.getWifiLocation();
+        int foregroundServiceNotificationId = 721;
 
-        startForeground(FOREGROUND_SERVICE_NOTIFICATION_ID, notification);
+        startForeground(foregroundServiceNotificationId, notificationBuilder.build());
     }
 
     @Override
@@ -62,6 +67,7 @@ public class ForegroundWifiLocationService extends Service {
         implementLocationResultCallback();
         requestLocationUpdates();
         registerWiFiReceiver();
+        registerGPSStateReceiver();
 
         return START_NOT_STICKY;
     }
@@ -78,8 +84,8 @@ public class ForegroundWifiLocationService extends Service {
         try {
             mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
         } catch (SecurityException securityException) {
+            stopServiceWork();
             stopSelf();
-            // todo show notification for denied permission
         }
     }
 
@@ -112,6 +118,14 @@ public class ForegroundWifiLocationService extends Service {
         registerReceiver(mWifiReceiver, intentFilter);
     }
 
+    private void registerGPSStateReceiver(){
+        mDisabledGPSStateReceiver = new GPSStateReceiver();
+        IntentFilter intentFilter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
+
+        intentFilter.addAction(Intent.ACTION_PROVIDER_CHANGED);
+        registerReceiver(mDisabledGPSStateReceiver, intentFilter);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -134,16 +148,19 @@ public class ForegroundWifiLocationService extends Service {
     }
 
     private void stopServiceWork() {
-        unregisterReceiver(mWifiReceiver);
-        mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-        mWifiLocationRepository.closeFileOutputStream();
+        try {
+            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+            mWifiLocationRepository.closeFileOutputStream();
+            unregisterReceiver(mWifiReceiver);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
+        }
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
         stopServiceWork();
-        mWifiLocationRepository.closetags();
         stopSelf();
     }
 }
