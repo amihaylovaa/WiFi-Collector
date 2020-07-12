@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.preference.ScanPreference;
+import com.example.wi_ficollector.receiver.GPSStateReceiver;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
 import com.example.wi_ficollector.service.ForegroundWifiLocationService;
@@ -37,6 +38,7 @@ public class ScanActivity extends Activity {
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private GPSStateReceiver mGPSStateReceiver;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
     private ScanPreference mScanPreference;
@@ -65,6 +67,56 @@ public class ScanActivity extends Activity {
         requestLocationPermission();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (isServiceStarted) {
+            stopService(intent);
+            isServiceStarted = false;
+        }
+        requestLocationPermission();
+        mWifiLocationRepository.openFileOutputStream();
+        startUpdateUIThread();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (!isBackgroundPermissionRequestRequired || isBackgroundPermissionGranted) {
+            stopActivityWork();
+            ContextCompat.startForegroundService(this, intent);
+            isServiceStarted = true;
+        }
+        if (isBackgroundPermissionRequestRequired && !isBackgroundPermissionGranted) {
+            stopActivityWork();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
+            startActivityWork();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, @NonNull int[] grantResults) {
+        for (int i = 0; i < permissions.length; i++) {
+            switch (requestCode) {
+                case FINE_LOCATION_PERMISSION_CODE:
+                    handleFineLocationPermissionRequestResult(grantResults[i]);
+                    break;
+                case BACKGROUND_LOCATION_PERMISSION_CODE:
+                    handleBackgroundPermissionRequestResult(grantResults[i], permissions[i]);
+                    break;
+                default:
+                    Log.d(UNRECOGNIZED_PERMISSION_TAG, UNRECOGNIZED_PERMISSION_MESSAGE);
+            }
+        }
+    }
+
     public void enableGPS() {
         createLocationRequest();
 
@@ -78,10 +130,15 @@ public class ScanActivity extends Activity {
                 showGPSRequirements(resolvable);
             }
         }).addOnSuccessListener(e -> {
-            implementLocationResultCallback();
-            requestLocationUpdates();
-            registerWiFiReceiver();
+            startActivityWork();
         });
+    }
+
+    void startActivityWork() {
+        implementLocationResultCallback();
+        requestLocationUpdates();
+        registerReceiver(mWifiReceiver, SCAN_RESULTS_AVAILABLE_ACTION);
+        registerReceiver(mGPSStateReceiver, PROVIDERS_CHANGED_ACTION);
     }
 
     public void createLocationRequest() {
@@ -98,17 +155,6 @@ public class ScanActivity extends Activity {
         builder.addLocationRequest(mLocationRequest);
 
         return builder;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
-            implementLocationResultCallback();
-            requestLocationUpdates();
-            registerWiFiReceiver();
-        }
     }
 
     public void requestFineLocationPermission() {
@@ -153,27 +199,13 @@ public class ScanActivity extends Activity {
     }
 
     public void showBackgroundPermissionRequestRationale() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-        alertDialog.setMessage(BACKGROUND_PERMISSION_REQUEST_RATIONALE);
-        alertDialog.setPositiveButton(R.string.OK, (dialog, id) -> requestBackgroundLocationPermission());
-        alertDialog.create().show();
-    }
+        alertDialogBuilder.setMessage(BACKGROUND_PERMISSION_REQUEST_RATIONALE);
+        alertDialogBuilder.setPositiveButton(R.string.OK, (dialog, id) -> requestBackgroundLocationPermission());
+        alertDialogBuilder.create().show();
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, @NonNull int[] grantResults) {
-        for (int i = 0; i < permissions.length; i++) {
-            switch (requestCode) {
-                case FINE_LOCATION_PERMISSION_CODE:
-                    handleFineLocationPermissionRequestResult(grantResults[i]);
-                    break;
-                case BACKGROUND_LOCATION_PERMISSION_CODE:
-                    handleBackgroundPermissionRequestResult(grantResults[i], permissions[i]);
-                    break;
-                default:
-                    Log.d(UNRECOGNIZED_PERMISSION_TAG, UNRECOGNIZED_PERMISSION_MESSAGE);
-            }
-        }
+        alertDialogBuilder.create().dismiss();
     }
 
     private void handleBackgroundPermissionRequestResult(int grantResult, String permission) {
@@ -196,10 +228,10 @@ public class ScanActivity extends Activity {
     }
 
     private void showGPSRequirements(ResolvableApiException resolvable) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-        alertDialog.setMessage(GPS_REQUIREMENTS);
-        alertDialog.setPositiveButton(R.string.OK, (dialog, id) -> {
+        alertDialogBuilder.setMessage(GPS_REQUIREMENTS);
+        alertDialogBuilder.setPositiveButton(R.string.OK, (dialog, id) -> {
             try {
                 resolvable.startResolutionForResult(this, REQUEST_LOCATION_SETTINGS_CODE);
             } catch (IntentSender.SendIntentException sendEx) {
@@ -207,13 +239,14 @@ public class ScanActivity extends Activity {
                 // todo window leak
             }
         });
-        alertDialog.create().show();
+        // todo add dismiss
+        alertDialogBuilder.create().show();
     }
 
-    private void registerWiFiReceiver() {
-        IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+    private void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
+        IntentFilter intentFilter = new IntentFilter(action);
 
-        registerReceiver(mWifiReceiver, intentFilter);
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 
     private void requestLocationUpdates() {
@@ -252,10 +285,7 @@ public class ScanActivity extends Activity {
         if (!isWifiScanningSucceeded) {
             mWifiLocationRepository.save();
         }
-        tv.invalidate();
-        tv.setText(String.valueOf(numberFoundWifiNetworks));
-        // UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
-        // new Thread(uiUpdateTask).start();
+        startUpdateUIThread();
     }
 
     private void initializeFields() {
@@ -265,6 +295,7 @@ public class ScanActivity extends Activity {
         mWifiLocation = WifiLocation.getWifiLocation();
         mWifiLocationRepository = new WifiLocationRepository(ScanActivity.this);
         mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
+        mGPSStateReceiver = new GPSStateReceiver();
         intent = new Intent(this, ForegroundWifiLocationService.class);
         isBackgroundPermissionRequestRequired = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
         isBackgroundPermissionGranted = false;
@@ -276,47 +307,22 @@ public class ScanActivity extends Activity {
 
     private void stopActivityWork() {
         try {
-            unregisterReceiver(mWifiReceiver);
-        } catch (IllegalArgumentException illegalArgumentException) {
-            Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
-        }
-        try {
             mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         } catch (NullPointerException npe) {
             Log.d(NULL_POINTER_EXCEPTION_THROWN_TAG, NULL_POINTER_EXCEPTION_THROWN_MESSAGE);
         }
+        try {
+            unregisterReceiver(mWifiReceiver);
+            unregisterReceiver(mGPSStateReceiver);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
+        }
         mWifiLocationRepository.closeFileOutputStream();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (isServiceStarted) {
-            stopService(intent);
-            isServiceStarted = false;
-        }
-        requestLocationPermission();
-        mWifiLocationRepository.openFileOutputStream();
-        tv.invalidate();
-        tv.setText(String.valueOf(numberFoundWifiNetworks));
-    }
+    private void startUpdateUIThread() {
+        UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (!isBackgroundPermissionRequestRequired || isBackgroundPermissionGranted) {
-            stopActivityWork();
-            ContextCompat.startForegroundService(this, intent);
-            isServiceStarted = true;
-        }
-        if (isBackgroundPermissionRequestRequired && !isBackgroundPermissionGranted) {
-            stopActivityWork();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopActivityWork();
+        new Thread(uiUpdateTask).start();
     }
 }

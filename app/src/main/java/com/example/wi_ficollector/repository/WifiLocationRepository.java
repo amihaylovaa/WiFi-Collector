@@ -28,6 +28,7 @@ public class WifiLocationRepository {
     boolean isOutputSet;
     private XmlSerializer serializer;
     private Context mContext;
+    private static boolean areBasicTagsAdded;
 
     public WifiLocationRepository(Context mContext) {
         this.mWifiLocation = WifiLocation.getWifiLocation();
@@ -47,7 +48,7 @@ public class WifiLocationRepository {
                 saveValidWifiLocation(latitude, longitude, scanResults);
                 mWifiLocation.clearResults();
             }
-        } catch (IOException IOexception) {
+        } catch (IOException IOException) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
     }
@@ -144,14 +145,6 @@ public class WifiLocationRepository {
             mFileOutputStream.close();
         } catch (IOException e) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-        }
-    }
-
-    public synchronized void closetags() {
-        try {
-            serializer.endDocument();
-        } catch (IOException i) {
-
         }
     }
 }

@@ -76,6 +76,15 @@ public class ForegroundWifiLocationService extends Service {
         mWifiLocation = WifiLocation.getWifiLocation();
         mGPSStateReceiver = new GPSStateReceiver();
         mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
+        createLocationRequest();
+    }
+
+    public void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+
+        mLocationRequest.setInterval(FIVE_SECONDS);
+        mLocationRequest.setFastestInterval(THREE_SECONDS);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     private void showDeniedPermissionNotification() {
@@ -89,31 +98,26 @@ public class ForegroundWifiLocationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        createLocationRequest();
         implementLocationResultCallback();
         requestLocationUpdates();
-        registerWiFiReceiver();
-        registerGPSStateReceiver();
+        registerReceiver(mWifiReceiver, SCAN_RESULTS_AVAILABLE_ACTION);
+        registerReceiver(mGPSStateReceiver, PROVIDERS_CHANGED_ACTION);
 
         return START_STICKY;
     }
 
+    private void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
+        IntentFilter intentFilter = new IntentFilter(action);
+
+        registerReceiver(broadcastReceiver, intentFilter);
+    }
+
     public boolean isFineLocationPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this,
-                ACCESS_FINE_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission(mContext, ACCESS_FINE_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
     }
 
     public boolean isBackgroundLocationPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this,
-                ACCESS_BACKGROUND_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-
-        mLocationRequest.setInterval(FIVE_SECONDS);
-        mLocationRequest.setFastestInterval(THREE_SECONDS);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        return ContextCompat.checkSelfPermission(mContext, ACCESS_BACKGROUND_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
     }
 
     public void requestLocationUpdates() {
@@ -147,22 +151,9 @@ public class ForegroundWifiLocationService extends Service {
         };
     }
 
-    private void registerWiFiReceiver() {
-        IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-
-        registerReceiver(mWifiReceiver, intentFilter);
-    }
-
-    private void registerGPSStateReceiver() {
-        IntentFilter intentFilter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
-
-        registerReceiver(mGPSStateReceiver, intentFilter);
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("OnDestroy", "Called");
         stopServiceWork();
         stopSelf();
     }
@@ -185,8 +176,6 @@ public class ForegroundWifiLocationService extends Service {
         try {
             unregisterReceiver(mWifiReceiver);
             unregisterReceiver(mGPSStateReceiver);
-            mWifiManager = null;
-            mGPSStateReceiver = null;
         } catch (IllegalArgumentException illegalArgumentException) {
             Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
         }

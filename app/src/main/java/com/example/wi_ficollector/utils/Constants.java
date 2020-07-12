@@ -1,6 +1,8 @@
 package com.example.wi_ficollector.utils;
 
 import android.Manifest;
+import android.location.LocationManager;
+import android.net.wifi.WifiManager;
 
 public final class Constants {
 
@@ -8,8 +10,10 @@ public final class Constants {
     }
 
     public static int numberFoundWifiNetworks = 0;
+    private static boolean areBasicTagsAdded = false;
     public static final double ZERO = 0.00;
-    public static boolean areBasicTagsAdded = false;
+    public static final String SCAN_RESULTS_AVAILABLE_ACTION = WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;
+    public static final String PROVIDERS_CHANGED_ACTION = LocationManager.PROVIDERS_CHANGED_ACTION;
     public static final String UNRECOGNIZED_PERMISSION_TAG = "Unrecognized tag";
     public static final String UNRECOGNIZED_PERMISSION_MESSAGE = "Permission request can not be processed";
     public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
@@ -24,7 +28,6 @@ public final class Constants {
     public static final String ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
     public static final int FIVE_SECONDS = 5000;
     public static final int THREE_SECONDS = 3000;
-    public static final int TEN_SECONDS = 10_000;
     public static final String GPX_TAG = "gpx";
     public static final String TRACK_TAG = "trk";
     public static final String TRACK_SEGMENT_TAG = "trkseg";

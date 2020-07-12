@@ -29,7 +29,6 @@ public class GPSStateReceiver extends BroadcastReceiver {
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(notificationId, builder.build());
-
         }
     }
 }
