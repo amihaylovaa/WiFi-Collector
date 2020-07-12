@@ -41,7 +41,7 @@ public class WiFiReceiver extends BroadcastReceiver {
             mWifiLocation.setScanResults(scanResults);
             if (shouldSaveScanResults()) {
                 mWifiLocationRepository.save();
-            }
+           }
         }
     }
 

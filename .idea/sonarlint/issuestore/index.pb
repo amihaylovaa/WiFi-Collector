@@ -5,8 +5,6 @@ w
 Gapp/src/main/java/com/example/wi_ficollector/activity/MainActivity.java,e\2\e2db098d5c9e31d4003428fe7271f46ff70c94d1
 w
 Gapp/src/main/java/com/example/wi_ficollector/receiver/WiFiReceiver.java,b\d\bdbe09c60829f8d76087b787a712b543939067a1
-
-Oapp/src/main/java/com/example/wi_ficollector/ScanActivityLifecycleObserver.java,a\7\a7255ee423f11e3f1769acb5ae7a332d8f93e8a7
 P
  app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 q
@@ -58,7 +56,9 @@ Wapp/src/main/java/com/example/wi_ficollector/service/ForegroundWifiLocationServ
 \app/src/main/java/com/example/wi_ficollector/notification/ForegroundServiceNotification.java,9\4\94718323dad1fa03b97a8f471025b958796cd77a
 Ü
 Vapp/src/main/java/com/example/wi_ficollector/notification/ApplicationNotification.java,9\6\96850575ded400027cb9957a887e152a68fd54d4
-Ü
-Vapp/src/main/java/com/example/wi_ficollector/notification/DisabledGSPNotification.java,d\2\d280751e7afa1f344bd1755a20843829678d2e2d
 {
 Kapp/src/main/java/com/example/wi_ficollector/receiver/GPSStateReceiver.java,f\1\f1edaa4f16056d4a2edcbab11425899b83a6a40d
+~
+Napp/src/main/java/com/example/wi_ficollector/notification/GSPNotification.java,d\2\d2f8062666274a7a56e7194485d75aa05b75c276
+ç
+]app/src/main/java/com/example/wi_ficollector/notification/LocationPermissionNotification.java,4\2\42e80eecb4b897ff781009fd7d5fea46a9cb945f

@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -33,7 +32,7 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
-public class ScanActivity extends AppCompatActivity {
+public class ScanActivity extends Activity {
 
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
@@ -58,6 +57,11 @@ public class ScanActivity extends AppCompatActivity {
         if (mScanPreference.isActivityFirstTimeLaunched()) {
             mScanPreference.addBackgroundPermissionRationaleKey();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         requestLocationPermission();
     }
 
@@ -200,13 +204,13 @@ public class ScanActivity extends AppCompatActivity {
                 resolvable.startResolutionForResult(this, REQUEST_LOCATION_SETTINGS_CODE);
             } catch (IntentSender.SendIntentException sendEx) {
                 // todo some handling
+                // todo window leak
             }
         });
         alertDialog.create().show();
     }
 
     private void registerWiFiReceiver() {
-        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
         IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 
         registerReceiver(mWifiReceiver, intentFilter);
@@ -248,8 +252,10 @@ public class ScanActivity extends AppCompatActivity {
         if (!isWifiScanningSucceeded) {
             mWifiLocationRepository.save();
         }
-        UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
-        new Thread(uiUpdateTask).start();
+        tv.invalidate();
+        tv.setText(String.valueOf(numberFoundWifiNetworks));
+        // UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
+        // new Thread(uiUpdateTask).start();
     }
 
     private void initializeFields() {
@@ -258,6 +264,7 @@ public class ScanActivity extends AppCompatActivity {
         mScanPreference = new ScanPreference(this);
         mWifiLocation = WifiLocation.getWifiLocation();
         mWifiLocationRepository = new WifiLocationRepository(ScanActivity.this);
+        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
         intent = new Intent(this, ForegroundWifiLocationService.class);
         isBackgroundPermissionRequestRequired = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
         isBackgroundPermissionGranted = false;
@@ -269,13 +276,16 @@ public class ScanActivity extends AppCompatActivity {
 
     private void stopActivityWork() {
         try {
-    // todo add handling for npe
-            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-            mWifiLocationRepository.closeFileOutputStream();
             unregisterReceiver(mWifiReceiver);
         } catch (IllegalArgumentException illegalArgumentException) {
             Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
         }
+        try {
+            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        } catch (NullPointerException npe) {
+            Log.d(NULL_POINTER_EXCEPTION_THROWN_TAG, NULL_POINTER_EXCEPTION_THROWN_MESSAGE);
+        }
+        mWifiLocationRepository.closeFileOutputStream();
     }
 
     @Override

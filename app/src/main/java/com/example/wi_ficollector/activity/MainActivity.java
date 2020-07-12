@@ -1,7 +1,6 @@
 package com.example.wi_ficollector.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +12,7 @@ import com.example.wi_ficollector.preference.MainPreference;
 
 import static com.example.wi_ficollector.utils.Constants.INTRO;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

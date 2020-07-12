@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
@@ -41,13 +42,13 @@ public class ForegroundWifiLocationService extends Service {
 
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
+    private GPSStateReceiver mGPSStateReceiver;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
     private WifiLocationRepository mWifiLocationRepository;
     private WifiLocation mWifiLocation;
     private Context mContext;
-
 
     @Override
     public void onCreate() {
@@ -73,6 +74,8 @@ public class ForegroundWifiLocationService extends Service {
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         mWifiLocationRepository = new WifiLocationRepository(mContext);
         mWifiLocation = WifiLocation.getWifiLocation();
+        mGPSStateReceiver = new GPSStateReceiver();
+        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
     }
 
     private void showDeniedPermissionNotification() {
@@ -145,23 +148,21 @@ public class ForegroundWifiLocationService extends Service {
     }
 
     private void registerWiFiReceiver() {
-        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
         IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 
         registerReceiver(mWifiReceiver, intentFilter);
     }
 
     private void registerGPSStateReceiver() {
-        GPSStateReceiver mDisabledGPSStateReceiver = new GPSStateReceiver();
         IntentFilter intentFilter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
 
-        intentFilter.addAction(Intent.ACTION_PROVIDER_CHANGED);
-        registerReceiver(mDisabledGPSStateReceiver, intentFilter);
+        registerReceiver(mGPSStateReceiver, intentFilter);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("OnDestroy", "Called");
         stopServiceWork();
         stopSelf();
     }
@@ -182,13 +183,19 @@ public class ForegroundWifiLocationService extends Service {
 
     private void stopServiceWork() {
         try {
-            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-            mWifiLocationRepository.closeFileOutputStream();
             unregisterReceiver(mWifiReceiver);
+            unregisterReceiver(mGPSStateReceiver);
+            mWifiManager = null;
+            mGPSStateReceiver = null;
         } catch (IllegalArgumentException illegalArgumentException) {
-            // todo add handling for npe
             Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
         }
+        try {
+            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        } catch (NullPointerException npe) {
+            Log.d(NULL_POINTER_EXCEPTION_THROWN_TAG, NULL_POINTER_EXCEPTION_THROWN_MESSAGE);
+        }
+        mWifiLocationRepository.closeFileOutputStream();
     }
 
     @Override

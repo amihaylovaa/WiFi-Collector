@@ -10,6 +10,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.wi_ficollector.notification.ApplicationNotification;
 import com.example.wi_ficollector.notification.GSPNotification;
+import com.example.wi_ficollector.service.ForegroundWifiLocationService;
 
 public class GPSStateReceiver extends BroadcastReceiver {
 
@@ -20,12 +21,15 @@ public class GPSStateReceiver extends BroadcastReceiver {
         boolean isProviderEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
         if (action.equals("android.location.PROVIDERS_CHANGED") && !isProviderEnabled) {
+            context.stopService(new Intent(context, ForegroundWifiLocationService.class));
+
             ApplicationNotification disabledGPSNotification = new GSPNotification(context);
             NotificationCompat.Builder builder = disabledGPSNotification.createNotification();
-            int notificationId=182;
+            int notificationId = 182;
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(notificationId, builder.build());
+
         }
     }
 }
