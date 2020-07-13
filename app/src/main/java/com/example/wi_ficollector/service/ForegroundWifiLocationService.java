@@ -5,24 +5,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 
 import com.example.wi_ficollector.notification.ApplicationNotification;
 import com.example.wi_ficollector.notification.ForegroundServiceNotification;
-import com.example.wi_ficollector.notification.LocationPermissionNotification;
 import com.example.wi_ficollector.receiver.GPSStateReceiver;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
 import com.example.wi_ficollector.repository.WifiLocationRepository;
@@ -54,18 +48,6 @@ public class ForegroundWifiLocationService extends Service {
     public void onCreate() {
         super.onCreate();
         initializeFields();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isBackgroundLocationPermissionGranted()) {
-            showDeniedPermissionNotification();
-        } else if (!isFineLocationPermissionGranted()) {
-            showDeniedPermissionNotification();
-        } else {
-            ApplicationNotification applicationNotification = new ForegroundServiceNotification(mContext);
-            NotificationCompat.Builder notificationBuilder = applicationNotification.createNotification();
-            int foregroundServiceNotificationId = 721;
-
-            startForeground(foregroundServiceNotificationId, notificationBuilder.build());
-        }
     }
 
     private void initializeFields() {
@@ -87,21 +69,18 @@ public class ForegroundWifiLocationService extends Service {
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    private void showDeniedPermissionNotification() {
-        ApplicationNotification locationPermissionNotification = new LocationPermissionNotification(this);
-        NotificationCompat.Builder builder = locationPermissionNotification.createNotification();
-        int notificationId = 93;
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(notificationId, builder.build());
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         implementLocationResultCallback();
         requestLocationUpdates();
         registerReceiver(mWifiReceiver, SCAN_RESULTS_AVAILABLE_ACTION);
         registerReceiver(mGPSStateReceiver, PROVIDERS_CHANGED_ACTION);
+
+        ApplicationNotification applicationNotification = new ForegroundServiceNotification(mContext);
+        NotificationCompat.Builder notificationBuilder = applicationNotification.createNotification();
+        int foregroundServiceNotificationId = 721;
+
+        startForeground(foregroundServiceNotificationId, notificationBuilder.build());
 
         return START_STICKY;
     }
@@ -110,14 +89,6 @@ public class ForegroundWifiLocationService extends Service {
         IntentFilter intentFilter = new IntentFilter(action);
 
         registerReceiver(broadcastReceiver, intentFilter);
-    }
-
-    public boolean isFineLocationPermissionGranted() {
-        return ContextCompat.checkSelfPermission(mContext, ACCESS_FINE_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public boolean isBackgroundLocationPermissionGranted() {
-        return ContextCompat.checkSelfPermission(mContext, ACCESS_BACKGROUND_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
     }
 
     public void requestLocationUpdates() {

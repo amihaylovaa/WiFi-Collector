@@ -1,9 +1,5 @@
 
-S
-java:S2696["6Make the enclosing method "static" or remove this set.(ÖÌóé8Ú’ëñª.
 X
-java:S2696p"6Make the enclosing method "static" or remove this set.(ğºÔŸøÿÿÿÿ8´£¥«.
-r	java:S1172"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(›ÛÜÌÿÿÿÿÿ8«‰§õ«.
-K	java:S108™")Either remove or fill this block of code.(âœ„Äúÿÿÿÿ8´£¥«.
-o
-java:S2095G"MUse try-with-resources or close this "FileInputStream" in a "finally" clause.(««Õ¡ÿÿÿÿÿ8°¥©ê³.
+java:S2696q"6Make the enclosing method "static" or remove this set.(ğºÔŸøÿÿÿÿ8´£¥«.
+S
+java:S2696\"6Make the enclosing method "static" or remove this set.(ÖÌóé8Ú’ëñª.

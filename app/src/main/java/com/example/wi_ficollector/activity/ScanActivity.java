@@ -37,8 +37,8 @@ public class ScanActivity extends Activity {
 
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
     private GPSStateReceiver mGPSStateReceiver;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
     private ScanPreference mScanPreference;
@@ -204,8 +204,6 @@ public class ScanActivity extends Activity {
         alertDialogBuilder.setMessage(BACKGROUND_PERMISSION_REQUEST_RATIONALE);
         alertDialogBuilder.setPositiveButton(R.string.OK, (dialog, id) -> requestBackgroundLocationPermission());
         alertDialogBuilder.create().show();
-
-        alertDialogBuilder.create().dismiss();
     }
 
     private void handleBackgroundPermissionRequestResult(int grantResult, String permission) {
