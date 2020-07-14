@@ -14,5 +14,7 @@
     <string name="disabled_gps_notification_content_text">Application stopped due to disabled GPS. Tap go enable GPS.</string>
     <string name="denied_location_permission_channel_name">Previously granted location permission has been denied</string>
     <string name="denied_location_permission_content_text">Application has been terminated due to denied location permission. Tap to grant permission.</string>
+    <string name="gps_requirements_dialog">GPS Requirements</string>
+    <string name="gps_requirements_fragment_dialog_message">Turning GPS on is required in order to scan WiFi and find your location</string>
 
 </resources>

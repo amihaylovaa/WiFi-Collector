@@ -3,6 +3,7 @@ package com.example.wi_ficollector.utils;
 import android.Manifest;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 
 public final class Constants {
 
@@ -28,6 +29,7 @@ public final class Constants {
     public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during working with file stream";
     public static final String ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
+    public static final  boolean IS_BACKGROUND_PERMISSION_REQUEST_REQUIRED = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
     public static final int FIVE_SECONDS = 5000;
     public static final int THREE_SECONDS = 3000;
     public static final String GPX_TAG = "gpx";
@@ -63,6 +65,4 @@ public final class Constants {
     public static final String BACKGROUND_PERMISSION_REQUEST_RATIONALE =
             "It is recommended to grant all time permission to access your location, " +
                     "otherwise application will not be able to work on background";
-
-    public static final String GPS_REQUIREMENTS = "Turning GPS on is required in order to scan WiFi and find your location";
 }

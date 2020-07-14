@@ -1,7 +1,6 @@
 package com.example.wi_ficollector.service;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -35,7 +34,7 @@ import static com.example.wi_ficollector.utils.Constants.*;
 public class ForegroundWifiLocationService extends Service {
 
     private WifiManager mWifiManager;
-    private BroadcastReceiver mWifiReceiver;
+    private android.content.BroadcastReceiver mWifiReceiver;
     private GPSStateReceiver mGPSStateReceiver;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationCallback mLocationCallback;
@@ -85,7 +84,7 @@ public class ForegroundWifiLocationService extends Service {
         return START_STICKY;
     }
 
-    private void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
+    private void registerReceiver(android.content.BroadcastReceiver broadcastReceiver, String action) {
         IntentFilter intentFilter = new IntentFilter(action);
 
         registerReceiver(broadcastReceiver, intentFilter);

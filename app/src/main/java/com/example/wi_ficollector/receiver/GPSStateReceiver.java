@@ -1,6 +1,5 @@
 package com.example.wi_ficollector.receiver;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
@@ -12,7 +11,7 @@ import com.example.wi_ficollector.notification.ApplicationNotification;
 import com.example.wi_ficollector.notification.GSPNotification;
 import com.example.wi_ficollector.service.ForegroundWifiLocationService;
 
-public class GPSStateReceiver extends BroadcastReceiver {
+public class GPSStateReceiver extends android.content.BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
