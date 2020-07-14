@@ -1,17 +1,5 @@
 
-S
-java:S2696j"6Make the enclosing method "static" or remove this set.(³ø«Ç8 Ð¦Ä´.
-P
-java:S1135ó"2Complete the task associated to this TODO comment.(øç‡›8îÆ £´.
-T
-java:S14443"2Make this "public static isGPSEnabled" field final(ßÃÅ¶ÿÿÿÿÿ8¿õ£Ä´.
-P
-java:S1135÷"2Complete the task associated to this TODO comment.(”ÖóÍ8 Ð¦Ä´.
 O
-java:S1874 "1Remove this use of "startScan"; it is deprecated.(»žŠø8 Ð¦Ä´.
+java:S1874œ"1Remove this use of "startScan"; it is deprecated.(»žŠø8 Ð¦Ä´.
 P
-java:S1135ô"2Complete the task associated to this TODO comment.(‡«¨ü8 Ð¦Ä´.
-z
-java:S11043"XMake isGPSEnabled a static final constant or non-public and provide accessors if needed.(ßÃÅ¶ÿÿÿÿÿ8¿õ£Ä´.
-T
-java:S2696Œ"6Make the enclosing method "static" or remove this set.(³ø«Ç8¨‹§Ä´.
+java:S1135ï"2Complete the task associated to this TODO comment.(øç‡›8îÆ £´.

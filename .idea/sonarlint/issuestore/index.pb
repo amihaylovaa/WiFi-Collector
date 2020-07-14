@@ -60,5 +60,3 @@ Vapp/src/main/java/com/example/wi_ficollector/notification/ApplicationNotificati
 Kapp/src/main/java/com/example/wi_ficollector/receiver/GPSStateReceiver.java,f\1\f1edaa4f16056d4a2edcbab11425899b83a6a40d
 ~
 Napp/src/main/java/com/example/wi_ficollector/notification/GSPNotification.java,d\2\d2f8062666274a7a56e7194485d75aa05b75c276
-ç
-]app/src/main/java/com/example/wi_ficollector/notification/LocationPermissionNotification.java,4\2\42e80eecb4b897ff781009fd7d5fea46a9cb945f

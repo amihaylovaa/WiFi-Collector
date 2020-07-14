@@ -136,7 +136,7 @@ public class WifiLocationRepository {
         try {
             mFileOutputStream = mContext.openFileOutput(FILE_NAME, MODE_APPEND);
         } catch (FileNotFoundException exception) {
-            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MESSAGE);
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
         }
     }
 

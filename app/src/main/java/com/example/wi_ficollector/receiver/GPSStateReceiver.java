@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -12,8 +11,6 @@ import androidx.core.app.NotificationManagerCompat;
 import com.example.wi_ficollector.notification.ApplicationNotification;
 import com.example.wi_ficollector.notification.GSPNotification;
 import com.example.wi_ficollector.service.ForegroundWifiLocationService;
-
-import static com.example.wi_ficollector.activity.ScanActivity.isForeground;
 
 public class GPSStateReceiver extends BroadcastReceiver {
 
@@ -28,9 +25,9 @@ public class GPSStateReceiver extends BroadcastReceiver {
 
             ApplicationNotification disabledGPSNotification = new GSPNotification(context);
             NotificationCompat.Builder builder = disabledGPSNotification.createNotification();
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             int notificationId = 182;
 
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(notificationId, builder.build());
         }
     }

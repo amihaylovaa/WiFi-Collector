@@ -44,9 +44,12 @@ public class ScanActivity extends Activity {
     private ScanPreference mScanPreference;
     private WifiLocationRepository mWifiLocationRepository;
     private WifiLocation mWifiLocation;
+    private AlertDialog mGPSRequirementsDialog;
+    private AlertDialog mBackgroundLocationPermissionRationaleDialog;
     private TextView tv;
     private boolean isBackgroundPermissionRequestRequired;
     private boolean isBackgroundPermissionGranted;
+    public static boolean isGPSEnabled;
     private boolean isServiceStarted;
     private Intent intent;
 
@@ -98,6 +101,7 @@ public class ScanActivity extends Activity {
 
         if (requestCode == REQUEST_LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
             startActivityWork();
+            isGPSEnabled = true;
         }
     }
 
@@ -112,7 +116,7 @@ public class ScanActivity extends Activity {
                     handleBackgroundPermissionRequestResult(grantResults[i], permissions[i]);
                     break;
                 default:
-                    Log.d(UNRECOGNIZED_PERMISSION_TAG, UNRECOGNIZED_PERMISSION_MESSAGE);
+                    Log.d(UNRECOGNIZED_PERMISSION_TAG, UNRECOGNIZED_PERMISSION_MSG);
             }
         }
     }
@@ -131,6 +135,7 @@ public class ScanActivity extends Activity {
             }
         }).addOnSuccessListener(e -> {
             startActivityWork();
+            isGPSEnabled = true;
         });
     }
 
@@ -139,6 +144,14 @@ public class ScanActivity extends Activity {
         requestLocationUpdates();
         registerReceiver(mWifiReceiver, SCAN_RESULTS_AVAILABLE_ACTION);
         registerReceiver(mGPSStateReceiver, PROVIDERS_CHANGED_ACTION);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isGPSEnabled) {
+            enableGPS();
+        }
     }
 
     public void createLocationRequest() {
@@ -201,9 +214,14 @@ public class ScanActivity extends Activity {
     public void showBackgroundPermissionRequestRationale() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
+        dismissLocationPermissionDialog();
+
         alertDialogBuilder.setMessage(BACKGROUND_PERMISSION_REQUEST_RATIONALE);
         alertDialogBuilder.setPositiveButton(R.string.OK, (dialog, id) -> requestBackgroundLocationPermission());
-        alertDialogBuilder.create().show();
+
+        mBackgroundLocationPermissionRationaleDialog = alertDialogBuilder.create();
+
+        mBackgroundLocationPermissionRationaleDialog.show();
     }
 
     private void handleBackgroundPermissionRequestResult(int grantResult, String permission) {
@@ -225,20 +243,29 @@ public class ScanActivity extends Activity {
         }
     }
 
+    private void dismissLocationPermissionDialog() {
+        if (mBackgroundLocationPermissionRationaleDialog != null) {
+            mBackgroundLocationPermissionRationaleDialog.dismiss();
+            mBackgroundLocationPermissionRationaleDialog = null;
+        }
+    }
+
     private void showGPSRequirements(ResolvableApiException resolvable) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ScanActivity.this);
+
+        dismissDialog();
 
         alertDialogBuilder.setMessage(GPS_REQUIREMENTS);
         alertDialogBuilder.setPositiveButton(R.string.OK, (dialog, id) -> {
             try {
                 resolvable.startResolutionForResult(this, REQUEST_LOCATION_SETTINGS_CODE);
             } catch (IntentSender.SendIntentException sendEx) {
-                // todo some handling
-                // todo window leak
+                Log.d(SEND_INTENT_EXCEPTION_THROWN_TAG, SEND_INTENT_EXCEPTION_EXCEPTION_THROWN_MSG);
             }
         });
-        // todo add dismiss
-        alertDialogBuilder.create().show();
+        mGPSRequirementsDialog = alertDialogBuilder.create();
+
+        mGPSRequirementsDialog.show();
     }
 
     private void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
@@ -252,6 +279,13 @@ public class ScanActivity extends Activity {
             mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
         } catch (SecurityException securityException) {
             requestLocationPermission();
+        }
+    }
+
+    private void dismissDialog() {
+        if (mGPSRequirementsDialog != null && mGPSRequirementsDialog.isShowing()) {
+            mGPSRequirementsDialog.cancel();
+            mGPSRequirementsDialog = null;
         }
     }
 
@@ -304,6 +338,8 @@ public class ScanActivity extends Activity {
     }
 
     private void stopActivityWork() {
+        dismissDialog();
+        dismissLocationPermissionDialog();
         try {
             mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         } catch (NullPointerException npe) {
