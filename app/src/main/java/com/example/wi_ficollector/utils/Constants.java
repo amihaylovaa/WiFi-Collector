@@ -59,10 +59,7 @@ public final class Constants {
     public static final int REQUEST_LOCATION_SETTINGS_CODE = 104;
 
     public static final String INTRO = "This application collect " +
-            "your location and wireless access points based on your current location.\n" +
+            "your location and wireless access points based on your current location," +
+            "therefore all time permission is required.\n" +
             "This data is stored on your device and is expected to be sent later.";
-
-    public static final String BACKGROUND_PERMISSION_REQUEST_RATIONALE =
-            "It is recommended to grant all time permission to access your location, " +
-                    "otherwise application will not be able to work on background";
 }

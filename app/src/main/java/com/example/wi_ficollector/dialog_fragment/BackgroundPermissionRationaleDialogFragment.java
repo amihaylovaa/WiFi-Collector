@@ -1,9 +1,8 @@
 package com.example.wi_ficollector.dialog_fragment;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,11 +11,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.wi_ficollector.activity.ScanActivity;
 
-import static com.example.wi_ficollector.utils.Constants.BACKGROUND_PERMISSION_REQUEST_RATIONALE;
-
 public class BackgroundPermissionRationaleDialogFragment extends DialogFragment {
 
-    public interface BackgroundPermissionRationale {
+    public interface BackgroundPermissionRationaleListener {
         void showRationale();
     }
 
@@ -62,10 +59,9 @@ public class BackgroundPermissionRationaleDialogFragment extends DialogFragment 
         }
 
         if (alertDialog == null) {
-            Log.d("ALERT", "DIALOG");
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity())
-                    .setTitle("Background Permission")
-                    .setMessage(BACKGROUND_PERMISSION_REQUEST_RATIONALE)
+                    .setTitle(title)
+                    .setMessage(message)
                     .setCancelable(false)
                     .setPositiveButton(buttonOk, (dialog, whichButton) -> {
                         ((ScanActivity) getActivity()).showRationale();
@@ -77,11 +73,4 @@ public class BackgroundPermissionRationaleDialogFragment extends DialogFragment 
         }
         return alertDialog;
     }
-
-    @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
-        Log.d("DISMISSED", "STATE");
-    }
-
 }

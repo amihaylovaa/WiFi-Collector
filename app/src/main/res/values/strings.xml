@@ -18,5 +18,7 @@
     <string name="gps_requirements_fragment_dialog_message">Turning GPS on is required in order to scan WiFi and find your location</string>
     <string name="gps_requirements_fragment_dialog_title">GPS actions required</string>
     <string name="gps_requirements_title">GPS  requirements</string>
+    <string name="background_permission_rationale_fragment_dialog">Background permission required</string>
+    <string name="background_permission_rationale_dialog_fragment_message">It is recommended to grant all time permission to access your location, otherwise application will not be able to work on background</string>
 
 </resources>

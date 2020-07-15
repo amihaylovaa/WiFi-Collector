@@ -37,8 +37,8 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
-public class ScanActivity extends AppCompatActivity
-        implements GPSRequirementDialogFragment.GPSDialogListener, BackgroundPermissionRationaleDialogFragment.BackgroundPermissionRationale {
+public class ScanActivity extends AppCompatActivity implements GPSRequirementDialogFragment.GPSDialogListener,
+        BackgroundPermissionRationaleDialogFragment.BackgroundPermissionRationaleListener {
 
     private WifiManager mWifiManager;
     private WiFiReceiver mWifiReceiver;
@@ -142,6 +142,22 @@ public class ScanActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void startResolution() {
+        try {
+            if (mResolvableApiException != null) {
+                mResolvableApiException.startResolutionForResult(this, REQUEST_LOCATION_SETTINGS_CODE);
+            }
+        } catch (IntentSender.SendIntentException sendEx) {
+            Log.d(SEND_INTENT_EXCEPTION_THROWN_TAG, SEND_INTENT_EXCEPTION_EXCEPTION_THROWN_MSG);
+        }
+    }
+
+    @Override
+    public void showRationale() {
+        requestBackgroundLocationPermission();
+    }
+
     private void handleFineLocationPermissionGranted() {
         if (IS_BACKGROUND_PERMISSION_REQUEST_REQUIRED) {
             requestBackgroundPermission();
@@ -237,12 +253,10 @@ public class ScanActivity extends AppCompatActivity
 
     public void showBackgroundPermissionRequestRationale() {
         if (mBackgroundPermissionRationaleDialogFragment == null) {
-            Log.d("BACKGROUND PERMISSION", "REQUIREMENTS");
-
-            final String dialogTag = "Dialog tag";
+            final String dialogTag = "GPS Dialog";
             FragmentManager fragmentManager = getSupportFragmentManager();
-            String message = getString(R.string.gps_requirements_fragment_dialog_message);
-            String title = getString(R.string.gps_requirements_fragment_dialog_title);
+            String message = getString(R.string.background_permission_rationale_dialog_fragment_message);
+            String title = getString(R.string.background_permission_rationale_fragment_dialog);
             String buttonOk = getString(R.string.OK);
             mBackgroundPermissionRationaleDialogFragment = BackgroundPermissionRationaleDialogFragment.newInstance(title, message, buttonOk);
 
@@ -252,9 +266,7 @@ public class ScanActivity extends AppCompatActivity
 
     private void showGPSRequirements() {
         if (mGPSRequirementsDialogFragment == null) {
-            Log.d("SHOW GPS", "REQUIREMENTS");
-
-            final String dialogTag = "Dialog tag";
+            final String dialogTag = "Background permission dialog";
             FragmentManager fragmentManager = getSupportFragmentManager();
             String message = getString(R.string.gps_requirements_fragment_dialog_message);
             String title = getString(R.string.gps_requirements_fragment_dialog_title);
@@ -345,21 +357,5 @@ public class ScanActivity extends AppCompatActivity
         UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
 
         new Thread(uiUpdateTask).start();
-    }
-
-    @Override
-    public void startResolution() {
-        try {
-            if (mResolvableApiException != null) {
-                mResolvableApiException.startResolutionForResult(this, REQUEST_LOCATION_SETTINGS_CODE);
-            }
-        } catch (IntentSender.SendIntentException sendEx) {
-            Log.d(SEND_INTENT_EXCEPTION_THROWN_TAG, SEND_INTENT_EXCEPTION_EXCEPTION_THROWN_MSG);
-        }
-    }
-
-    @Override
-    public void showRationale() {
-        requestBackgroundLocationPermission();
     }
 }

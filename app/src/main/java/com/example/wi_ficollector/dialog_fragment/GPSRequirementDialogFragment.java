@@ -1,9 +1,8 @@
 package com.example.wi_ficollector.dialog_fragment;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
+
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,7 +62,6 @@ public class GPSRequirementDialogFragment extends DialogFragment {
         }
 
         if (mAlertDialog == null) {
-            Log.d("ALERT", "DIALOG");
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity())
                     .setTitle(title)
                     .setMessage(message)
@@ -77,11 +75,5 @@ public class GPSRequirementDialogFragment extends DialogFragment {
             mAlertDialog.setCanceledOnTouchOutside(false);
         }
         return mAlertDialog;
-    }
-
-    @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
-        Log.d("DISMISSED", "STATE");
     }
 }
