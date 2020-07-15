@@ -12,19 +12,18 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.wi_ficollector.activity.ScanActivity;
 
+import static com.example.wi_ficollector.utils.Constants.BACKGROUND_PERMISSION_REQUEST_RATIONALE;
 
-// todo attach
-// todo dismiss
-public class GPSRequirementDialogFragment extends DialogFragment {
+public class BackgroundPermissionRationaleDialogFragment extends DialogFragment {
 
-    public interface GPSDialogListener {
-        void startResolution();
+    public interface BackgroundPermissionRationale {
+        void showRationale();
     }
 
     private static final String TITLE;
     private static final String MESSAGE;
     private static final String BUTTON_KEY;
-    private AlertDialog mAlertDialog;
+    AlertDialog alertDialog;
 
     static {
         TITLE = "title";
@@ -32,20 +31,20 @@ public class GPSRequirementDialogFragment extends DialogFragment {
         BUTTON_KEY = "buttonValue";
     }
 
-    public GPSRequirementDialogFragment() {
+    public BackgroundPermissionRationaleDialogFragment() {
         // Needed when dialog fragment is recreated
     }
 
-    public static GPSRequirementDialogFragment newInstance(String title, String message, String buttonOk) {
-        GPSRequirementDialogFragment gpsRequirementDialogFragment = new GPSRequirementDialogFragment();
+    public static BackgroundPermissionRationaleDialogFragment newInstance(String title, String message, String buttonOk) {
+        BackgroundPermissionRationaleDialogFragment backgroundPermissionRationaleDialogFragment = new BackgroundPermissionRationaleDialogFragment();
         Bundle args = new Bundle();
 
         args.putString(TITLE, title);
         args.putString(MESSAGE, message);
         args.putString(BUTTON_KEY, buttonOk);
-        gpsRequirementDialogFragment.setArguments(args);
+        backgroundPermissionRationaleDialogFragment.setArguments(args);
 
-        return gpsRequirementDialogFragment;
+        return backgroundPermissionRationaleDialogFragment;
     }
 
     @NonNull
@@ -62,21 +61,21 @@ public class GPSRequirementDialogFragment extends DialogFragment {
             buttonOk = args.getString(BUTTON_KEY);
         }
 
-        if (mAlertDialog == null) {
+        if (alertDialog == null) {
             Log.d("ALERT", "DIALOG");
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity())
-                    .setTitle(title)
-                    .setMessage(message)
+                    .setTitle("Background Permission")
+                    .setMessage(BACKGROUND_PERMISSION_REQUEST_RATIONALE)
                     .setCancelable(false)
                     .setPositiveButton(buttonOk, (dialog, whichButton) -> {
-                        ((ScanActivity) getActivity()).startResolution();
+                        ((ScanActivity) getActivity()).showRationale();
                         dismiss();
                     });
 
-            mAlertDialog = alertDialogBuilder.create();
-            mAlertDialog.setCanceledOnTouchOutside(false);
+            alertDialog = alertDialogBuilder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
         }
-        return mAlertDialog;
+        return alertDialog;
     }
 
     @Override
@@ -84,4 +83,5 @@ public class GPSRequirementDialogFragment extends DialogFragment {
         super.onDismiss(dialog);
         Log.d("DISMISSED", "STATE");
     }
+
 }

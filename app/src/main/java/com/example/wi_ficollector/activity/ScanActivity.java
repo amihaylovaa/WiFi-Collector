@@ -1,7 +1,6 @@
 package com.example.wi_ficollector.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.*;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -17,9 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.wi_ficollector.R;
-import com.example.wi_ficollector.dialog_fragment.GPSDialog;
+import com.example.wi_ficollector.dialog_fragment.BackgroundPermissionRationaleDialogFragment;
 import com.example.wi_ficollector.dialog_fragment.GPSRequirementDialogFragment;
 import com.example.wi_ficollector.preference.ScanPreference;
 import com.example.wi_ficollector.receiver.GPSStateReceiver;
@@ -37,12 +37,14 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
-public class ScanActivity extends AppCompatActivity implements GPSDialog {
+public class ScanActivity extends AppCompatActivity
+        implements GPSRequirementDialogFragment.GPSDialogListener, BackgroundPermissionRationaleDialogFragment.BackgroundPermissionRationale {
 
     private WifiManager mWifiManager;
     private WiFiReceiver mWifiReceiver;
     private GPSStateReceiver mGPSStateReceiver;
-    DialogFragment mGPSRequirementsDialogFragment;
+    private DialogFragment mGPSRequirementsDialogFragment;
+    private DialogFragment mBackgroundPermissionRationaleDialogFragment;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
@@ -51,7 +53,6 @@ public class ScanActivity extends AppCompatActivity implements GPSDialog {
     private WifiLocation mWifiLocation;
     private Intent intent;
     private ResolvableApiException mResolvableApiException;
-    private AlertDialog mBackgroundLocationPermissionRationaleDialog;
     private TextView tv;
     private boolean isBackgroundPermissionGranted;
     private boolean isServiceStarted;
@@ -64,6 +65,23 @@ public class ScanActivity extends AppCompatActivity implements GPSDialog {
 
         if (mScanPreference.isActivityFirstTimeLaunched()) {
             mScanPreference.addBackgroundPermissionRationaleKey();
+        }
+
+        if (savedInstanceState != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            mGPSRequirementsDialogFragment = (DialogFragment) fragmentManager.getFragment(savedInstanceState, "dialog");
+            mBackgroundPermissionRationaleDialogFragment = (DialogFragment) fragmentManager.getFragment(savedInstanceState, "dialog1");
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mGPSRequirementsDialogFragment != null && mGPSRequirementsDialogFragment.isAdded()) {
+            getSupportFragmentManager().putFragment(outState, "dialog", mGPSRequirementsDialogFragment);
+        }
+        if (mBackgroundPermissionRationaleDialogFragment != null && mBackgroundPermissionRationaleDialogFragment.isAdded()) {
+            getSupportFragmentManager().putFragment(outState, "dialog1", mBackgroundPermissionRationaleDialogFragment);
         }
     }
 
@@ -157,7 +175,6 @@ public class ScanActivity extends AppCompatActivity implements GPSDialog {
     }
 
     void startActivityWork() {
-        //  mWifiLocationRepository.openFileOutputStream();
         implementLocationResultCallback();
         requestLocationUpdates();
         registerReceiver(mWifiReceiver, SCAN_RESULTS_AVAILABLE_ACTION);
@@ -219,28 +236,33 @@ public class ScanActivity extends AppCompatActivity implements GPSDialog {
     }
 
     public void showBackgroundPermissionRequestRationale() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        if (mBackgroundPermissionRationaleDialogFragment == null) {
+            Log.d("BACKGROUND PERMISSION", "REQUIREMENTS");
 
-        dismissBackgroundLocationPermissionRationaleDialog();
+            final String dialogTag = "Dialog tag";
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            String message = getString(R.string.gps_requirements_fragment_dialog_message);
+            String title = getString(R.string.gps_requirements_fragment_dialog_title);
+            String buttonOk = getString(R.string.OK);
+            mBackgroundPermissionRationaleDialogFragment = BackgroundPermissionRationaleDialogFragment.newInstance(title, message, buttonOk);
 
-        alertDialogBuilder.setMessage(BACKGROUND_PERMISSION_REQUEST_RATIONALE);
-        alertDialogBuilder.setPositiveButton(R.string.OK, (dialog, id) -> requestBackgroundLocationPermission());
-
-        mBackgroundLocationPermissionRationaleDialog = alertDialogBuilder.create();
-
-        mBackgroundLocationPermissionRationaleDialog.show();
-    }
-
-    private void dismissBackgroundLocationPermissionRationaleDialog() {
-        if (mBackgroundLocationPermissionRationaleDialog != null) {
-            mBackgroundLocationPermissionRationaleDialog.dismiss();
-            mBackgroundLocationPermissionRationaleDialog = null;
+            mBackgroundPermissionRationaleDialogFragment.show(fragmentManager, dialogTag);
         }
     }
 
     private void showGPSRequirements() {
-        mGPSRequirementsDialogFragment = GPSRequirementDialogFragment.newInstance();
-        mGPSRequirementsDialogFragment.show(getSupportFragmentManager(), "dialog");
+        if (mGPSRequirementsDialogFragment == null) {
+            Log.d("SHOW GPS", "REQUIREMENTS");
+
+            final String dialogTag = "Dialog tag";
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            String message = getString(R.string.gps_requirements_fragment_dialog_message);
+            String title = getString(R.string.gps_requirements_fragment_dialog_title);
+            String buttonOk = getString(R.string.OK);
+            mGPSRequirementsDialogFragment = GPSRequirementDialogFragment.newInstance(title, message, buttonOk);
+
+            mGPSRequirementsDialogFragment.show(fragmentManager, dialogTag);
+        }
     }
 
     private void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
@@ -326,11 +348,18 @@ public class ScanActivity extends AppCompatActivity implements GPSDialog {
     }
 
     @Override
-    public void ok() {
+    public void startResolution() {
         try {
-            mResolvableApiException.startResolutionForResult(this, REQUEST_LOCATION_SETTINGS_CODE);
+            if (mResolvableApiException != null) {
+                mResolvableApiException.startResolutionForResult(this, REQUEST_LOCATION_SETTINGS_CODE);
+            }
         } catch (IntentSender.SendIntentException sendEx) {
             Log.d(SEND_INTENT_EXCEPTION_THROWN_TAG, SEND_INTENT_EXCEPTION_EXCEPTION_THROWN_MSG);
         }
+    }
+
+    @Override
+    public void showRationale() {
+        requestBackgroundLocationPermission();
     }
 }
