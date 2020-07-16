@@ -1,6 +1,7 @@
 package com.example.wi_ficollector.repository;
 
 import android.content.Context;
+import android.location.Location;
 import android.net.wifi.ScanResult;
 import android.util.Log;
 import android.util.Xml;
@@ -24,29 +25,28 @@ import static com.example.wi_ficollector.utils.Constants.*;
 public class WifiLocationRepository {
 
     private FileOutputStream mFileOutputStream;
-    private WifiLocation mWifiLocation;
     boolean isOutputSet;
     private XmlSerializer serializer;
     private Context mContext;
     private static boolean areBasicTagsAdded;
 
     public WifiLocationRepository(Context mContext) {
-        this.mWifiLocation = WifiLocation.getWifiLocation();
         this.mContext = mContext;
         this.serializer = Xml.newSerializer();
         this.isOutputSet = false;
-        openFileOutputStream();
     }
 
-    public void save() {
-        double latitude = mWifiLocation.getLatitude();
-        double longitude = mWifiLocation.getLongitude();
-        List<ScanResult> scanResults = mWifiLocation.getScanResults();
+    public void save(WifiLocation wifiLocation) {
+        Log.d("Save", "data");
+        Location location = wifiLocation.getLocation();
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        List<ScanResult> scanResults = wifiLocation.getScanResults();
 
         try {
             if (latitude != ZERO && longitude != ZERO) {
                 saveValidWifiLocation(latitude, longitude, scanResults);
-                mWifiLocation.clearResults();
+                wifiLocation.clearResults();
             }
         } catch (IOException IOException) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
@@ -85,7 +85,7 @@ public class WifiLocationRepository {
         serializer.endDocument();
     }
 
-    private void saveWifiLocation(double latitude, double longitude, List<ScanResult> scanResults) throws IOException {
+    synchronized private void saveWifiLocation(double latitude, double longitude, List<ScanResult> scanResults) throws IOException {
         if (!areBasicTagsAdded) {
             serializer.startTag(NO_NAMESPACE, TRACK_TAG)
                     .startTag(NO_NAMESPACE, TRACK_SEGMENT_TAG);
@@ -127,9 +127,11 @@ public class WifiLocationRepository {
                         .endTag(NO_NAMESPACE, WIFI_TAG);
             }
         }
+
         serializer.endTag(NO_NAMESPACE, EXTENSIONS_TAG)
                 .endTag(NO_NAMESPACE, TRACK_POINT_TAG);
         serializer.flush();
+        Log.d("Saved", "Already");
     }
 
     public void openFileOutputStream() {

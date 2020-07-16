@@ -5,6 +5,11 @@ import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 
+import com.example.wi_ficollector.wrapper.WifiLocation;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public final class Constants {
 
     private Constants() {
@@ -14,7 +19,7 @@ public final class Constants {
 
     public static final String GPS_DIALOG_TAG = "GPS Dialog";
     public static final String BACKGROUND_PERMISSION_DIALOG = "Background permission dialog";
-
+    public static List<WifiLocation> wifiLocationList = new ArrayList<>();
     public static final double ZERO = 0.00;
     public static final String SCAN_RESULTS_AVAILABLE_ACTION = WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;
     public static final String PROVIDERS_CHANGED_ACTION = LocationManager.PROVIDERS_CHANGED_ACTION;

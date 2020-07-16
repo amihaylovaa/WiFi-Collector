@@ -37,6 +37,8 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
+// todo add thread to write
+// todo add thread in closing file
 public class ScanActivity extends AppCompatActivity implements GPSRequirementDialogFragment.GPSDialogListener,
         BackgroundPermissionDialogFragment.BackgroundPermissionRationaleListener {
 
@@ -52,7 +54,6 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
     private WifiLocationRepository mWifiLocationRepository;
     private WifiLocation mWifiLocation;
     private ResolvableApiException mResolvableApiException;
-    private FragmentManager mFragmentManager;
     private TextView tv;
     private boolean isBackgroundPermissionGranted;
     private boolean isServiceStarted;
@@ -68,6 +69,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
         }
 
         if (savedInstanceState != null) {
+            FragmentManager mFragmentManager = getSupportFragmentManager();
             mGPSRequirementsDialogFragment = (DialogFragment) mFragmentManager
                     .getFragment(savedInstanceState, GPS_DIALOG_TAG);
             mBackgroundPermissionDialogFragment = (DialogFragment) mFragmentManager
@@ -78,6 +80,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        FragmentManager mFragmentManager = getSupportFragmentManager();
         if (mGPSRequirementsDialogFragment != null && mGPSRequirementsDialogFragment.isAdded()) {
             mFragmentManager.putFragment(outState, GPS_DIALOG_TAG, mGPSRequirementsDialogFragment);
         }
@@ -128,8 +131,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, @NonNull int[] grantResults) {
         for (int i = 0; i < permissions.length; i++) {
             switch (requestCode) {
                 case FINE_LOCATION_PERMISSION_CODE:
@@ -196,6 +198,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
 
     void startActivityWork() {
         implementLocationResultCallback();
+        mWifiLocationRepository.openFileOutputStream();
         requestLocationUpdates();
         registerReceiver(mWifiReceiver, SCAN_RESULTS_AVAILABLE_ACTION);
         registerReceiver(mGPSStateReceiver, PROVIDERS_CHANGED_ACTION);
@@ -204,8 +207,8 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
     public void createLocationRequest() {
         mLocationRequest = new LocationRequest();
 
-        mLocationRequest.setInterval(FIVE_SECONDS);
-        mLocationRequest.setFastestInterval(THREE_SECONDS);
+        mLocationRequest.setInterval(THREE_SECONDS);
+        mLocationRequest.setFastestInterval(FIVE_SECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -248,7 +251,6 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
     public void requestBackgroundPermission() {
         if (isBackgroundLocationPermissionGranted()) {
             isBackgroundPermissionGranted = true;
-            startActivityWork();
         } else {
             if (mScanPreference.shouldShowBackgroundPermissionRequestRationale()) {
                 showBackgroundPermissionRequestRationale();
@@ -258,6 +260,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
 
     public void showBackgroundPermissionRequestRationale() {
         if (mBackgroundPermissionDialogFragment == null) {
+            FragmentManager mFragmentManager = getSupportFragmentManager();
             mBackgroundPermissionDialogFragment = BackgroundPermissionDialogFragment.newInstance();
 
             mBackgroundPermissionDialogFragment.setCancelable(false);
@@ -267,6 +270,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
 
     private void showGPSRequirements() {
         if (mGPSRequirementsDialogFragment == null) {
+            FragmentManager mFragmentManager = getSupportFragmentManager();
             mGPSRequirementsDialogFragment = GPSRequirementDialogFragment.newInstance();
 
             mGPSRequirementsDialogFragment.setCancelable(false);
@@ -297,13 +301,12 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
                     return;
                 }
                 List<Location> locations = locationResult.getLocations();
-                mWifiLocation.setLocalTime(LocalTime.now());
+                LocalTime localTime = LocalTime.now();
+                mWifiLocation.setLocalTime(localTime);
 
                 for (Location location : locations) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    mWifiLocation.setLongitude(longitude);
-                    mWifiLocation.setLatitude(latitude);
+                    mWifiLocation.setLocation(location);
+                    Log.d("Found", "Location -" + String.valueOf(localTime) + "");
                     startWifiScanning();
                 }
             }
@@ -314,7 +317,8 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
         boolean isWifiScanningSucceeded = mWifiManager.startScan();
 
         if (!isWifiScanningSucceeded) {
-            mWifiLocationRepository.save();
+            Log.d("Scanning", "Failed");
+            mWifiLocationRepository.save(mWifiLocation);
         }
         startUpdateUIThread();
     }
@@ -323,10 +327,10 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mScanPreference = new ScanPreference(this);
-        mWifiLocation = WifiLocation.getWifiLocation();
+        mWifiLocation = new WifiLocation();
         mWifiLocationRepository = new WifiLocationRepository(ScanActivity.this);
         mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
-        mFragmentManager = getSupportFragmentManager();
+        mWifiLocationRepository.openFileOutputStream();
         mGPSStateReceiver = new GPSStateReceiver();
         isBackgroundPermissionGranted = false;
         isServiceStarted = false;

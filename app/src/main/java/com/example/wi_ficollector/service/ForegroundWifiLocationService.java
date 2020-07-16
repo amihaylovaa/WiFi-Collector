@@ -47,13 +47,14 @@ public class ForegroundWifiLocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        Log.d("Foreground", "Service");
         mContext = this;
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         mWifiLocationRepository = new WifiLocationRepository(mContext);
-        mWifiLocation = WifiLocation.getWifiLocation();
+        mWifiLocation = new WifiLocation();
         mGPSStateReceiver = new GPSStateReceiver();
+        mWifiLocationRepository.openFileOutputStream();
         mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
         createLocationRequest();
     }
@@ -61,8 +62,8 @@ public class ForegroundWifiLocationService extends Service {
     public void createLocationRequest() {
         mLocationRequest = new LocationRequest();
 
-        mLocationRequest.setInterval(FIVE_SECONDS);
-        mLocationRequest.setFastestInterval(THREE_SECONDS);
+        mLocationRequest.setInterval(THREE_SECONDS);
+        mLocationRequest.setFastestInterval(FIVE_SECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
@@ -106,13 +107,12 @@ public class ForegroundWifiLocationService extends Service {
                     return;
                 }
                 List<Location> locations = locationResult.getLocations();
-                mWifiLocation.setLocalTime(LocalTime.now());
+                LocalTime localTime = LocalTime.now();
+                mWifiLocation.setLocalTime(localTime);
+                Log.d("Found", "Location - " + String.valueOf(localTime) + "");
 
                 for (Location location : locations) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    mWifiLocation.setLongitude(longitude);
-                    mWifiLocation.setLatitude(latitude);
+                    mWifiLocation.setLocation(location);
                     startWifiScanning();
                 }
             }
@@ -136,7 +136,8 @@ public class ForegroundWifiLocationService extends Service {
         boolean isWifiScanningSucceeded = mWifiManager.startScan();
 
         if (!isWifiScanningSucceeded) {
-            mWifiLocationRepository.save();
+            Log.d("Scanning", "Failed");
+            mWifiLocationRepository.save(mWifiLocation);
         }
     }
 

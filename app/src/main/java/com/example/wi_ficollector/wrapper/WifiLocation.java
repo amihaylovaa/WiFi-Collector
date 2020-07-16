@@ -1,5 +1,6 @@
 package com.example.wi_ficollector.wrapper;
 
+import android.location.Location;
 import android.net.wifi.ScanResult;
 
 import java.io.Serializable;
@@ -8,40 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WifiLocation implements Serializable {
-    private double latitude;
-    private double longitude;
+    private Location mLocation;
     private LocalTime localTime;
     private List<ScanResult> wifiScanResults;
-    private static WifiLocation mWifiLocation;
-
-    public WifiLocation() {
-        latitude = 0.00;
-        longitude = 0.00;
-        wifiScanResults = new ArrayList<>();
-    }
-
-    public static WifiLocation getWifiLocation() {
-        if (mWifiLocation == null) {
-            mWifiLocation = new WifiLocation();
-        }
-        return mWifiLocation;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
 
     public List<ScanResult> getScanResults() {
         return wifiScanResults;
@@ -59,9 +29,27 @@ public class WifiLocation implements Serializable {
         wifiScanResults = new ArrayList<>(scanResults);
     }
 
+    public Location getLocation() {
+        return mLocation;
+    }
+
+    public List<ScanResult> getWifiScanResults() {
+        return wifiScanResults;
+    }
+
+    public void setLocation(Location mLocation) {
+        this.mLocation = mLocation;
+    }
+
+    public void setWifiScanResults(List<ScanResult> wifiScanResults) {
+        this.wifiScanResults = wifiScanResults;
+    }
+
     public void clearResults() {
-        latitude = 0.00;
-        longitude = 0.00;
-        wifiScanResults.clear();
+        mLocation = null;
+        if (wifiScanResults != null) {
+            wifiScanResults.clear();
+        }
+        localTime = null;
     }
 }
