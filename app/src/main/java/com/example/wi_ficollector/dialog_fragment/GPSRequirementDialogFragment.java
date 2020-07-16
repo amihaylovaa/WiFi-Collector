@@ -2,13 +2,16 @@ package com.example.wi_ficollector.dialog_fragment;
 
 import android.app.Dialog;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.activity.ScanActivity;
 
 
@@ -20,53 +23,24 @@ public class GPSRequirementDialogFragment extends DialogFragment {
         void startResolution();
     }
 
-    private static final String TITLE;
-    private static final String MESSAGE;
-    private static final String BUTTON_KEY;
     private AlertDialog mAlertDialog;
-
-    static {
-        TITLE = "title";
-        MESSAGE = "message";
-        BUTTON_KEY = "buttonValue";
-    }
 
     public GPSRequirementDialogFragment() {
         // Needed when dialog fragment is recreated
     }
 
-    public static GPSRequirementDialogFragment newInstance(String title, String message, String buttonOk) {
-        GPSRequirementDialogFragment gpsRequirementDialogFragment = new GPSRequirementDialogFragment();
-        Bundle args = new Bundle();
-
-        args.putString(TITLE, title);
-        args.putString(MESSAGE, message);
-        args.putString(BUTTON_KEY, buttonOk);
-        gpsRequirementDialogFragment.setArguments(args);
-
-        return gpsRequirementDialogFragment;
+    public static GPSRequirementDialogFragment newInstance() {
+        return new GPSRequirementDialogFragment();
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        String title = null;
-        String message = null;
-        String buttonOk = null;
-
-        if (args != null) {
-            title = args.getString(TITLE);
-            message = args.getString(MESSAGE);
-            buttonOk = args.getString(BUTTON_KEY);
-        }
-
         if (mAlertDialog == null) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity())
-                    .setTitle(title)
-                    .setMessage(message)
-                    .setCancelable(false)
-                    .setPositiveButton(buttonOk, (dialog, whichButton) -> {
+                    .setTitle(R.string.gps_requirements_title)
+                    .setMessage(R.string.gps_requirements_fragment_dialog_message)
+                    .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
                         ((ScanActivity) getActivity()).startResolution();
                         dismiss();
                     });

@@ -11,7 +11,10 @@ public final class Constants {
     }
 
     public static int numberFoundWifiNetworks = 0;
-    private static boolean areBasicTagsAdded = false;
+
+    public static final String GPS_DIALOG_TAG = "GPS Dialog";
+    public static final String BACKGROUND_PERMISSION_DIALOG = "Background permission dialog";
+
     public static final double ZERO = 0.00;
     public static final String SCAN_RESULTS_AVAILABLE_ACTION = WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;
     public static final String PROVIDERS_CHANGED_ACTION = LocationManager.PROVIDERS_CHANGED_ACTION;
@@ -29,7 +32,7 @@ public final class Constants {
     public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during working with file stream";
     public static final String ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
-    public static final  boolean IS_BACKGROUND_PERMISSION_REQUEST_REQUIRED = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
+    public static final boolean IS_BACKGROUND_PERMISSION_REQUEST_REQUIRED = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
     public static final int FIVE_SECONDS = 5000;
     public static final int THREE_SECONDS = 3000;
     public static final String GPX_TAG = "gpx";
