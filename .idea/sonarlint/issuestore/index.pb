@@ -62,5 +62,5 @@ Kapp/src/main/java/com/example/wi_ficollector/receiver/GPSStateReceiver.java,f\
 Napp/src/main/java/com/example/wi_ficollector/notification/GSPNotification.java,d\2\d2f8062666274a7a56e7194485d75aa05b75c276
 é
 ^app/src/main/java/com/example/wi_ficollector/dialog_fragment/GPSRequirementDialogFragment.java,5\0\504fd7f2bacd61e832bd273c19e10260948eb398
-ù
-mapp/src/main/java/com/example/wi_ficollector/dialog_fragment/BackgroundPermissionRationaleDialogFragment.java,a\a\aa5f10db512fcc3520be7d7c5b35eb8e27d9e763
+î
+dapp/src/main/java/com/example/wi_ficollector/dialog_fragment/BackgroundPermissionDialogFragment.java,5\2\521fed1f437a3ad85dddf9084e6d66b66dc36e72

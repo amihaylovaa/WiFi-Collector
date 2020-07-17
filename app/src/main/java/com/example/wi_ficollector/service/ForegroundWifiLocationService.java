@@ -54,7 +54,6 @@ public class ForegroundWifiLocationService extends Service {
         mWifiLocationRepository = new WifiLocationRepository(mContext);
         mWifiLocation = new WifiLocation();
         mGPSStateReceiver = new GPSStateReceiver();
-        mWifiLocationRepository.openFileOutputStream();
         mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
         createLocationRequest();
     }
@@ -80,7 +79,7 @@ public class ForegroundWifiLocationService extends Service {
 
         startForeground(foregroundServiceNotificationId, notificationBuilder.build());
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     private void registerReceiver(android.content.BroadcastReceiver broadcastReceiver, String action) {
@@ -122,6 +121,7 @@ public class ForegroundWifiLocationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("SERVICE", "ON DESTROY");
         stopServiceWork();
         stopSelf();
     }
@@ -153,7 +153,6 @@ public class ForegroundWifiLocationService extends Service {
         } catch (NullPointerException npe) {
             Log.d(NULL_POINTER_EXCEPTION_THROWN_TAG, NULL_POINTER_EXCEPTION_THROWN_MESSAGE);
         }
-        mWifiLocationRepository.closeFileOutputStream();
     }
 
     @Override

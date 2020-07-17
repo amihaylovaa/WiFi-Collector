@@ -1,3 +1,7 @@
 
 N
 java:S1948"1Make "wifiScanResults" transient or serializable.(¡Ò¥‰8ğ¯ëí³.
+€
+java:S4144$"^Update this method so that its implementation is not identical to "getScanResults" on line 16.(–ÇâŠıÿÿÿÿ8±–á¿µ.
+M
+java:S1948"+Make "mLocation" transient or serializable.(øûŠîûÿÿÿÿ8½«Û¿µ.

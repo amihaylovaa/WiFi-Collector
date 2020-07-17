@@ -39,7 +39,9 @@ public class WiFiReceiver extends BroadcastReceiver {
         if (scanResults != null && !scanResults.isEmpty() && shouldSaveScanResults()) {
             mWifiLocation.setScanResults(scanResults);
             Log.d("Number of wifi", String.valueOf(scanResults.size()));
-            mWifiLocationRepository.save(mWifiLocation);
+            if (mWifiLocationRepository != null) {
+                mWifiLocationRepository.save(mWifiLocation);
+            }
         }
     }
 

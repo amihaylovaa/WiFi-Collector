@@ -92,6 +92,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
     @Override
     protected void onStart() {
         super.onStart();
+        mWifiLocationRepository = new WifiLocationRepository(ScanActivity.this);
         enableGPS();
     }
 
@@ -103,7 +104,6 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
             stopService(intent);
             isServiceStarted = false;
         }
-        enableGPS();
         startUpdateUIThread();
     }
 
@@ -119,6 +119,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
         if (IS_BACKGROUND_PERMISSION_REQUEST_REQUIRED && !isBackgroundPermissionGranted) {
             stopActivityWork();
         }
+        mWifiLocationRepository = null;
     }
 
     @Override
@@ -198,7 +199,6 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
 
     void startActivityWork() {
         implementLocationResultCallback();
-        mWifiLocationRepository.openFileOutputStream();
         requestLocationUpdates();
         registerReceiver(mWifiReceiver, SCAN_RESULTS_AVAILABLE_ACTION);
         registerReceiver(mGPSStateReceiver, PROVIDERS_CHANGED_ACTION);
@@ -328,9 +328,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mScanPreference = new ScanPreference(this);
         mWifiLocation = new WifiLocation();
-        mWifiLocationRepository = new WifiLocationRepository(ScanActivity.this);
         mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
-        mWifiLocationRepository.openFileOutputStream();
         mGPSStateReceiver = new GPSStateReceiver();
         isBackgroundPermissionGranted = false;
         isServiceStarted = false;
@@ -351,7 +349,9 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
         } catch (IllegalArgumentException illegalArgumentException) {
             Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
         }
-        mWifiLocationRepository.closeFileOutputStream();
+        if (!isChangingConfigurations()) {
+            mWifiLocationRepository.closeFileOutputStream();
+        }
     }
 
     private void startUpdateUIThread() {

@@ -1,9 +1,10 @@
 
+X	java:S110*"<This class has 9 parents which is greater than 5 authorized.(Öê¤8‡Å´¾µ.
 O
-java:S1874¾"1Remove this use of "startScan"; it is deprecated.(»Šø8ïş­µ.
-X	java:S110*"<This class has 9 parents which is greater than 5 authorized.(Öê¤8òõİ¸µ.
-X
-java:S1874‚":Remove this use of "getFragmentManager"; it is deprecated.(äíÅÕ8òõİ¸µ.
-K	java:S108„")Either remove or fill this block of code.(¥äÅşÿÿÿÿ8†ä¿·µ.
-V
-java:S1874‚"8Remove this use of "beginTransaction"; it is deprecated.(äíÅÕ8òõİ¸µ.
+java:S1153µ"1Directly append the argument of String.valueOf().(ÂºÛã8‡Ğ¶Áµ.
+O
+java:S1135("2Complete the task associated to this TODO comment.(ó“°8˜şãÊµ.
+O
+java:S1135)"2Complete the task associated to this TODO comment.(£Õ–õ8¶©æÊµ.
+O
+java:S1874½"1Remove this use of "startScan"; it is deprecated.(»Šø8ïş­µ.
