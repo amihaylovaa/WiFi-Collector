@@ -1,5 +1,5 @@
 
-N
-java:S1153p"1Directly append the argument of String.valueOf().(ÂºÛã8·Ü·Èµ.
 O
 java:S1874ˆ"1Remove this use of "startScan"; it is deprecated.(»Šø8ÎäÏ´.
+N
+java:S1153o"1Directly append the argument of String.valueOf().(ÂºÛã8›é›îµ.

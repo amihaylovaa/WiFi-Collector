@@ -1,5 +1,7 @@
 
+S
+java:S2696_"6Make the enclosing method "static" or remove this set.(ÖÌóé8¾²Ãêµ.
 X
-java:S2696q"6Make the enclosing method "static" or remove this set.(ğºÔŸøÿÿÿÿ8İ™ÎÉµ.
-g
-java:S1124X"EReorder the modifiers to comply with the Java Language Specification.(ªÿŞ‰şÿÿÿÿ8İ™ÎÉµ.
+java:S2696t"6Make the enclosing method "static" or remove this set.(ğºÔŸøÿÿÿÿ8İ™ÎÉµ.
+J
+java:S1068""(Remove this unused "lock" private field.(ä°â”ıÿÿÿÿ8íêµ.

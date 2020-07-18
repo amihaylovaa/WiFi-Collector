@@ -14,6 +14,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.wi_ficollector.notification.ApplicationNotification;
 import com.example.wi_ficollector.notification.ForegroundServiceNotification;
@@ -42,12 +43,12 @@ public class ForegroundWifiLocationService extends Service {
     private LocationRequest mLocationRequest;
     private WifiLocationRepository mWifiLocationRepository;
     private WifiLocation mWifiLocation;
+    private LocalBroadcastManager mLocalBroadcastManager;
     private Context mContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("Foreground", "Service");
         mContext = this;
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
@@ -55,6 +56,7 @@ public class ForegroundWifiLocationService extends Service {
         mWifiLocation = new WifiLocation();
         mGPSStateReceiver = new GPSStateReceiver();
         mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         createLocationRequest();
     }
 
@@ -79,10 +81,10 @@ public class ForegroundWifiLocationService extends Service {
 
         startForeground(foregroundServiceNotificationId, notificationBuilder.build());
 
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
-    private void registerReceiver(android.content.BroadcastReceiver broadcastReceiver, String action) {
+    private void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
         IntentFilter intentFilter = new IntentFilter(action);
 
         registerReceiver(broadcastReceiver, intentFilter);
@@ -136,8 +138,12 @@ public class ForegroundWifiLocationService extends Service {
         boolean isWifiScanningSucceeded = mWifiManager.startScan();
 
         if (!isWifiScanningSucceeded) {
-            Log.d("Scanning", "Failed");
+            Log.d("SERVICE Scanning", "Failed");
             mWifiLocationRepository.save(mWifiLocation);
+        } else {
+            Intent intent = new Intent("UI_UPDATE");
+            mLocalBroadcastManager.sendBroadcast(intent);
+
         }
     }
 
@@ -153,6 +159,7 @@ public class ForegroundWifiLocationService extends Service {
         } catch (NullPointerException npe) {
             Log.d(NULL_POINTER_EXCEPTION_THROWN_TAG, NULL_POINTER_EXCEPTION_THROWN_MESSAGE);
         }
+        mWifiLocationRepository.closeFileOutputStream();
     }
 
     @Override

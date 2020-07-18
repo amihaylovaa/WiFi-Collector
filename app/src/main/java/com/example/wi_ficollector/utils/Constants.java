@@ -1,25 +1,18 @@
 package com.example.wi_ficollector.utils;
 
-import android.Manifest;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 
-import com.example.wi_ficollector.wrapper.WifiLocation;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class Constants {
 
     private Constants() {
     }
 
-    public static int numberFoundWifiNetworks = 0;
-
+    public static int numOfWifiNetworks = 0;
     public static final String GPS_DIALOG_TAG = "GPS Dialog";
     public static final String BACKGROUND_PERMISSION_DIALOG = "Background permission dialog";
-    public static List<WifiLocation> wifiLocationList = new ArrayList<>();
     public static final double ZERO = 0.00;
     public static final String SCAN_RESULTS_AVAILABLE_ACTION = WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;
     public static final String PROVIDERS_CHANGED_ACTION = LocationManager.PROVIDERS_CHANGED_ACTION;
@@ -35,8 +28,7 @@ public final class Constants {
     public static final String SEND_INTENT_EXCEPTION_THROWN_TAG = "SendIntent exception thrown";
     public static final String SEND_INTENT_EXCEPTION_EXCEPTION_THROWN_MSG = "Request could not be executed";
     public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during working with file stream";
-    public static final String ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
-    public static final String ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
+
     public static final boolean IS_BACKGROUND_PERMISSION_REQUEST_REQUIRED = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
     public static final int FIVE_SECONDS = 5000;
     public static final int THREE_SECONDS = 3000;

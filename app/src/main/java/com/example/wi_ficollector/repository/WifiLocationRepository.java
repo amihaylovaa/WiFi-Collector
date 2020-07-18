@@ -18,8 +18,6 @@ import java.nio.channels.FileChannel;
 import java.time.LocalDateTime;
 
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static android.content.Context.MODE_APPEND;
 import static com.example.wi_ficollector.utils.Constants.*;
@@ -31,7 +29,6 @@ public class WifiLocationRepository {
     private XmlSerializer serializer;
     private Context mContext;
     private static boolean areBasicTagsAdded;
-    private static final Lock lock = new ReentrantLock();
 
     public WifiLocationRepository(Context mContext) {
         this.mContext = mContext;
@@ -111,28 +108,28 @@ public class WifiLocationRepository {
     }
 
     private void saveExtensions(List<ScanResult> scanResults) throws IOException {
-            serializer.startTag(NO_NAMESPACE, EXTENSIONS_TAG);
-            if (scanResults != null) {
-                numberFoundWifiNetworks += scanResults.size();
-                for (ScanResult scanResult : scanResults) {
-                    serializer.startTag(NO_NAMESPACE, WIFI_TAG);
-                    serializer.startTag(NO_NAMESPACE, SSID_TAG)
-                            .text(scanResult.SSID)
-                            .endTag(NO_NAMESPACE, SSID_TAG)
-                            .startTag(NO_NAMESPACE, BSSID_TAG)
-                            .text(scanResult.BSSID).endTag(NO_NAMESPACE, BSSID_TAG)
-                            .startTag(NO_NAMESPACE, RSSI_TAG)
-                            .text(String.valueOf(scanResult.level))
-                            .endTag(NO_NAMESPACE, RSSI_TAG)
-                            .startTag(NO_NAMESPACE, FREQUENCY_TAG)
-                            .text(String.valueOf(scanResult.frequency))
-                            .endTag(NO_NAMESPACE, FREQUENCY_TAG)
-                            .endTag(NO_NAMESPACE, WIFI_TAG);
-                }
+        serializer.startTag(NO_NAMESPACE, EXTENSIONS_TAG);
+        if (scanResults != null) {
+            numOfWifiNetworks += scanResults.size();
+            for (ScanResult scanResult : scanResults) {
+                serializer.startTag(NO_NAMESPACE, WIFI_TAG);
+                serializer.startTag(NO_NAMESPACE, SSID_TAG)
+                        .text(scanResult.SSID)
+                        .endTag(NO_NAMESPACE, SSID_TAG)
+                        .startTag(NO_NAMESPACE, BSSID_TAG)
+                        .text(scanResult.BSSID).endTag(NO_NAMESPACE, BSSID_TAG)
+                        .startTag(NO_NAMESPACE, RSSI_TAG)
+                        .text(String.valueOf(scanResult.level))
+                        .endTag(NO_NAMESPACE, RSSI_TAG)
+                        .startTag(NO_NAMESPACE, FREQUENCY_TAG)
+                        .text(String.valueOf(scanResult.frequency))
+                        .endTag(NO_NAMESPACE, FREQUENCY_TAG)
+                        .endTag(NO_NAMESPACE, WIFI_TAG);
             }
-            serializer.endTag(NO_NAMESPACE, EXTENSIONS_TAG);
-            serializer.endTag(NO_NAMESPACE, TRACK_POINT_TAG);
-            serializer.flush();
+        }
+        serializer.endTag(NO_NAMESPACE, EXTENSIONS_TAG);
+        serializer.endTag(NO_NAMESPACE, TRACK_POINT_TAG);
+        serializer.flush();
     }
 
     public void openFileOutputStream() {

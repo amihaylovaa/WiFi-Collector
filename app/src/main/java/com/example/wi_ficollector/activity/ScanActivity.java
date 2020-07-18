@@ -1,10 +1,10 @@
 package com.example.wi_ficollector.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.*;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.net.wifi.WifiManager;
+
 import android.os.*;
 
 import android.util.Log;
@@ -17,45 +17,39 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.dialog_fragment.BackgroundPermissionDialogFragment;
 import com.example.wi_ficollector.dialog_fragment.GPSRequirementDialogFragment;
 import com.example.wi_ficollector.preference.ScanPreference;
-import com.example.wi_ficollector.receiver.GPSStateReceiver;
-import com.example.wi_ficollector.receiver.WiFiReceiver;
-import com.example.wi_ficollector.repository.WifiLocationRepository;
+
 import com.example.wi_ficollector.service.ForegroundWifiLocationService;
 import com.example.wi_ficollector.thread.*;
-import com.example.wi_ficollector.wrapper.WifiLocation;
+
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
-import java.time.LocalTime;
-import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.*;
-
-// todo add thread to write
-// todo add thread in closing file
-public class ScanActivity extends AppCompatActivity implements GPSRequirementDialogFragment.GPSDialogListener,
+// todo fix rotation issues
+public class ScanActivity extends AppCompatActivity implements
+        GPSRequirementDialogFragment.GPSDialogListener,
         BackgroundPermissionDialogFragment.BackgroundPermissionRationaleListener {
 
-    private WifiManager mWifiManager;
-    private WiFiReceiver mWifiReceiver;
-    private GPSStateReceiver mGPSStateReceiver;
+    private static final String ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
+    private LocationRequest mLocationRequest;
     private DialogFragment mGPSRequirementsDialogFragment;
     private DialogFragment mBackgroundPermissionDialogFragment;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
-    private LocationCallback mLocationCallback;
-    private LocationRequest mLocationRequest;
     private ScanPreference mScanPreference;
-    private WifiLocationRepository mWifiLocationRepository;
-    private WifiLocation mWifiLocation;
     private ResolvableApiException mResolvableApiException;
+    private Intent mIntent;
     private TextView tv;
     private boolean isBackgroundPermissionGranted;
+    private BroadcastReceiver UIUpdate;
+    private LocalBroadcastManager mLocalBroadcastManager;
     private boolean isServiceStarted;
 
     @Override
@@ -63,17 +57,20 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         initializeFields();
+        Log.d("ON", "CREATE");
+        UIUpdate = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                startUpdateUIThread();
+            }
+        };
 
         if (mScanPreference.isActivityFirstTimeLaunched()) {
             mScanPreference.addBackgroundPermissionRationaleKey();
         }
 
         if (savedInstanceState != null) {
-            FragmentManager mFragmentManager = getSupportFragmentManager();
-            mGPSRequirementsDialogFragment = (DialogFragment) mFragmentManager
-                    .getFragment(savedInstanceState, GPS_DIALOG_TAG);
-            mBackgroundPermissionDialogFragment = (DialogFragment) mFragmentManager
-                    .getFragment(savedInstanceState, BACKGROUND_PERMISSION_DIALOG);
+            restoreState(savedInstanceState);
         }
     }
 
@@ -87,39 +84,24 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
         if (mBackgroundPermissionDialogFragment != null && mBackgroundPermissionDialogFragment.isAdded()) {
             mFragmentManager.putFragment(outState, BACKGROUND_PERMISSION_DIALOG, mBackgroundPermissionDialogFragment);
         }
+        outState.putBoolean("FOREGROUND_SERVICE", isServiceStarted);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mWifiLocationRepository = new WifiLocationRepository(ScanActivity.this);
+        Log.d("ON", "START");
         enableGPS();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (isServiceStarted) {
-            Intent intent = new Intent(this, ForegroundWifiLocationService.class);
-            stopService(intent);
-            isServiceStarted = false;
-        }
-        startUpdateUIThread();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (!IS_BACKGROUND_PERMISSION_REQUEST_REQUIRED || isBackgroundPermissionGranted) {
-            stopActivityWork();
-            Intent intent = new Intent(this, ForegroundWifiLocationService.class);
-            ContextCompat.startForegroundService(this, intent);
-            isServiceStarted = true;
-        }
         if (IS_BACKGROUND_PERMISSION_REQUEST_REQUIRED && !isBackgroundPermissionGranted) {
-            stopActivityWork();
+            stopService(mIntent);
+            isServiceStarted = false;
+            mLocalBroadcastManager.unregisterReceiver(UIUpdate);
         }
-        mWifiLocationRepository = null;
     }
 
     @Override
@@ -169,7 +151,15 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
         if (IS_BACKGROUND_PERMISSION_REQUEST_REQUIRED) {
             requestBackgroundPermission();
         }
-        startActivityWork();
+        if (!isServiceStarted) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ContextCompat.startForegroundService(this, mIntent);
+            } else {
+                startService(mIntent);
+            }
+            isServiceStarted = true;
+        }
+        mLocalBroadcastManager.registerReceiver(UIUpdate, new IntentFilter("UI_UPDATE"));
     }
 
     private void handleBackgroundPermissionRequestResult(int grantResult, String permission) {
@@ -197,12 +187,6 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
         }).addOnSuccessListener(e -> requestLocationPermission());
     }
 
-    void startActivityWork() {
-        implementLocationResultCallback();
-        requestLocationUpdates();
-        registerReceiver(mWifiReceiver, SCAN_RESULTS_AVAILABLE_ACTION);
-        registerReceiver(mGPSStateReceiver, PROVIDERS_CHANGED_ACTION);
-    }
 
     public void createLocationRequest() {
         mLocationRequest = new LocationRequest();
@@ -278,85 +262,36 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementDia
         }
     }
 
-    private void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
-        IntentFilter intentFilter = new IntentFilter(action);
-
-        registerReceiver(broadcastReceiver, intentFilter);
-    }
-
-    private void requestLocationUpdates() {
-        try {
-            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
-        } catch (SecurityException securityException) {
-            requestLocationPermission();
-        }
-    }
-
-    private void implementLocationResultCallback() {
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                if (locationResult == null) {
-                    return;
-                }
-                List<Location> locations = locationResult.getLocations();
-                LocalTime localTime = LocalTime.now();
-                mWifiLocation.setLocalTime(localTime);
-
-                for (Location location : locations) {
-                    mWifiLocation.setLocation(location);
-                    Log.d("Found", "Location -" + String.valueOf(localTime) + "");
-                    startWifiScanning();
-                }
-            }
-        };
-    }
-
-    private void startWifiScanning() {
-        boolean isWifiScanningSucceeded = mWifiManager.startScan();
-
-        if (!isWifiScanningSucceeded) {
-            Log.d("Scanning", "Failed");
-            mWifiLocationRepository.save(mWifiLocation);
-        }
-        startUpdateUIThread();
-    }
-
-    private void initializeFields() {
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        mScanPreference = new ScanPreference(this);
-        mWifiLocation = new WifiLocation();
-        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
-        mGPSStateReceiver = new GPSStateReceiver();
-        isBackgroundPermissionGranted = false;
-        isServiceStarted = false;
-        tv = findViewById(R.id.numberOfWifiNetworks);
-
-        tv.setText(String.valueOf(numberFoundWifiNetworks));
-    }
-
-    private void stopActivityWork() {
-        try {
-            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-        } catch (NullPointerException npe) {
-            Log.d(NULL_POINTER_EXCEPTION_THROWN_TAG, NULL_POINTER_EXCEPTION_THROWN_MESSAGE);
-        }
-        try {
-            unregisterReceiver(mWifiReceiver);
-            unregisterReceiver(mGPSStateReceiver);
-        } catch (IllegalArgumentException illegalArgumentException) {
-            Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
-        }
-        if (!isChangingConfigurations()) {
-            mWifiLocationRepository.closeFileOutputStream();
-        }
-    }
-
     private void startUpdateUIThread() {
         UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
 
         new Thread(uiUpdateTask).start();
+    }
+
+    private void restoreState(Bundle savedInstanceState) {
+        FragmentManager mFragmentManager = getSupportFragmentManager();
+        mGPSRequirementsDialogFragment = (DialogFragment) mFragmentManager
+                .getFragment(savedInstanceState, GPS_DIALOG_TAG);
+        mBackgroundPermissionDialogFragment = (DialogFragment) mFragmentManager
+                .getFragment(savedInstanceState, BACKGROUND_PERMISSION_DIALOG);
+        isServiceStarted = savedInstanceState.getBoolean("FOREGROUND_SERVICE");
+    }
+
+    private void initializeFields() {
+        isBackgroundPermissionGranted = false;
+        mScanPreference = new ScanPreference(this);
+        mIntent = new Intent(this, ForegroundWifiLocationService.class);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+        tv = findViewById(R.id.numberOfWifiNetworks);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            mLocalBroadcastManager.unregisterReceiver(UIUpdate);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
+        }
     }
 }

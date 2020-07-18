@@ -33,10 +33,6 @@ public class WifiLocation implements Serializable {
         return mLocation;
     }
 
-    public List<ScanResult> getWifiScanResults() {
-        return wifiScanResults;
-    }
-
     public void setLocation(Location mLocation) {
         this.mLocation = mLocation;
     }

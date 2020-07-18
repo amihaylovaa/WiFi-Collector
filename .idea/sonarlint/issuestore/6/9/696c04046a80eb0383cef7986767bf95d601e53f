@@ -1,10 +1,10 @@
 
-X	java:S110*"<This class has 9 parents which is greater than 5 authorized.(Öê¤8‡Å´¾µ.
-O
-java:S1153µ"1Directly append the argument of String.valueOf().(ÂºÛã8‡Ğ¶Áµ.
-O
-java:S1135("2Complete the task associated to this TODO comment.(ó“°8˜şãÊµ.
 O
 java:S1135)"2Complete the task associated to this TODO comment.(£Õ–õ8¶©æÊµ.
+X	java:S110*"<This class has 9 parents which is greater than 5 authorized.(Öê¤8‡Å´¾µ.
+O
+java:S1153µ"1Directly append the argument of String.valueOf().(ÂºÛã8ß¢Àğµ.
+O
+java:S1135("2Complete the task associated to this TODO comment.(ó“°8˜şãÊµ.
 O
 java:S1874½"1Remove this use of "startScan"; it is deprecated.(»Šø8ïş­µ.
