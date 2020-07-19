@@ -2,6 +2,7 @@ package com.example.wi_ficollector.dialog_fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 
 
 import androidx.annotation.NonNull;

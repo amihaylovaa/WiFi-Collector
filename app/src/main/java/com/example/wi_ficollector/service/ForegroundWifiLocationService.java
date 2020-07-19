@@ -49,6 +49,7 @@ public class ForegroundWifiLocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d("SERVICE", "ON CREATE");
         mContext = this;
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
         mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
@@ -58,28 +59,28 @@ public class ForegroundWifiLocationService extends Service {
         mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         createLocationRequest();
-    }
-
-    public void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-
-        mLocationRequest.setInterval(THREE_SECONDS);
-        mLocationRequest.setFastestInterval(FIVE_SECONDS);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        implementLocationResultCallback();
-        requestLocationUpdates();
-        registerReceiver(mWifiReceiver, SCAN_RESULTS_AVAILABLE_ACTION);
-        registerReceiver(mGPSStateReceiver, PROVIDERS_CHANGED_ACTION);
-
         ApplicationNotification applicationNotification = new ForegroundServiceNotification(mContext);
         NotificationCompat.Builder notificationBuilder = applicationNotification.createNotification();
         int foregroundServiceNotificationId = 721;
 
         startForeground(foregroundServiceNotificationId, notificationBuilder.build());
+    }
+
+    public void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+
+        mLocationRequest.setInterval(FIVE_SECONDS);
+        mLocationRequest.setFastestInterval(THREE_SECONDS);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("SERVICE", "ON START");
+        implementLocationResultCallback();
+        requestLocationUpdates();
+        registerReceiver(mWifiReceiver, SCAN_RESULTS_AVAILABLE_ACTION);
+        registerReceiver(mGPSStateReceiver, PROVIDERS_CHANGED_ACTION);
 
         return START_STICKY;
     }
@@ -92,7 +93,8 @@ public class ForegroundWifiLocationService extends Service {
 
     public void requestLocationUpdates() {
         try {
-            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
+            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback,
+                    Looper.getMainLooper());
         } catch (SecurityException securityException) {
             stopServiceWork();
             stopSelf();
@@ -143,7 +145,6 @@ public class ForegroundWifiLocationService extends Service {
         } else {
             Intent intent = new Intent("UI_UPDATE");
             mLocalBroadcastManager.sendBroadcast(intent);
-
         }
     }
 

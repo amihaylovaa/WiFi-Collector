@@ -1,10 +1,5 @@
 
-O
-java:S1135)"2Complete the task associated to this TODO comment.(£’ñı8∂©Ê µ.
-X	java:S110*"<This class has 9 parents which is greater than 5 authorized.(÷ûÍ§8á≈¥æµ.
-O
-java:S1153µ"1Directly append the argument of String.valueOf().(¬∫€„8ﬂ¢¿µ.
-O
-java:S1135("2Complete the task associated to this TODO comment.(Ûìê∞8ò˛„ µ.
-O
-java:S1874Ω"1Remove this use of "startScan"; it is deprecated.(ªûä¯8Ô˛≠ûµ.
+X	java:S110%"<This class has 9 parents which is greater than 5 authorized.(∂ÅªÅ8á≈¥æµ.
+t	java:S1163"SRename this field "UIUpdate" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(æÃûö¸ˇˇˇˇ8¢»’ô∂.
+T
+java:S1135$"2Complete the task associated to this TODO comment.(˙˘ë˙ˇˇˇˇ8›¥•õ∂.

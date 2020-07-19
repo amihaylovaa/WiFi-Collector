@@ -29,7 +29,7 @@ public final class Constants {
     public static final String SEND_INTENT_EXCEPTION_EXCEPTION_THROWN_MSG = "Request could not be executed";
     public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during working with file stream";
 
-    public static final boolean IS_BACKGROUND_PERMISSION_REQUEST_REQUIRED = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
+    public static final boolean IS_BACKGROUND_PERMISSION_REQUIRED = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
     public static final int FIVE_SECONDS = 5000;
     public static final int THREE_SECONDS = 3000;
     public static final String GPX_TAG = "gpx";
@@ -59,7 +59,6 @@ public final class Constants {
     public static final int REQUEST_LOCATION_SETTINGS_CODE = 104;
 
     public static final String INTRO = "This application collect " +
-            "your location and wireless access points based on your current location," +
-            "therefore all time permission is required.\n" +
+            "your location and wireless access points based on your current location." +
             "This data is stored on your device and is expected to be sent later.";
 }
