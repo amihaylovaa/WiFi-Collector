@@ -1,5 +1,6 @@
 
+6
+java:S2178ı"Correct this "&" to "&&".(µÉb8œêÆ¶.
 X	java:S110%"<This class has 9 parents which is greater than 5 authorized.(¶»8‡Å´¾µ.
-t	java:S1163"SRename this field "UIUpdate" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¾Ìšüÿÿÿÿ8¢ÈÕ™¶.
-T
-java:S1135$"2Complete the task associated to this TODO comment.(úùğ‘úÿÿÿÿ8İ´¥›¶.
+O
+java:S1135O"2Complete the task associated to this TODO comment.(äÒê8ÆäßÇ¶.

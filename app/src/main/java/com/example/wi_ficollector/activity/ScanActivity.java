@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -34,6 +35,7 @@ import com.google.android.gms.tasks.Task;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
+@RequiresApi(api = Build.VERSION_CODES.Q)
 public class ScanActivity extends AppCompatActivity implements
         GPSRequirementDialogFragment.GPSDialogListener,
         BackgroundPermissionDialogFragment.BackgroundPermissionRationaleListener {
@@ -42,15 +44,17 @@ public class ScanActivity extends AppCompatActivity implements
     private static final String ACCESS_BACKGROUND_LOCATION_PERMISSION;
     private static final String FOREGROUND_SERVICE_KEY;
     private static final String ANDROID_GPS_DIALOG_SHOWN_KEY;
+    private static final String ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN_KEY;
     private boolean isBackgroundPermissionGranted;
+    private boolean isAndroidBackgroundPermissionRequestShown;
     private boolean isServiceStarted;
+    private boolean isAndroidGPSDialogShown;
     private DialogFragment mGPSRequirementsDialogFragment;
     private DialogFragment mBackgroundPermissionDialogFragment;
     private ScanPreference mScanPreference;
     private ResolvableApiException mResolvableApiException;
     private Intent mIntent;
     private TextView tv;
-    private boolean isAndroidGPSDialogShown;
     private BroadcastReceiver mUIUpdateReceiver;
     private FragmentManager mFragmentManager;
     private LocalBroadcastManager mLocalBroadcastManager;
@@ -60,6 +64,7 @@ public class ScanActivity extends AppCompatActivity implements
         ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
         FOREGROUND_SERVICE_KEY = "FOREGROUND_SERVICE";
         ANDROID_GPS_DIALOG_SHOWN_KEY = "ANDROID_GPS_DIALOG_SHOWN";
+        ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN_KEY = "ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN";
     }
 
     @Override
@@ -76,7 +81,6 @@ public class ScanActivity extends AppCompatActivity implements
         }
     }
 
-    // todo check may be removed
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -89,6 +93,7 @@ public class ScanActivity extends AppCompatActivity implements
         }
         outState.putBoolean(FOREGROUND_SERVICE_KEY, isServiceStarted);
         outState.putBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY, isAndroidGPSDialogShown);
+        outState.putBoolean(ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN_KEY, isAndroidBackgroundPermissionRequestShown);
     }
 
     @Override
@@ -109,10 +114,10 @@ public class ScanActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
             requestLocationPermission();
         }
-        if (requestCode == REQUEST_LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_CANCELED) {
+        if (requestCode == LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_CANCELED) {
             mGPSRequirementsDialogFragment = null;
             isAndroidGPSDialogShown = false;
         }
@@ -141,7 +146,7 @@ public class ScanActivity extends AppCompatActivity implements
     public void startResolution() {
         try {
             if (mResolvableApiException != null) {
-                mResolvableApiException.startResolutionForResult(this, REQUEST_LOCATION_SETTINGS_CODE);
+                mResolvableApiException.startResolutionForResult(this, LOCATION_SETTINGS_CODE);
                 isAndroidGPSDialogShown = true;
             }
         } catch (IntentSender.SendIntentException sendEx) {
@@ -151,6 +156,8 @@ public class ScanActivity extends AppCompatActivity implements
 
     @Override
     public void showRationale() {
+        Log.d("BUTTON", "CLICKED");
+        isAndroidBackgroundPermissionRequestShown = true;
         requestBackgroundLocationPermission();
     }
 
@@ -176,6 +183,8 @@ public class ScanActivity extends AppCompatActivity implements
             if (!shouldShowRequestPermissionRationale(permission)) {
                 mScanPreference.stopShowBackgroundPermissionRequestRationale();
             }
+            Log.d("ENTERED", "NOT GRANTED");
+            isAndroidBackgroundPermissionRequestShown = false;
         }
     }
 
@@ -191,8 +200,7 @@ public class ScanActivity extends AppCompatActivity implements
                 mResolvableApiException = (ResolvableApiException) e;
                 showGPSRequirements();
             }
-        }).addOnSuccessListener(e ->
-                requestLocationPermission());
+        }).addOnSuccessListener(e -> requestLocationPermission());
     }
 
     private LocationRequest createLocationRequest() {
@@ -241,16 +249,18 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     public void showBackgroundPermissionRequestRationale() {
-        if (mBackgroundPermissionDialogFragment == null) {
+        Log.d("BACKGROUND PERMISSION VALUE", String.valueOf(isAndroidBackgroundPermissionRequestShown));
+        Log.d("BACKGROUND DIALOG", String.valueOf(mBackgroundPermissionDialogFragment));
+        if (!isAndroidBackgroundPermissionRequestShown && mBackgroundPermissionDialogFragment == null) {
             mBackgroundPermissionDialogFragment = BackgroundPermissionDialogFragment.newInstance();
-
+            Log.d("HERE", "RE");
             mBackgroundPermissionDialogFragment.setCancelable(false);
             mBackgroundPermissionDialogFragment.show(mFragmentManager, BACKGROUND_PERMISSION_DIALOG);
         }
     }
 
     private void showGPSRequirements() {
-        if (mGPSRequirementsDialogFragment == null & !isAndroidGPSDialogShown) {
+        if (!isAndroidGPSDialogShown && mGPSRequirementsDialogFragment == null) {
             mGPSRequirementsDialogFragment = GPSRequirementDialogFragment.newInstance();
 
             mGPSRequirementsDialogFragment.setCancelable(false);
@@ -267,13 +277,16 @@ public class ScanActivity extends AppCompatActivity implements
     private void restoreState(Bundle savedInstanceState) {
         isServiceStarted = savedInstanceState.getBoolean(FOREGROUND_SERVICE_KEY);
         isAndroidGPSDialogShown = savedInstanceState.getBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY);
+        isAndroidBackgroundPermissionRequestShown = savedInstanceState.getBoolean(ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN_KEY);
 
         if (!isAndroidGPSDialogShown) {
             mGPSRequirementsDialogFragment = (GPSRequirementDialogFragment) mFragmentManager
                     .getFragment(savedInstanceState, GPS_DIALOG_TAG);
         }
-        mBackgroundPermissionDialogFragment = (DialogFragment) mFragmentManager
-                .getFragment(savedInstanceState, BACKGROUND_PERMISSION_DIALOG);
+        if (!isAndroidBackgroundPermissionRequestShown) {
+            mBackgroundPermissionDialogFragment = (BackgroundPermissionDialogFragment) mFragmentManager
+                    .getFragment(savedInstanceState, BACKGROUND_PERMISSION_DIALOG);
+        }
     }
 
     private void initializeFields() {
@@ -300,7 +313,7 @@ public class ScanActivity extends AppCompatActivity implements
             try {
                 mLocalBroadcastManager.unregisterReceiver(mUIUpdateReceiver);
             } catch (IllegalArgumentException illegalArgumentException) {
-                Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE);
+                Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MSG);
             }
         }
     }

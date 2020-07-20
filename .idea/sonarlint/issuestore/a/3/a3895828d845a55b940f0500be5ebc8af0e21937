@@ -1,5 +1,9 @@
 
-O
-java:S1874Š"1Remove this use of "startScan"; it is deprecated.(»Šø8˜ÓÉ–¶.
 N
-java:S1153q"1Directly append the argument of String.valueOf().(ÂºÛã8˜ÓÉ–¶.
+java:S1153s"1Directly append the argument of String.valueOf().(ÂºÛã8˜ÓÉ–¶.
+O
+java:S1874Œ"1Remove this use of "startScan"; it is deprecated.(»Šø8˜ÓÉ–¶.
+y
+java:S1450/"WRemove the "mContext" field and declare it as a local variable in the relevant methods.(»úÅ¾øÿÿÿÿ8®ÕÉ¸¶.
+j
+java:S11924"HDefine a constant instead of duplicating this literal "SERVICE" 3 times.(‘±À£ùÿÿÿÿ8ˆşğ±¶.

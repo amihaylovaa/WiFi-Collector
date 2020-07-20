@@ -21,7 +21,7 @@ public final class Constants {
     public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
     public static final String FILE_NOT_FOUND_EXCEPTION_MSG = "File does not exist,  but is going to be created";
     public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG = "Illegal argument exception thrown";
-    public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MESSAGE = "Broadcast receiver has not been registered";
+    public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MSG = "Broadcast receiver has not been registered";
     public static final String NULL_POINTER_EXCEPTION_THROWN_TAG = "Null pointer exception thrown";
     public static final String NULL_POINTER_EXCEPTION_THROWN_MESSAGE = "Listener has not been registered and is null";
     public static final String IO_EXCEPTION_THROWN_TAG = "IO exception thrown";
@@ -56,7 +56,7 @@ public final class Constants {
     public static final String XML_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
     public static final int FINE_LOCATION_PERMISSION_CODE = 87;
     public static final int BACKGROUND_LOCATION_PERMISSION_CODE = 43;
-    public static final int REQUEST_LOCATION_SETTINGS_CODE = 104;
+    public static final int LOCATION_SETTINGS_CODE = 104;
 
     public static final String INTRO = "This application collect " +
             "your location and wireless access points based on your current location." +
