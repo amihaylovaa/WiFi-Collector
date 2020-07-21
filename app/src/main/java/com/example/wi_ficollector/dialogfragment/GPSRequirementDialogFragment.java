@@ -15,11 +15,11 @@ import com.example.wi_ficollector.activity.ScanActivity;
 
 public class GPSRequirementDialogFragment extends DialogFragment {
 
-    public interface GPSDialogListener {
-        void startResolution();
-    }
-
     private AlertDialog mAlertDialog;
+
+    public interface GPSDialogListener {
+        void startGPSResolution();
+    }
 
     public GPSRequirementDialogFragment() {
         // Needed when dialog fragment is recreated
@@ -32,20 +32,19 @@ public class GPSRequirementDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        if (mAlertDialog == null) {
             Activity activity = getActivity();
+
             if (activity != null) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity, R.style.GPSDialogFragment)
                         .setMessage(R.string.gps_requirements_fragment_dialog_message)
                         .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
-                            ((ScanActivity) activity).startResolution();
+                            ((ScanActivity) activity).startGPSResolution();
                             dismiss();
                         });
 
                 mAlertDialog = alertDialogBuilder.create();
                 mAlertDialog.setCanceledOnTouchOutside(false);
             }
-        }
         return mAlertDialog;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.wi_ficollector.dialogfragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 
@@ -14,12 +15,11 @@ import com.example.wi_ficollector.activity.ScanActivity;
 
 public class BackgroundPermissionDialogFragment extends DialogFragment {
 
-    public interface BackgroundPermissionRationaleListener {
+    private AlertDialog mAlertDialog;
+
+    public interface BackgroundPermissionRequestRationaleListener {
         void showRationale();
     }
-
-    AlertDialog alertDialog;
-
 
     public BackgroundPermissionDialogFragment() {
         // Needed when dialog fragment is recreated
@@ -32,9 +32,10 @@ public class BackgroundPermissionDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Activity activity = getActivity();
 
-        if (alertDialog == null) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.BackgroundPermissionDialogFragment)
+        if (activity != null) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity, R.style.BackgroundPermissionDialogFragment)
                     .setMessage(R.string.background_permission_rationale_dialog_fragment_message)
                     .setCancelable(false)
                     .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
@@ -42,9 +43,9 @@ public class BackgroundPermissionDialogFragment extends DialogFragment {
                         dismiss();
                     });
 
-            alertDialog = alertDialogBuilder.create();
-            alertDialog.setCanceledOnTouchOutside(false);
+            mAlertDialog = alertDialogBuilder.create();
+            mAlertDialog.setCanceledOnTouchOutside(false);
         }
-        return alertDialog;
+        return mAlertDialog;
     }
 }

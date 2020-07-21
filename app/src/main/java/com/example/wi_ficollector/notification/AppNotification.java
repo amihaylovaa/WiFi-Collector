@@ -5,11 +5,11 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
-public abstract class ApplicationNotification {
+public abstract class AppNotification {
 
     protected Context mContext;
 
-    public ApplicationNotification(Context mContext) {
+    public AppNotification(Context mContext) {
         this.mContext = mContext;
     }
 

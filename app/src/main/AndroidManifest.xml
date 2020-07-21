@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.wi_ficollector">
 
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -26,6 +26,7 @@
 
         <service
             android:name=".service.ForegroundWifiLocationService"
+            android:foregroundServiceType="location"
             android:stopWithTask="false" />
     </application>
 </manifest>

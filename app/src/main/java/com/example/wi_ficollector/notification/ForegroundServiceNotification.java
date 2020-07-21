@@ -8,7 +8,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.wi_ficollector.R;
 
-public class ForegroundServiceNotification extends ApplicationNotification {
+public class ForegroundServiceNotification extends AppNotification {
 
     public ForegroundServiceNotification(Context mContext) {
         super(mContext);

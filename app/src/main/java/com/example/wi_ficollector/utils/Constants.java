@@ -12,6 +12,7 @@ public final class Constants {
 
     public static int numOfWifiNetworks = 0;
     public static final String GPS_DIALOG_TAG = "GPS Dialog";
+    public static final String ACTION = "UI_UPDATE";
     public static final String BACKGROUND_PERMISSION_DIALOG = "Background permission dialog";
     public static final double ZERO = 0.00;
     public static final String SCAN_RESULTS_AVAILABLE_ACTION = WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;

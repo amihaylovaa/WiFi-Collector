@@ -38,7 +38,7 @@ import static com.example.wi_ficollector.utils.Constants.*;
 @RequiresApi(api = Build.VERSION_CODES.Q)
 public class ScanActivity extends AppCompatActivity implements
         GPSRequirementDialogFragment.GPSDialogListener,
-        BackgroundPermissionDialogFragment.BackgroundPermissionRationaleListener {
+        BackgroundPermissionDialogFragment.BackgroundPermissionRequestRationaleListener {
 
     private static final String FINE_LOCATION_PERMISSION;
     private static final String BACKGROUND_LOCATION_PERMISSION;
@@ -66,6 +66,7 @@ public class ScanActivity extends AppCompatActivity implements
         ANDROID_GPS_DIALOG_SHOWN_KEY = "ANDROID_GPS_DIALOG_SHOWN";
         ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN_KEY = "ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN";
     }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,9 +107,9 @@ public class ScanActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-        if (IS_BACKGROUND_PERMISSION_REQUIRED && !isBackgroundPermissionGranted) {
-            stopForegroundService();
-        }
+        //  if (IS_BACKGROUND_PERMISSION_REQUIRED && !isBackgroundPermissionGranted) {
+        //    stopForegroundService();
+        // }
     }
 
     @Override
@@ -143,7 +144,7 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void startResolution() {
+    public void startGPSResolution() {
         try {
             if (mResolvableApiException != null) {
                 mResolvableApiException.startResolutionForResult(this, LOCATION_SETTINGS_CODE);
@@ -161,9 +162,9 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     private void handleFineLocationPermissionGranted() {
-        if (IS_BACKGROUND_PERMISSION_REQUIRED) {
-            requestBackgroundPermission();
-        }
+    //    if (IS_BACKGROUND_PERMISSION_REQUIRED) {
+ //           requestBackgroundPermission();
+      //  }
         if (!isServiceStarted) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 ContextCompat.startForegroundService(this, mIntent);
@@ -171,19 +172,32 @@ public class ScanActivity extends AppCompatActivity implements
                 startService(mIntent);
             }
             isServiceStarted = true;
-            mLocalBroadcastManager.registerReceiver(mUIUpdateReceiver, new IntentFilter("UI_UPDATE"));
+            mLocalBroadcastManager.registerReceiver(mUIUpdateReceiver, new IntentFilter(ACTION));
         }
     }
 
     private void handleBackgroundPermissionRequestResult(int grantResult, String permission) {
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
             isBackgroundPermissionGranted = true;
+
+            Log.d("Granted", "ya");
+            if (!isServiceStarted) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    ContextCompat.startForegroundService(this, mIntent);
+                } else {
+                    startService(mIntent);
+                }
+                isServiceStarted = true;
+                mLocalBroadcastManager.registerReceiver(mUIUpdateReceiver, new IntentFilter(ACTION));
+            }
+
         } else {
             if (!shouldShowRequestPermissionRationale(permission)) {
                 mScanPreference.stopShowBackgroundPermissionRequestRationale();
             }
             isAndroidBackgroundPermissionRequestShown = false;
             mBackgroundPermissionDialogFragment = null;
+            int x = 0;
         }
     }
 
