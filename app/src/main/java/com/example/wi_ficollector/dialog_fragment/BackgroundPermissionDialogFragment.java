@@ -1,6 +1,5 @@
 package com.example.wi_ficollector.dialog_fragment;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 
@@ -35,8 +34,7 @@ public class BackgroundPermissionDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         if (alertDialog == null) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom)
-                    .setTitle(R.string.background_permission_rationale_fragment_dialog)
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity(), R.style.BackgroundPermissionDialogFragment)
                     .setMessage(R.string.background_permission_rationale_dialog_fragment_message)
                     .setCancelable(false)
                     .setPositiveButton(R.string.OK, (dialog, whichButton) -> {

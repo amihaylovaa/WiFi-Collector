@@ -57,8 +57,4 @@ public final class Constants {
     public static final int FINE_LOCATION_PERMISSION_CODE = 87;
     public static final int BACKGROUND_LOCATION_PERMISSION_CODE = 43;
     public static final int LOCATION_SETTINGS_CODE = 104;
-
-    public static final String INTRO = "This application collect " +
-            "your location and wireless access points based on your current location." +
-            "This data is stored on your device and is expected to be sent later.";
 }

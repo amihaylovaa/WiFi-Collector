@@ -11,8 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.preference.MainPreference;
 
-import static com.example.wi_ficollector.utils.Constants.INTRO;
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
@@ -40,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this, ScanActivity.class);
             startActivity(intent);
         } else {
+
         }
     }
 
@@ -47,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MainPreference mainPreference = new MainPreference(this);
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
-        alertDialog.setMessage(INTRO);
+        alertDialog.setMessage(R.string.intro);
         alertDialog.setPositiveButton(R.string.OK, (dialog, id) -> mainPreference.addIntroKey());
         alertDialog.create().show();
     }

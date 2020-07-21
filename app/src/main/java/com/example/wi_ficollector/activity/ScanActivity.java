@@ -40,8 +40,8 @@ public class ScanActivity extends AppCompatActivity implements
         GPSRequirementDialogFragment.GPSDialogListener,
         BackgroundPermissionDialogFragment.BackgroundPermissionRationaleListener {
 
-    private static final String ACCESS_FINE_LOCATION_PERMISSION;
-    private static final String ACCESS_BACKGROUND_LOCATION_PERMISSION;
+    private static final String FINE_LOCATION_PERMISSION;
+    private static final String BACKGROUND_LOCATION_PERMISSION;
     private static final String FOREGROUND_SERVICE_KEY;
     private static final String ANDROID_GPS_DIALOG_SHOWN_KEY;
     private static final String ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN_KEY;
@@ -60,8 +60,8 @@ public class ScanActivity extends AppCompatActivity implements
     private LocalBroadcastManager mLocalBroadcastManager;
 
     static {
-        ACCESS_FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
-        ACCESS_BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
+        FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
+        BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
         FOREGROUND_SERVICE_KEY = "FOREGROUND_SERVICE";
         ANDROID_GPS_DIALOG_SHOWN_KEY = "ANDROID_GPS_DIALOG_SHOWN";
         ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN_KEY = "ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN";
@@ -73,12 +73,13 @@ public class ScanActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_scan);
         initializeFields();
 
-        if (IS_BACKGROUND_PERMISSION_REQUIRED && mScanPreference.isActivityFirstTimeLaunched()) {
+        if (mScanPreference.isActivityFirstTimeLaunched() && IS_BACKGROUND_PERMISSION_REQUIRED) {
             mScanPreference.addBackgroundPermissionRationaleKey();
         }
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
         }
+        enableGPS();
     }
 
     @Override
@@ -97,8 +98,8 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onRestart() {
+        super.onRestart();
         enableGPS();
     }
 
@@ -124,8 +125,7 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, @NonNull int[] grantResults) {
         for (int i = 0; i < permissions.length; i++) {
             switch (requestCode) {
                 case FINE_LOCATION_PERMISSION_CODE:
@@ -156,7 +156,6 @@ public class ScanActivity extends AppCompatActivity implements
 
     @Override
     public void showRationale() {
-        Log.d("BUTTON", "CLICKED");
         isAndroidBackgroundPermissionRequestShown = true;
         requestBackgroundLocationPermission();
     }
@@ -183,8 +182,8 @@ public class ScanActivity extends AppCompatActivity implements
             if (!shouldShowRequestPermissionRationale(permission)) {
                 mScanPreference.stopShowBackgroundPermissionRequestRationale();
             }
-            Log.d("ENTERED", "NOT GRANTED");
             isAndroidBackgroundPermissionRequestShown = false;
+            mBackgroundPermissionDialogFragment = null;
         }
     }
 
@@ -211,23 +210,23 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     public void requestFineLocationPermission() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{ACCESS_FINE_LOCATION_PERMISSION}, FINE_LOCATION_PERMISSION_CODE);
+        ActivityCompat.requestPermissions(this, new String[]{FINE_LOCATION_PERMISSION},
+                FINE_LOCATION_PERMISSION_CODE);
     }
 
     public void requestBackgroundLocationPermission() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{ACCESS_BACKGROUND_LOCATION_PERMISSION}, BACKGROUND_LOCATION_PERMISSION_CODE);
+        ActivityCompat.requestPermissions(this, new String[]{BACKGROUND_LOCATION_PERMISSION},
+                BACKGROUND_LOCATION_PERMISSION_CODE);
     }
 
     public boolean isFineLocationPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this,
-                ACCESS_FINE_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission
+                (this, FINE_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
     }
 
     public boolean isBackgroundLocationPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this,
-                ACCESS_BACKGROUND_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission(
+                this, BACKGROUND_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
     }
 
     public void requestLocationPermission() {
@@ -249,11 +248,9 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     public void showBackgroundPermissionRequestRationale() {
-        Log.d("BACKGROUND PERMISSION VALUE", String.valueOf(isAndroidBackgroundPermissionRequestShown));
-        Log.d("BACKGROUND DIALOG", String.valueOf(mBackgroundPermissionDialogFragment));
         if (!isAndroidBackgroundPermissionRequestShown && mBackgroundPermissionDialogFragment == null) {
             mBackgroundPermissionDialogFragment = BackgroundPermissionDialogFragment.newInstance();
-            Log.d("HERE", "RE");
+
             mBackgroundPermissionDialogFragment.setCancelable(false);
             mBackgroundPermissionDialogFragment.show(mFragmentManager, BACKGROUND_PERMISSION_DIALOG);
         }
@@ -279,14 +276,11 @@ public class ScanActivity extends AppCompatActivity implements
         isAndroidGPSDialogShown = savedInstanceState.getBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY);
         isAndroidBackgroundPermissionRequestShown = savedInstanceState.getBoolean(ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN_KEY);
 
-        if (!isAndroidGPSDialogShown) {
-            mGPSRequirementsDialogFragment = (GPSRequirementDialogFragment) mFragmentManager
-                    .getFragment(savedInstanceState, GPS_DIALOG_TAG);
-        }
-        if (!isAndroidBackgroundPermissionRequestShown) {
-            mBackgroundPermissionDialogFragment = (BackgroundPermissionDialogFragment) mFragmentManager
-                    .getFragment(savedInstanceState, BACKGROUND_PERMISSION_DIALOG);
-        }
+        mGPSRequirementsDialogFragment = (GPSRequirementDialogFragment) mFragmentManager
+                .getFragment(savedInstanceState, GPS_DIALOG_TAG);
+
+        mBackgroundPermissionDialogFragment = (BackgroundPermissionDialogFragment) mFragmentManager
+                .getFragment(savedInstanceState, BACKGROUND_PERMISSION_DIALOG);
     }
 
     private void initializeFields() {

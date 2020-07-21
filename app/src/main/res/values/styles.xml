@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -8,7 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AlertDialogCustom" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <style name="GPSDialogFragment" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">#EAE2E5</item>
+        <item name="android:textColorPrimary">#EDECEC</item>
+        <item name="android:background">#430D1F</item>
+        <item name="android:textAppearanceMedium">@style/TextAppearance.AppCompat.Medium</item>
     </style>
+
+    <style name="BackgroundPermissionDialogFragment" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">#EAE2E5</item>
+        <item name="android:textColorPrimary">#EDECEC</item>
+        <item name="android:background">#430D1F</item>
+        <item name="android:textAppearanceMedium">@style/TextAppearance.AppCompat.Medium</item>
+    </style>
+
 </resources>

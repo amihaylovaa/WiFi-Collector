@@ -3,12 +3,11 @@ package com.example.wi_ficollector.wrapper;
 import android.location.Location;
 import android.net.wifi.ScanResult;
 
-import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WifiLocation implements Serializable {
+public class WifiLocation {
     private Location mLocation;
     private LocalTime localTime;
     private List<ScanResult> wifiScanResults;

@@ -1,9 +1,8 @@
 package com.example.wi_ficollector.dialog_fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,8 +13,6 @@ import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.activity.ScanActivity;
 
 
-// todo attach
-// todo dismiss
 public class GPSRequirementDialogFragment extends DialogFragment {
 
     public interface GPSDialogListener {
@@ -36,16 +33,18 @@ public class GPSRequirementDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         if (mAlertDialog == null) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.gps_requirements_title)
-                    .setMessage(R.string.gps_requirements_fragment_dialog_message)
-                    .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
-                        ((ScanActivity) getActivity()).startResolution();
-                        dismiss();
-                    });
+            Activity activity = getActivity();
+            if (activity != null) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity, R.style.GPSDialogFragment)
+                        .setMessage(R.string.gps_requirements_fragment_dialog_message)
+                        .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
+                            ((ScanActivity) activity).startResolution();
+                            dismiss();
+                        });
 
-            mAlertDialog = alertDialogBuilder.create();
-            mAlertDialog.setCanceledOnTouchOutside(false);
+                mAlertDialog = alertDialogBuilder.create();
+                mAlertDialog.setCanceledOnTouchOutside(false);
+            }
         }
         return mAlertDialog;
     }

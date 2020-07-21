@@ -44,22 +44,20 @@ public class ForegroundWifiLocationService extends Service {
     private WifiLocationRepository mWifiLocationRepository;
     private WifiLocation mWifiLocation;
     private LocalBroadcastManager mLocalBroadcastManager;
-    private Context mContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
-//        Log.d("SERVICE", "ON CREATE");
-        mContext = this;
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(mContext);
-        mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-        mWifiLocationRepository = new WifiLocationRepository(mContext);
+        Context context = this;
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
+        mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        mWifiLocationRepository = new WifiLocationRepository(context);
         mWifiLocation = new WifiLocation();
         mGPSStateReceiver = new GPSStateReceiver();
         mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         createLocationRequest();
-        ApplicationNotification applicationNotification = new ForegroundServiceNotification(mContext);
+        ApplicationNotification applicationNotification = new ForegroundServiceNotification(context);
         NotificationCompat.Builder notificationBuilder = applicationNotification.createNotification();
         int foregroundServiceNotificationId = 721;
 
@@ -76,7 +74,6 @@ public class ForegroundWifiLocationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-   //     Log.d("SERVICE", "ON START");
         implementLocationResultCallback();
         requestLocationUpdates();
         registerReceiver(mWifiReceiver, SCAN_RESULTS_AVAILABLE_ACTION);
@@ -112,7 +109,6 @@ public class ForegroundWifiLocationService extends Service {
                 List<Location> locations = locationResult.getLocations();
                 LocalTime localTime = LocalTime.now();
                 mWifiLocation.setLocalTime(localTime);
-       //         Log.d("Found", "Location - " + String.valueOf(localTime) + "");
 
                 for (Location location : locations) {
                     mWifiLocation.setLocation(location);
@@ -125,7 +121,6 @@ public class ForegroundWifiLocationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-      //  Log.d("SERVICE", "ON DESTROY");
         stopServiceWork();
         stopSelf();
     }
@@ -140,7 +135,6 @@ public class ForegroundWifiLocationService extends Service {
         boolean isWifiScanningSucceeded = mWifiManager.startScan();
 
         if (!isWifiScanningSucceeded) {
-        //    Log.d("SERVICE Scanning", "Failed");
             mWifiLocationRepository.save(mWifiLocation);
         } else {
             Intent intent = new Intent("UI_UPDATE");
