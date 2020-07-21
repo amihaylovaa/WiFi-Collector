@@ -1,4 +1,4 @@
-package com.example.wi_ficollector.dialog_fragment;
+package com.example.wi_ficollector.dialogfragment;
 
 import android.app.Dialog;
 import android.os.Bundle;

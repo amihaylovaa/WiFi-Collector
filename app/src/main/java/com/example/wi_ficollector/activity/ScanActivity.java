@@ -21,8 +21,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.wi_ficollector.R;
-import com.example.wi_ficollector.dialog_fragment.BackgroundPermissionDialogFragment;
-import com.example.wi_ficollector.dialog_fragment.GPSRequirementDialogFragment;
+import com.example.wi_ficollector.dialogfragment.BackgroundPermissionDialogFragment;
+import com.example.wi_ficollector.dialogfragment.GPSRequirementDialogFragment;
 import com.example.wi_ficollector.preference.ScanPreference;
 
 import com.example.wi_ficollector.service.ForegroundWifiLocationService;
