@@ -17,7 +17,7 @@
     <string name="gps_requirements_dialog">GPS Requirements</string>
     <string name="gps_requirements_fragment_dialog_message">Turning GPS on is required in order to scan WiFi and find your location.</string>
     <string name="gps_requirements_fragment_dialog_title">GPS actions required</string>
-    <string name="background_permission_rationale_dialog_fragment_message">It is recommended to grant permission to access your location all the time, otherwise application will not be able to work on background.</string>
+    <string name="location_permission_rationale_dialog_fragment_message">The app needs permission to access your location, otherwise it will not be able to work. Do you want to give permission?</string>
     <string name="yes_button">Yes</string>
     <string name="no_button">No</string>
     <string name="intro">This application collect your location and wireless access points based on your current location. This data is stored on your device and is expected to be sent later.</string>

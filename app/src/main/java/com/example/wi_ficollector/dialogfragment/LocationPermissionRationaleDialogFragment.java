@@ -13,20 +13,22 @@ import androidx.fragment.app.DialogFragment;
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.activity.ScanActivity;
 
-public class BackgroundPermissionDialogFragment extends DialogFragment {
+public class LocationPermissionRationaleDialogFragment extends DialogFragment {
 
     private AlertDialog mAlertDialog;
 
     public interface BackgroundPermissionRequestRationaleListener {
-        void showRationale();
+        void positiveButton();
+
+        void negativeButton();
     }
 
-    public BackgroundPermissionDialogFragment() {
+    public LocationPermissionRationaleDialogFragment() {
         // Needed when dialog fragment is recreated
     }
 
-    public static BackgroundPermissionDialogFragment newInstance() {
-        return new BackgroundPermissionDialogFragment();
+    public static LocationPermissionRationaleDialogFragment newInstance() {
+        return new LocationPermissionRationaleDialogFragment();
     }
 
     @NonNull
@@ -35,11 +37,15 @@ public class BackgroundPermissionDialogFragment extends DialogFragment {
         Activity activity = getActivity();
 
         if (activity != null) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity, R.style.BackgroundPermissionDialogFragment)
-                    .setMessage(R.string.background_permission_rationale_dialog_fragment_message)
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity, R.style.LocationPermissionDialogFragment)
+                    .setMessage(R.string.location_permission_rationale_dialog_fragment_message)
                     .setCancelable(false)
-                    .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
-                        ((ScanActivity) getActivity()).showRationale();
+                    .setNegativeButton(R.string.disagree, (dialog, whichButton) -> {
+                        ((ScanActivity) getActivity()).negativeButton();
+                          dismiss();
+                    })
+                    .setPositiveButton(R.string.agree, (dialog, whichButton) -> {
+                        ((ScanActivity) getActivity()).positiveButton();
                         dismiss();
                     });
 

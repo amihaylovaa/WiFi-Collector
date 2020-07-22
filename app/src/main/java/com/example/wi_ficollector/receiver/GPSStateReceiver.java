@@ -15,7 +15,7 @@ public class GPSStateReceiver extends android.content.BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         String action = intent.getAction();
         boolean isProviderEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
