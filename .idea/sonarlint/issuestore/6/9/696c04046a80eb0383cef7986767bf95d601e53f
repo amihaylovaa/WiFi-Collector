@@ -1,10 +1,4 @@
 
-]	java:S125n"<This block of commented-out lines of code should be removed.(àœšÿÿÿÿÿ8§Ñú•·.
-J
-java:S1185l"(Remove this method to simply inherit it.(èüù±ùÿÿÿÿ8§Ñú•·.
-I
-java:S1481È"&Remove this unused "x" local variable.(¾„ëüÿÿÿÿ8¡Œ¾’·.
-X	java:S110'"<This class has 9 parents which is greater than 5 authorized.(¶»8òÔ©‰·.
-^
-java:S10680"ARemove this unused "isBackgroundPermissionGranted" private field.(¶üîÂ8§Ñú•·.
-Y	java:S125¥"<This block of commented-out lines of code should be removed.(‹…ĞÖ8•Òï–·.
+T
+java:S1135f"2Complete the task associated to this TODO comment.(şê÷‹şÿÿÿÿ8¼¿¼¾·.
+X	java:S110$"<This class has 9 parents which is greater than 5 authorized.(¶»8òÔ©‰·.

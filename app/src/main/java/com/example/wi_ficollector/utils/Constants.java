@@ -2,7 +2,6 @@ package com.example.wi_ficollector.utils;
 
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 
 
 public final class Constants {
@@ -13,12 +12,10 @@ public final class Constants {
     public static int numOfWifiNetworks = 0;
     public static final String GPS_DIALOG_TAG = "GPS Dialog";
     public static final String ACTION = "UI_UPDATE";
-    public static final String BACKGROUND_PERMISSION_DIALOG = "Background permission dialog";
+    public static final String LOCATION_PERMISSION_DIALOG_TAG = "Background permission dialog";
     public static final double ZERO = 0.00;
     public static final String SCAN_RESULTS_AVAILABLE_ACTION = WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;
     public static final String PROVIDERS_CHANGED_ACTION = LocationManager.PROVIDERS_CHANGED_ACTION;
-    public static final String UNRECOGNIZED_PERMISSION_TAG = "Unrecognized tag";
-    public static final String UNRECOGNIZED_PERMISSION_MSG = "Permission request can not be processed";
     public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
     public static final String FILE_NOT_FOUND_EXCEPTION_MSG = "File does not exist,  but is going to be created";
     public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG = "Illegal argument exception thrown";
@@ -29,8 +26,6 @@ public final class Constants {
     public static final String SEND_INTENT_EXCEPTION_THROWN_TAG = "SendIntent exception thrown";
     public static final String SEND_INTENT_EXCEPTION_EXCEPTION_THROWN_MSG = "Request could not be executed";
     public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during working with file stream";
-
-    public static final boolean IS_BACKGROUND_PERMISSION_REQUIRED = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
     public static final int FIVE_SECONDS = 5000;
     public static final int THREE_SECONDS = 3000;
     public static final String GPX_TAG = "gpx";
@@ -56,6 +51,5 @@ public final class Constants {
     public static final String XMLNS_XSI = "xmlns:xsi";
     public static final String XML_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
     public static final int FINE_LOCATION_PERMISSION_CODE = 87;
-    public static final int BACKGROUND_LOCATION_PERMISSION_CODE = 43;
     public static final int LOCATION_SETTINGS_CODE = 104;
 }

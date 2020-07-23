@@ -17,7 +17,7 @@ public class GPSRequirementDialogFragment extends DialogFragment {
 
     private AlertDialog mAlertDialog;
 
-    public interface GPSDialogListener {
+    public interface GPSRequirementsListener {
         void startGPSResolution();
     }
 

@@ -20,7 +20,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.wi_ficollector.R;
-import com.example.wi_ficollector.dialogfragment.LocationPermissionRationaleDialogFragment;
+import com.example.wi_ficollector.dialogfragment.LocationRequestRationaleDialogFragment;
 import com.example.wi_ficollector.dialogfragment.GPSRequirementDialogFragment;
 
 import com.example.wi_ficollector.service.ForegroundWifiLocationService;
@@ -34,14 +34,14 @@ import com.google.android.gms.tasks.Task;
 import static com.example.wi_ficollector.utils.Constants.*;
 
 public class ScanActivity extends AppCompatActivity implements
-        GPSRequirementDialogFragment.GPSDialogListener,
-        LocationPermissionRationaleDialogFragment.BackgroundPermissionRequestRationaleListener {
+        GPSRequirementDialogFragment.GPSRequirementsListener,
+        LocationRequestRationaleDialogFragment.LocationRequestRationaleListener {
 
     private static final String FINE_LOCATION_PERMISSION;
     private static final String ANDROID_GPS_DIALOG_SHOWN_KEY;
     private static final String ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY;
-    private boolean isAndroidLocationDialogShown;
-    private boolean isAndroidGPSDialogShown;
+    private boolean isLocationRequestDialogShown;
+    private boolean isGPSRequestDialogShown;
     private boolean isServiceStarted;
     private DialogFragment mGPSRequirementsDialogFragment;
     private DialogFragment mLocationPermissionDialogFragment;
@@ -78,16 +78,15 @@ public class ScanActivity extends AppCompatActivity implements
             mFragmentManager.putFragment(outState, GPS_DIALOG_TAG, mGPSRequirementsDialogFragment);
         }
         if (mLocationPermissionDialogFragment != null && mLocationPermissionDialogFragment.isAdded()) {
-            mFragmentManager.putFragment(outState, BACKGROUND_PERMISSION_DIALOG, mLocationPermissionDialogFragment);
+            mFragmentManager.putFragment(outState, LOCATION_PERMISSION_DIALOG_TAG, mLocationPermissionDialogFragment);
         }
-        outState.putBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY, isAndroidGPSDialogShown);
-        outState.putBoolean(ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY, isAndroidLocationDialogShown);
+        outState.putBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY, isGPSRequestDialogShown);
+        outState.putBoolean(ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY, isLocationRequestDialogShown);
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d("on", "RESTART");
         enableGPS();
     }
 
@@ -99,17 +98,18 @@ public class ScanActivity extends AppCompatActivity implements
         }
     }
 
-    // todo fix bug with disabled gps
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
             requestLocationPermission();
+            mGPSRequirementsDialogFragment = null;
+            isGPSRequestDialogShown = false;
         }
         if (requestCode == LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_CANCELED) {
             mGPSRequirementsDialogFragment = null;
-            isAndroidGPSDialogShown = false;
+            isGPSRequestDialogShown = false;
         }
     }
 
@@ -117,7 +117,7 @@ public class ScanActivity extends AppCompatActivity implements
     public void onRequestPermissionsResult(int requestCode, String[] permissions, @NonNull int[] grantResults) {
         for (int i = 0; i < permissions.length; i++) {
             if (requestCode == FINE_LOCATION_PERMISSION_CODE) {
-                isAndroidLocationDialogShown = true;
+                isLocationRequestDialogShown = true;
                 handleFineLocationPermissionRequestResults(permissions[i], grantResults[i]);
             }
         }
@@ -127,7 +127,7 @@ public class ScanActivity extends AppCompatActivity implements
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
             startForegroundService();
         } else {
-            isAndroidLocationDialogShown = false;
+            isLocationRequestDialogShown = false;
             if (shouldShowRequestPermissionRationale(permission)) {
                 showLocationPermissionRequestRationale();
             }
@@ -139,7 +139,7 @@ public class ScanActivity extends AppCompatActivity implements
         try {
             if (mResolvableApiException != null) {
                 mResolvableApiException.startResolutionForResult(this, LOCATION_SETTINGS_CODE);
-                isAndroidGPSDialogShown = true;
+                isGPSRequestDialogShown = true;
             }
         } catch (IntentSender.SendIntentException sendEx) {
             Log.d(SEND_INTENT_EXCEPTION_THROWN_TAG, SEND_INTENT_EXCEPTION_EXCEPTION_THROWN_MSG);
@@ -154,7 +154,7 @@ public class ScanActivity extends AppCompatActivity implements
     @Override
     public void negativeButton() {
         mLocationPermissionDialogFragment = null;
-        isAndroidLocationDialogShown = false;
+        isLocationRequestDialogShown = false;
     }
 
     private void startForegroundService() {
@@ -212,7 +212,7 @@ public class ScanActivity extends AppCompatActivity implements
 
     public void requestLocationPermission() {
         if (!isFineLocationPermissionGranted()) {
-            if (!isAndroidLocationDialogShown) {
+            if (!isLocationRequestDialogShown) {
                 requestFineLocationPermission();
             }
         } else {
@@ -221,17 +221,17 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     public void showLocationPermissionRequestRationale() {
-        if (!isAndroidLocationDialogShown && mLocationPermissionDialogFragment == null) {
-            mLocationPermissionDialogFragment = LocationPermissionRationaleDialogFragment.newInstance();
+        if (!isLocationRequestDialogShown && mLocationPermissionDialogFragment == null) {
+            mLocationPermissionDialogFragment = LocationRequestRationaleDialogFragment.newInstance();
 
             mLocationPermissionDialogFragment.setCancelable(false);
-            mLocationPermissionDialogFragment.show(mFragmentManager, BACKGROUND_PERMISSION_DIALOG);
-            isAndroidLocationDialogShown = true;
+            mLocationPermissionDialogFragment.show(mFragmentManager, LOCATION_PERMISSION_DIALOG_TAG);
+            isLocationRequestDialogShown = true;
         }
     }
 
     private void showGPSRequirements() {
-        if (!isAndroidGPSDialogShown && mGPSRequirementsDialogFragment == null) {
+        if (!isGPSRequestDialogShown && mGPSRequirementsDialogFragment == null) {
             mGPSRequirementsDialogFragment = GPSRequirementDialogFragment.newInstance();
 
             mGPSRequirementsDialogFragment.setCancelable(false);
@@ -246,14 +246,14 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     private void restorePreviousState(Bundle savedInstanceState) {
-        isAndroidGPSDialogShown = savedInstanceState.getBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY);
-        isAndroidLocationDialogShown = savedInstanceState.getBoolean(ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY);
+        isGPSRequestDialogShown = savedInstanceState.getBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY);
+        isLocationRequestDialogShown = savedInstanceState.getBoolean(ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY);
 
         mGPSRequirementsDialogFragment = (GPSRequirementDialogFragment) mFragmentManager
                 .getFragment(savedInstanceState, GPS_DIALOG_TAG);
 
-        mLocationPermissionDialogFragment = (LocationPermissionRationaleDialogFragment) mFragmentManager
-                .getFragment(savedInstanceState, BACKGROUND_PERMISSION_DIALOG);
+        mLocationPermissionDialogFragment = (LocationRequestRationaleDialogFragment) mFragmentManager
+                .getFragment(savedInstanceState, LOCATION_PERMISSION_DIALOG_TAG);
     }
 
     private void initializeFields() {

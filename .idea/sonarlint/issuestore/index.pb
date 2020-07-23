@@ -37,8 +37,6 @@ A
 w
 Gapp/src/main/java/com/example/wi_ficollector/activity/ScanActivity.java,6\9\696c04046a80eb0383cef7986767bf95d601e53f
 {
-Kapp/src/main/java/com/example/wi_ficollector/preference/ScanPreference.java,6\5\65328b47cc1445e882d52d98438643d562bc7d3b
-{
 Kapp/src/main/java/com/example/wi_ficollector/preference/MainPreference.java,5\1\5177e9bf45e61e2e62567de2575b325d90baa194
 É
 Sapp/src/main/java/com/example/wi_ficollector/repository/WiFiLocationRepository.java,e\8\e8c2cca1a1050663dfe3b31a3f332b23a24465ae
@@ -58,9 +56,9 @@ Wapp/src/main/java/com/example/wi_ficollector/service/ForegroundWifiLocationServ
 Kapp/src/main/java/com/example/wi_ficollector/receiver/GPSStateReceiver.java,f\1\f1edaa4f16056d4a2edcbab11425899b83a6a40d
 ~
 Napp/src/main/java/com/example/wi_ficollector/notification/GSPNotification.java,d\2\d2f8062666274a7a56e7194485d75aa05b75c276
-ì
-capp/src/main/java/com/example/wi_ficollector/dialogfragment/BackgroundPermissionDialogFragment.java,9\0\9086a0c0cc8cc7467739369057982b6752a70b58
 ç
 ]app/src/main/java/com/example/wi_ficollector/dialogfragment/GPSRequirementDialogFragment.java,b\5\b59ead83a2b6af8ed52181a80fb12d1b2a9d2c12
 ~
 Napp/src/main/java/com/example/wi_ficollector/notification/AppNotification.java,b\8\b815038ceba0e4ff4c96ed9b96f09541007f185f
+ö
+japp/src/main/java/com/example/wi_ficollector/dialogfragment/LocationPermissionRationaleDialogFragment.java,4\f\4f9f1bba677f1854a0cd4f95d883f7854916b6d0

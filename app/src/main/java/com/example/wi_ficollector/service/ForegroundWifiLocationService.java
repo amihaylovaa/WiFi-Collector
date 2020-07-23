@@ -33,6 +33,10 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
+// todo remove numOfWifiLocation from constants make it private here,
+// todo then add it into the intent in wifi broadcast receiver
+// todo  pass is as argument in save
+// todo  add it into the intent in local broadcast receiver and start the thread with argument
 public class ForegroundWifiLocationService extends Service {
 
     private WifiManager mWifiManager;

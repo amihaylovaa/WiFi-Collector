@@ -13,22 +13,22 @@ import androidx.fragment.app.DialogFragment;
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.activity.ScanActivity;
 
-public class LocationPermissionRationaleDialogFragment extends DialogFragment {
+public class LocationRequestRationaleDialogFragment extends DialogFragment {
 
     private AlertDialog mAlertDialog;
 
-    public interface BackgroundPermissionRequestRationaleListener {
+    public interface LocationRequestRationaleListener {
         void positiveButton();
 
         void negativeButton();
     }
 
-    public LocationPermissionRationaleDialogFragment() {
+    public LocationRequestRationaleDialogFragment() {
         // Needed when dialog fragment is recreated
     }
 
-    public static LocationPermissionRationaleDialogFragment newInstance() {
-        return new LocationPermissionRationaleDialogFragment();
+    public static LocationRequestRationaleDialogFragment newInstance() {
+        return new LocationRequestRationaleDialogFragment();
     }
 
     @NonNull

@@ -49,15 +49,11 @@ public class WiFiReceiver extends BroadcastReceiver {
     private boolean shouldSaveScanResults() {
         LocalTime foundNetworksTime = LocalTime.now();
         LocalTime savedLocationTime = mWifiLocation.getLocalTime();
-        Log.d("Found wifi", " -  " + String.valueOf(foundNetworksTime) + "");
-
         long difference = -1L;
 
         if (savedLocationTime != null) {
             difference = ChronoUnit.SECONDS.between(savedLocationTime, foundNetworksTime);
         }
-
-        Log.d("Time difference", String.valueOf(difference));
         return (difference <= 5L && difference != -1L);
     }
 }
