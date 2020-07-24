@@ -28,13 +28,15 @@ public class WifiLocationRepository {
     boolean isOutputSet;
     private XmlSerializer serializer;
     private Context mContext;
-    private static boolean areBasicTagsAdded;
+    private boolean areBasicTagsAdded;
+    private int numOfWifiLocations;
 
     public WifiLocationRepository(Context mContext) {
         this.mContext = mContext;
         openFileOutputStream();
         this.serializer = Xml.newSerializer();
         this.isOutputSet = false;
+        this.numOfWifiLocations = 0;
     }
 
     public void save(WifiLocation wifiLocation) {
@@ -44,23 +46,17 @@ public class WifiLocationRepository {
         List<ScanResult> scanResults = wifiLocation.getScanResults();
 
         try {
-            if (latitude != ZERO && longitude != ZERO) {
-                saveValidWifiLocation(latitude, longitude, scanResults);
-                wifiLocation.clearResults();
+            if (isFileEmpty()) {
+                addGPXDeclaration();
             }
+            if (!isOutputSet) {
+                setOutput();
+            }
+            saveWifiLocation(latitude, longitude, scanResults);
+            wifiLocation.clearResults();
         } catch (IOException IOException) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
-    }
-
-    private void saveValidWifiLocation(double latitude, double longitude, List<ScanResult> scanResults) throws IOException {
-        if (isFileEmpty()) {
-            addGPXDeclaration();
-        }
-        if (!isOutputSet) {
-            setOutput();
-        }
-        saveWifiLocation(latitude, longitude, scanResults);
     }
 
     private void setOutput() throws IOException {
@@ -110,7 +106,8 @@ public class WifiLocationRepository {
     private void saveExtensions(List<ScanResult> scanResults) throws IOException {
         serializer.startTag(NO_NAMESPACE, EXTENSIONS_TAG);
         if (scanResults != null) {
-            numOfWifiNetworks += scanResults.size();
+            numOfWifiLocations += scanResults.size();
+
             for (ScanResult scanResult : scanResults) {
                 serializer.startTag(NO_NAMESPACE, WIFI_TAG);
                 serializer.startTag(NO_NAMESPACE, SSID_TAG)
@@ -147,5 +144,9 @@ public class WifiLocationRepository {
         } catch (IOException e) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
+    }
+
+    public int getNumOfWifiLocations() {
+        return numOfWifiLocations;
     }
 }

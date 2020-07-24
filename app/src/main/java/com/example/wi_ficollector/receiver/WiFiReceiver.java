@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 
 import com.example.wi_ficollector.repository.WifiLocationRepository;
@@ -38,13 +37,11 @@ public class WiFiReceiver extends BroadcastReceiver {
     private void setScanResults(List<ScanResult> scanResults) {
         if (scanResults != null && !scanResults.isEmpty() && shouldSaveScanResults()) {
             mWifiLocation.setScanResults(scanResults);
-            Log.d("Number of wifi", String.valueOf(scanResults.size()));
             if (mWifiLocationRepository != null) {
                 mWifiLocationRepository.save(mWifiLocation);
             }
         }
     }
-
 
     private boolean shouldSaveScanResults() {
         LocalTime foundNetworksTime = LocalTime.now();

@@ -33,10 +33,7 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
-// todo remove numOfWifiLocation from constants make it private here,
-// todo then add it into the intent in wifi broadcast receiver
-// todo  pass is as argument in save
-// todo  add it into the intent in local broadcast receiver and start the thread with argument
+// todo add threads
 public class ForegroundWifiLocationService extends Service {
 
     private WifiManager mWifiManager;
@@ -48,7 +45,6 @@ public class ForegroundWifiLocationService extends Service {
     private WifiLocationRepository mWifiLocationRepository;
     private WifiLocation mWifiLocation;
     private LocalBroadcastManager mLocalBroadcastManager;
-    private Intent mLocalBroadcastIntent;
 
     @Override
     public void onCreate() {
@@ -62,7 +58,6 @@ public class ForegroundWifiLocationService extends Service {
         mWifiLocation = new WifiLocation();
         mGPSStateReceiver = new GPSStateReceiver();
         mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
-        mLocalBroadcastIntent = new Intent(ACTION);
         AppNotification appNotification = new ForegroundServiceNotification(this);
         NotificationCompat.Builder notificationBuilder = appNotification.createNotification();
         int foregroundServiceNotificationId = 721;
@@ -137,8 +132,12 @@ public class ForegroundWifiLocationService extends Service {
                 mWifiLocation.setLocalTime(LocalTime.now());
 
                 for (Location location : locations) {
-                    mWifiLocation.setLocation(location);
-                    startWifiScanning();
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    if (latitude != ZERO && longitude != ZERO) {
+                        mWifiLocation.setLocation(location);
+                        startWifiScanning();
+                    }
                 }
             }
         };
@@ -150,7 +149,10 @@ public class ForegroundWifiLocationService extends Service {
         if (!isWifiScanningSucceeded) {
             mWifiLocationRepository.save(mWifiLocation);
         } else {
-            mLocalBroadcastManager.sendBroadcast(mLocalBroadcastIntent);
+            Intent intent = new Intent();
+            intent.putExtra("numOfWifiLocations", mWifiLocationRepository.getNumOfWifiLocations());
+            intent.setAction(ACTION);
+            mLocalBroadcastManager.sendBroadcast(intent);
         }
     }
 

@@ -8,8 +8,6 @@ public final class Constants {
 
     private Constants() {
     }
-
-    public static int numOfWifiNetworks = 0;
     public static final String GPS_DIALOG_TAG = "GPS Dialog";
     public static final String ACTION = "UI_UPDATE";
     public static final String LOCATION_PERMISSION_DIALOG_TAG = "Background permission dialog";

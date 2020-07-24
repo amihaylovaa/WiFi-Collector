@@ -104,13 +104,9 @@ public class ScanActivity extends AppCompatActivity implements
 
         if (requestCode == LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_OK) {
             requestLocationPermission();
-            mGPSRequirementsDialogFragment = null;
-            isGPSRequestDialogShown = false;
         }
-        if (requestCode == LOCATION_SETTINGS_CODE && resultCode == Activity.RESULT_CANCELED) {
-            mGPSRequirementsDialogFragment = null;
-            isGPSRequestDialogShown = false;
-        }
+        mGPSRequirementsDialogFragment = null;
+        isGPSRequestDialogShown = false;
     }
 
     @Override
@@ -239,8 +235,8 @@ public class ScanActivity extends AppCompatActivity implements
         }
     }
 
-    private void startUpdateUIThread() {
-        UIUpdateTask uiUpdateTask = new UIUpdateTask(tv);
+    private void startUpdateUIThread(int numOfWifiLocations) {
+        UIUpdateTask uiUpdateTask = new UIUpdateTask(tv, numOfWifiLocations);
 
         new Thread(uiUpdateTask).start();
     }
@@ -264,11 +260,12 @@ public class ScanActivity extends AppCompatActivity implements
         mUIUpdateReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                startUpdateUIThread();
+                int numOfWifiNetworks = intent.getIntExtra("numOfWifiLocations", 0);
+                startUpdateUIThread(numOfWifiNetworks);
             }
         };
 
-        tv.setText(String.valueOf(numOfWifiNetworks));
+        tv.setText(String.valueOf(0));
     }
 
     private void stopForegroundService() {

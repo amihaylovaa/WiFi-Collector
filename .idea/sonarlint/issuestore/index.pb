@@ -60,5 +60,5 @@ Napp/src/main/java/com/example/wi_ficollector/notification/GSPNotification.java
 ]app/src/main/java/com/example/wi_ficollector/dialogfragment/GPSRequirementDialogFragment.java,b\5\b59ead83a2b6af8ed52181a80fb12d1b2a9d2c12
 ~
 Napp/src/main/java/com/example/wi_ficollector/notification/AppNotification.java,b\8\b815038ceba0e4ff4c96ed9b96f09541007f185f
-š
-japp/src/main/java/com/example/wi_ficollector/dialogfragment/LocationPermissionRationaleDialogFragment.java,4\f\4f9f1bba677f1854a0cd4f95d883f7854916b6d0
+—
+gapp/src/main/java/com/example/wi_ficollector/dialogfragment/LocationRequestRationaleDialogFragment.java,4\a\4a9a10f1b7402968d895f59f05b0f602c51aac15
