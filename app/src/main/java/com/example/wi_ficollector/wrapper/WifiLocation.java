@@ -11,6 +11,18 @@ public class WifiLocation {
     private Location mLocation;
     private LocalTime localTime;
     private List<ScanResult> wifiScanResults;
+    private static WifiLocation wifiLocation;
+
+    private WifiLocation() {
+
+    }
+
+    public static WifiLocation getWifiLocation() {
+        if (wifiLocation == null) {
+            wifiLocation = new WifiLocation();
+        }
+        return wifiLocation;
+    }
 
     public List<ScanResult> getScanResults() {
         return wifiScanResults;
@@ -34,10 +46,6 @@ public class WifiLocation {
 
     public void setLocation(Location mLocation) {
         this.mLocation = mLocation;
-    }
-
-    public void setWifiScanResults(List<ScanResult> wifiScanResults) {
-        this.wifiScanResults = wifiScanResults;
     }
 
     public void clearResults() {

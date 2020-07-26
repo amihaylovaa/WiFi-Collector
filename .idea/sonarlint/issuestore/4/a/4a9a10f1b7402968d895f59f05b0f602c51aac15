@@ -1,5 +1,5 @@
 
-x
-java:S1905,"VRemove this unnecessary cast to "org.sonar.java.resolve.Symbols$UnknownType@4da1b8c3".(Üê¬žýÿÿÿÿ8ÄÞÙº·.
-s
-java:S19050"VRemove this unnecessary cast to "org.sonar.java.resolve.Symbols$UnknownType@4da1b8c3".(ôµ¨©8Œ²œ¿¶.
+w
+java:S1905,"URemove this unnecessary cast to "org.sonar.java.resolve.Symbols$UnknownType@c39b581".(Üê¬žýÿÿÿÿ8ÄÞÙº·.
+r
+java:S19050"URemove this unnecessary cast to "org.sonar.java.resolve.Symbols$UnknownType@c39b581".(ôµ¨©8Œ²œ¿¶.

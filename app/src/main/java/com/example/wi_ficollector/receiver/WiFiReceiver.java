@@ -6,8 +6,7 @@ import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 
-
-import com.example.wi_ficollector.repository.WifiLocationRepository;
+import com.example.wi_ficollector.repository.WifiLocationOutput;
 import com.example.wi_ficollector.wrapper.WifiLocation;
 
 import java.time.LocalTime;
@@ -17,11 +16,11 @@ import java.util.List;
 public class WiFiReceiver extends BroadcastReceiver {
 
     private WifiLocation mWifiLocation;
-    private WifiLocationRepository mWifiLocationRepository;
+    private WifiLocationOutput mWifiLocationOutput;
 
-    public WiFiReceiver(WifiLocationRepository mWifiLocationRepository, WifiLocation mWifiLocation) {
-        this.mWifiLocationRepository = mWifiLocationRepository;
-        this.mWifiLocation = mWifiLocation;
+    public WiFiReceiver(WifiLocationOutput mWifiLocationOutput) {
+        this.mWifiLocationOutput = mWifiLocationOutput;
+        this.mWifiLocation = WifiLocation.getWifiLocation();
     }
 
     @Override
@@ -35,10 +34,10 @@ public class WiFiReceiver extends BroadcastReceiver {
     }
 
     private void setScanResults(List<ScanResult> scanResults) {
-        if (scanResults != null && !scanResults.isEmpty() && shouldSaveScanResults()) {
+        if (scanResults != null && shouldSaveScanResults()) {
             mWifiLocation.setScanResults(scanResults);
-            if (mWifiLocationRepository != null) {
-                mWifiLocationRepository.save(mWifiLocation);
+            if (mWifiLocationOutput != null) {
+                mWifiLocationOutput.write(mWifiLocation);
             }
         }
     }
@@ -51,6 +50,7 @@ public class WiFiReceiver extends BroadcastReceiver {
         if (savedLocationTime != null) {
             difference = ChronoUnit.SECONDS.between(savedLocationTime, foundNetworksTime);
         }
+
         return (difference <= 5L && difference != -1L);
     }
 }

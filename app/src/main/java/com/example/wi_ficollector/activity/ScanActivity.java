@@ -24,12 +24,10 @@ import com.example.wi_ficollector.dialogfragment.LocationRequestRationaleDialogF
 import com.example.wi_ficollector.dialogfragment.GPSRequirementDialogFragment;
 
 import com.example.wi_ficollector.service.ForegroundWifiLocationService;
-import com.example.wi_ficollector.thread.*;
 
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
-
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
@@ -63,6 +61,7 @@ public class ScanActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         initializeFields();
+        implementUIUpdateReceiver();
 
         if (savedInstanceState != null) {
             restorePreviousState(savedInstanceState);
@@ -235,12 +234,6 @@ public class ScanActivity extends AppCompatActivity implements
         }
     }
 
-    private void startUpdateUIThread(int numOfWifiLocations) {
-        UIUpdateTask uiUpdateTask = new UIUpdateTask(tv, numOfWifiLocations);
-
-        new Thread(uiUpdateTask).start();
-    }
-
     private void restorePreviousState(Bundle savedInstanceState) {
         isGPSRequestDialogShown = savedInstanceState.getBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY);
         isLocationRequestDialogShown = savedInstanceState.getBoolean(ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY);
@@ -252,20 +245,23 @@ public class ScanActivity extends AppCompatActivity implements
                 .getFragment(savedInstanceState, LOCATION_PERMISSION_DIALOG_TAG);
     }
 
+    private void implementUIUpdateReceiver() {
+        mUIUpdateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int numOfWifiNetworks = intent.getIntExtra(EXTRA_NAME, 0);
+
+                tv.invalidate();
+                tv.setText(String.valueOf(numOfWifiNetworks));
+            }
+        };
+    }
+
     private void initializeFields() {
         mFragmentManager = getSupportFragmentManager();
         mIntent = new Intent(this, ForegroundWifiLocationService.class);
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         tv = findViewById(R.id.numberOfWifiNetworks);
-        mUIUpdateReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                int numOfWifiNetworks = intent.getIntExtra("numOfWifiLocations", 0);
-                startUpdateUIThread(numOfWifiNetworks);
-            }
-        };
-
-        tv.setText(String.valueOf(0));
     }
 
     private void stopForegroundService() {

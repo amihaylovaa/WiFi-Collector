@@ -1,7 +1,0 @@
-
-M
-java:S1128"-Remove this unused import 'android.os.Build'.(ãÇ¤Úıÿÿÿÿ8Øäôç·.
-T
-java:S1444"7Make this "public static numOfWifiNetworks" field final(êÓŒ8ûÎÇ™¶.
-z
-java:S1104"]Make numOfWifiNetworks a static final constant or non-public and provide accessors if needed.(êÓŒ8ûÎÇ™¶.

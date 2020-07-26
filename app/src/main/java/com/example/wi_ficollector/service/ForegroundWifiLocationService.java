@@ -20,7 +20,7 @@ import com.example.wi_ficollector.notification.AppNotification;
 import com.example.wi_ficollector.notification.ForegroundServiceNotification;
 import com.example.wi_ficollector.receiver.GPSStateReceiver;
 import com.example.wi_ficollector.receiver.WiFiReceiver;
-import com.example.wi_ficollector.repository.WifiLocationRepository;
+import com.example.wi_ficollector.repository.WifiLocationOutput;
 import com.example.wi_ficollector.wrapper.WifiLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -33,7 +33,6 @@ import java.util.List;
 
 import static com.example.wi_ficollector.utils.Constants.*;
 
-// todo add threads
 public class ForegroundWifiLocationService extends Service {
 
     private WifiManager mWifiManager;
@@ -42,9 +41,10 @@ public class ForegroundWifiLocationService extends Service {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
-    private WifiLocationRepository mWifiLocationRepository;
+    private WifiLocationOutput mWifiLocationRepository;
     private WifiLocation mWifiLocation;
     private LocalBroadcastManager mLocalBroadcastManager;
+    private Intent mLocalBroadcastIntent;
 
     @Override
     public void onCreate() {
@@ -54,10 +54,11 @@ public class ForegroundWifiLocationService extends Service {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        mWifiLocationRepository = new WifiLocationRepository(this);
-        mWifiLocation = new WifiLocation();
+        mWifiLocationRepository = new WifiLocationOutput(this);
+        mWifiLocation = WifiLocation.getWifiLocation();
         mGPSStateReceiver = new GPSStateReceiver();
-        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
+        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository);
+        mLocalBroadcastIntent = new Intent();
         AppNotification appNotification = new ForegroundServiceNotification(this);
         NotificationCompat.Builder notificationBuilder = appNotification.createNotification();
         int foregroundServiceNotificationId = 721;
@@ -73,13 +74,6 @@ public class ForegroundWifiLocationService extends Service {
         registerReceiver(mGPSStateReceiver, PROVIDERS_CHANGED_ACTION);
 
         return START_STICKY;
-    }
-
-    @Override
-    public void onTaskRemoved(Intent rootIntent) {
-        super.onTaskRemoved(rootIntent);
-        stopServiceWork();
-        stopSelf();
     }
 
     @Override
@@ -128,32 +122,28 @@ public class ForegroundWifiLocationService extends Service {
                     return;
                 }
 
+                sendBroadcast();
                 List<Location> locations = locationResult.getLocations();
-                mWifiLocation.setLocalTime(LocalTime.now());
 
                 for (Location location : locations) {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
                     if (latitude != ZERO && longitude != ZERO) {
+                        mWifiLocation.setLocalTime(LocalTime.now());
                         mWifiLocation.setLocation(location);
-                        startWifiScanning();
+                        mWifiManager.startScan();
                     }
                 }
             }
         };
     }
 
-    private void startWifiScanning() {
-        boolean isWifiScanningSucceeded = mWifiManager.startScan();
+    private void sendBroadcast() {
+        int numOfWifiLocations = mWifiLocationRepository.getNumOfWifiLocations();
 
-        if (!isWifiScanningSucceeded) {
-            mWifiLocationRepository.save(mWifiLocation);
-        } else {
-            Intent intent = new Intent();
-            intent.putExtra("numOfWifiLocations", mWifiLocationRepository.getNumOfWifiLocations());
-            intent.setAction(ACTION);
-            mLocalBroadcastManager.sendBroadcast(intent);
-        }
+        mLocalBroadcastIntent.putExtra(EXTRA_NAME, numOfWifiLocations);
+        mLocalBroadcastIntent.setAction(ACTION);
+        mLocalBroadcastManager.sendBroadcast(mLocalBroadcastIntent);
     }
 
     private void stopServiceWork() {
@@ -161,6 +151,7 @@ public class ForegroundWifiLocationService extends Service {
             unregisterReceiver(mWifiReceiver);
             unregisterReceiver(mGPSStateReceiver);
         } catch (IllegalArgumentException illegalArgumentException) {
+            illegalArgumentException.printStackTrace();
             Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MSG);
         }
         try {

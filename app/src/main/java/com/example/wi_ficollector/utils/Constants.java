@@ -8,10 +8,16 @@ public final class Constants {
 
     private Constants() {
     }
+
+    public static final int FINE_LOCATION_PERMISSION_CODE = 87;
+    public static final int LOCATION_SETTINGS_CODE = 104;
+    public static final int FIVE_SECONDS = 5000;
+    public static final int THREE_SECONDS = 3000;
+    public static final double ZERO = 0.00;
     public static final String GPS_DIALOG_TAG = "GPS Dialog";
     public static final String ACTION = "UI_UPDATE";
+    public static final String EXTRA_NAME = "WAP COUNT";
     public static final String LOCATION_PERMISSION_DIALOG_TAG = "Background permission dialog";
-    public static final double ZERO = 0.00;
     public static final String SCAN_RESULTS_AVAILABLE_ACTION = WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;
     public static final String PROVIDERS_CHANGED_ACTION = LocationManager.PROVIDERS_CHANGED_ACTION;
     public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
@@ -24,8 +30,6 @@ public final class Constants {
     public static final String SEND_INTENT_EXCEPTION_THROWN_TAG = "SendIntent exception thrown";
     public static final String SEND_INTENT_EXCEPTION_EXCEPTION_THROWN_MSG = "Request could not be executed";
     public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during working with file stream";
-    public static final int FIVE_SECONDS = 5000;
-    public static final int THREE_SECONDS = 3000;
     public static final String GPX_TAG = "gpx";
     public static final String TRACK_TAG = "trk";
     public static final String TRACK_SEGMENT_TAG = "trkseg";
@@ -48,6 +52,4 @@ public final class Constants {
     public static final String SCHEMA_LOCATION = "http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd";
     public static final String XMLNS_XSI = "xmlns:xsi";
     public static final String XML_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
-    public static final int FINE_LOCATION_PERMISSION_CODE = 87;
-    public static final int LOCATION_SETTINGS_CODE = 104;
 }
