@@ -38,16 +38,10 @@ w
 Gapp/src/main/java/com/example/wi_ficollector/activity/ScanActivity.java,6\9\696c04046a80eb0383cef7986767bf95d601e53f
 {
 Kapp/src/main/java/com/example/wi_ficollector/preference/MainPreference.java,5\1\5177e9bf45e61e2e62567de2575b325d90baa194
-ƒ
-Sapp/src/main/java/com/example/wi_ficollector/repository/WiFiLocationRepository.java,e\8\e8c2cca1a1050663dfe3b31a3f332b23a24465ae
 v
 Fapp/src/main/java/com/example/wi_ficollector/wrapper/WiFiLocation.java,9\d\9da8f6d4e6c20597a75bd3970137bc93f54615b0
-ƒ
-Sapp/src/main/java/com/example/wi_ficollector/repository/WifiLocationRepository.java,2\7\27cb9dc4aea7ddb9ec61165da80e392b55f3aebd
 v
 Fapp/src/main/java/com/example/wi_ficollector/wrapper/WifiLocation.java,9\9\99afa2f1fbcdc109e022ae54e13e919be381674e
-u
-Eapp/src/main/java/com/example/wi_ficollector/thread/UIUpdateTask.java,8\6\86a798a4c71f1e9966ab4edcac029a38dca7dde8
 ‡
 Wapp/src/main/java/com/example/wi_ficollector/service/ForegroundWifiLocationService.java,a\3\a3895828d845a55b940f0500be5ebc8af0e21937
 Œ
@@ -62,3 +56,7 @@ Napp/src/main/java/com/example/wi_ficollector/notification/GSPNotification.java
 Napp/src/main/java/com/example/wi_ficollector/notification/AppNotification.java,b\8\b815038ceba0e4ff4c96ed9b96f09541007f185f
 —
 gapp/src/main/java/com/example/wi_ficollector/dialogfragment/LocationRequestRationaleDialogFragment.java,4\a\4a9a10f1b7402968d895f59f05b0f602c51aac15
+|
+Lapp/src/main/java/com/example/wi_ficollector/repository/OutputOperation.java,9\f\9fff9b4bc2a8b3e5b64cba771380725f9349e510
+
+Oapp/src/main/java/com/example/wi_ficollector/repository/WifiLocationOutput.java,2\e\2ed45402f6b18be832c9bb30af7cbac4ab5f326f

@@ -10,8 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.preference.MainPreference;
+import com.example.wi_ficollector.repository.WifiLocationInput;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private WifiLocationInput mWifiLocationInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this, ScanActivity.class);
             startActivity(intent);
         } else {
-
+            mWifiLocationInput = new WifiLocationInput(this);
+            mWifiLocationInput.read();
         }
     }
 

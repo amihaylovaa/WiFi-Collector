@@ -33,7 +33,7 @@ public final class Constants {
     public static final String GPX_TAG = "gpx";
     public static final String TRACK_TAG = "trk";
     public static final String TRACK_SEGMENT_TAG = "trkseg";
-    public static final String TRACK_POINT_TAG = "trkpt";
+    public static String TRACK_POINT_TAG = "trkpt";
     public static final String NO_NAMESPACE = "";
     public static final String ENCODING = "UTF-8";
     public static final String TIME_TAG = "time";

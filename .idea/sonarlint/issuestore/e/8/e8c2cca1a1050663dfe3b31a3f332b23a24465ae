@@ -1,7 +1,0 @@
-
-
-java:S1130&"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(½†íÚÿÿÿÿÿ8ÈÀ¦.
-\
-java:S1068":Remove this unused "wiFiLocationRepository" private field.(ï¾ ÿÿÿÿÿ8ÈÀ¦.
-X
-java:S1128"6Remove this unused import 'android.location.Location'.(›¡ì®øÿÿÿÿ8úÆŠ¦.

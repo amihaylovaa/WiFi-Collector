@@ -66,6 +66,7 @@ public class WifiLocationOutput implements OutputOperation {
     private void prepareWrite() throws IOException {
         if (isFileEmpty()) {
             addGPXDeclaration();
+            setOutput();
         }
         if (!isOutputSet) {
             setOutput();
@@ -97,7 +98,8 @@ public class WifiLocationOutput implements OutputOperation {
                 .attribute(NO_NAMESPACE, XMLNS_ATTRIBUTE, GPX_NAMESPACE)
                 .attribute(NO_NAMESPACE, XMLNS_XSI, XML_INSTANCE)
                 .attribute(NO_NAMESPACE, XSI_SCHEMA_LOCATION, SCHEMA_LOCATION);
-        serializer.endDocument();
+        serializer.flush();
+        //serializer.endDocument();
     }
 
     private void writeTrackPoint(double latitude, double longitude) throws IOException {
