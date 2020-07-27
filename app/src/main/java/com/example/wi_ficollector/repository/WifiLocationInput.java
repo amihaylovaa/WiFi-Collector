@@ -12,27 +12,23 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 
-import static android.content.Context.MODE_APPEND;
 import static com.example.wi_ficollector.utils.Constants.ENCODING;
 import static com.example.wi_ficollector.utils.Constants.FILE_NAME;
 import static com.example.wi_ficollector.utils.Constants.FILE_NOT_FOUND_EXCEPTION_MSG;
 import static com.example.wi_ficollector.utils.Constants.FILE_NOT_FOUND_EXCEPTION_TAG;
 import static com.example.wi_ficollector.utils.Constants.TRACK_POINT_TAG;
-import static com.example.wi_ficollector.utils.Constants.TRACK_TAG;
 
 public class WifiLocationInput implements InputOperation {
 
     private FileInputStream mFileInputStream;
     private Context mContext;
-    private Executor mExecutor;
-    XmlPullParser xpp;
-    List<WifiLocation> mWifiLocations;
+    private XmlPullParser xpp;
+    private List<WifiLocation> mWifiLocations;
 
     public WifiLocationInput(Context mContext) {
         this.mContext = mContext;

@@ -99,7 +99,6 @@ public class WifiLocationOutput implements OutputOperation {
                 .attribute(NO_NAMESPACE, XMLNS_XSI, XML_INSTANCE)
                 .attribute(NO_NAMESPACE, XSI_SCHEMA_LOCATION, SCHEMA_LOCATION);
         serializer.flush();
-        //serializer.endDocument();
     }
 
     private void writeTrackPoint(double latitude, double longitude) throws IOException {

@@ -14,8 +14,6 @@ import com.example.wi_ficollector.repository.WifiLocationInput;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private WifiLocationInput mWifiLocationInput;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +39,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this, ScanActivity.class);
             startActivity(intent);
         } else {
-            mWifiLocationInput = new WifiLocationInput(this);
-            mWifiLocationInput.read();
+            WifiLocationInput wifiLocationInput = new WifiLocationInput(this);
+            wifiLocationInput.read();
         }
     }
 
