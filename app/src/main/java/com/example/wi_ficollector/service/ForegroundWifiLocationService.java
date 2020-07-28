@@ -28,6 +28,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -55,9 +56,9 @@ public class ForegroundWifiLocationService extends Service {
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mWifiLocationRepository = new WifiLocationOutput(this);
-        mWifiLocation = WifiLocation.getWifiLocation();
+        mWifiLocation = new WifiLocation();
         mGPSStateReceiver = new GPSStateReceiver();
-        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository);
+        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
         mLocalBroadcastIntent = new Intent();
         AppNotification appNotification = new ForegroundServiceNotification(this);
         NotificationCompat.Builder notificationBuilder = appNotification.createNotification();
@@ -129,8 +130,9 @@ public class ForegroundWifiLocationService extends Service {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
                     if (latitude != ZERO && longitude != ZERO) {
-                        mWifiLocation.setLocalTime(LocalTime.now());
-                        mWifiLocation.setLocation(location);
+                        mWifiLocation.setLocalDateTime(LocalDateTime.now());
+                        mWifiLocation.setLatitude(latitude);
+                        mWifiLocation.setLongitude(longitude);
                         mWifiManager.startScan();
                     }
                 }

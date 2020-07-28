@@ -1,0 +1,16 @@
+
+^
+java:S18547"<Remove this useless assignment to local variable "latitude".(Ô¶ú¢ùÿÿÿÿ8ÎþÖ‹¹.
+O
+java:S14817"-Remove this unused "latitude" local variable.(Ô¶ú¢ùÿÿÿÿ8ÎþÖ‹¹.
+>
+java:S1116*"Remove this empty statement.(Åñ­õþÿÿÿÿ8ÖËÇ„¹.
+O
+java:S1068"2Remove this unused "mWifiLocations" private field.(ß­æã8ÍñïŒ¹.
+J
+java:S14818".Remove this unused "longitude" local variable.(µÂü8¬Ëÿ‹¹.
+Y
+java:S18548"=Remove this useless assignment to local variable "longitude".(µÂü8¬Ëÿ‹¹.
+E	java:S108=")Either remove or fill this block of code.(Ý«úÔ8ÙÌç„¹.
+L
+java:S10666"/Merge this if statement with the enclosing one.(€µ¿Ý8õ©³‹¹.

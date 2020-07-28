@@ -60,3 +60,7 @@ gapp/src/main/java/com/example/wi_ficollector/dialogfragment/LocationRequestRati
 Lapp/src/main/java/com/example/wi_ficollector/repository/OutputOperation.java,9\f\9fff9b4bc2a8b3e5b64cba771380725f9349e510
 
 Oapp/src/main/java/com/example/wi_ficollector/repository/WifiLocationOutput.java,2\e\2ed45402f6b18be832c9bb30af7cbac4ab5f326f
+{
+Kapp/src/main/java/com/example/wi_ficollector/repository/InputOperation.java,0\e\0edab10c40df7a4b69a94e007ebdd0c08f4bcb81
+~
+Napp/src/main/java/com/example/wi_ficollector/repository/WifiLocationInput.java,8\e\8e7b71769df34e6dcad7a4859b65e802875b949f

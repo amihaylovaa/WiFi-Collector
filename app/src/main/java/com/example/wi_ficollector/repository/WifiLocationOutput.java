@@ -1,7 +1,6 @@
 package com.example.wi_ficollector.repository;
 
 import android.content.Context;
-import android.location.Location;
 import android.net.wifi.ScanResult;
 import android.util.Log;
 import android.util.Xml;
@@ -15,8 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -47,9 +46,8 @@ public class WifiLocationOutput implements OutputOperation {
     public void write(WifiLocation wifiLocation) {
         mExecutor.execute(() -> {
 
-            Location location = wifiLocation.getLocation();
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
+            double latitude = wifiLocation.getLatitude();
+            double longitude = wifiLocation.getLongitude();
             List<ScanResult> scanResults = wifiLocation.getScanResults();
 
             try {

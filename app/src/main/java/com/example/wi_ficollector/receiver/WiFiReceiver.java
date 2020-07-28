@@ -9,7 +9,7 @@ import android.net.wifi.WifiManager;
 import com.example.wi_ficollector.repository.WifiLocationOutput;
 import com.example.wi_ficollector.wrapper.WifiLocation;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -18,9 +18,9 @@ public class WiFiReceiver extends BroadcastReceiver {
     private WifiLocation mWifiLocation;
     private WifiLocationOutput mWifiLocationOutput;
 
-    public WiFiReceiver(WifiLocationOutput mWifiLocationOutput) {
+    public WiFiReceiver(WifiLocationOutput mWifiLocationOutput, WifiLocation mWifiLocation) {
         this.mWifiLocationOutput = mWifiLocationOutput;
-        this.mWifiLocation = WifiLocation.getWifiLocation();
+        this.mWifiLocation = mWifiLocation;
     }
 
     @Override
@@ -43,8 +43,8 @@ public class WiFiReceiver extends BroadcastReceiver {
     }
 
     private boolean shouldSaveScanResults() {
-        LocalTime foundNetworksTime = LocalTime.now();
-        LocalTime savedLocationTime = mWifiLocation.getLocalTime();
+        LocalDateTime foundNetworksTime = LocalDateTime.now();
+        LocalDateTime savedLocationTime = mWifiLocation.getLocalDateTime();
         long difference = -1L;
 
         if (savedLocationTime != null) {
