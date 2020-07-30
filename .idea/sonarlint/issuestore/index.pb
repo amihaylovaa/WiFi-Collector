@@ -64,3 +64,5 @@ Oapp/src/main/java/com/example/wi_ficollector/repository/WifiLocationOutput.java
 Kapp/src/main/java/com/example/wi_ficollector/repository/InputOperation.java,0\e\0edab10c40df7a4b69a94e007ebdd0c08f4bcb81
 ~
 Napp/src/main/java/com/example/wi_ficollector/repository/WifiLocationInput.java,8\e\8e7b71769df34e6dcad7a4859b65e802875b949f
+x
+Happ/src/main/java/com/example/wi_ficollector/wrapper/WifiScanResult.java,6\0\601f79ca40edbfadf5607c7f43ea7a83a74440bd

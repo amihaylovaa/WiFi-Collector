@@ -43,12 +43,11 @@ public class WifiLocationOutput implements OutputOperation {
     }
 
     @Override
-    public void write(WifiLocation wifiLocation) {
+    public void write(WifiLocation wifiLocation, List<ScanResult> scanResults) {
         mExecutor.execute(() -> {
 
             double latitude = wifiLocation.getLatitude();
             double longitude = wifiLocation.getLongitude();
-            List<ScanResult> scanResults = wifiLocation.getScanResults();
 
             try {
                 prepareWrite();

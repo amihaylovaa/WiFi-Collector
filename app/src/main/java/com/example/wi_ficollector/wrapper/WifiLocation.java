@@ -11,9 +11,9 @@ public class WifiLocation {
     private double latitude;
     private double longitude;
     private LocalDateTime localDateTime;
-    private List<ScanResult> wifiScanResults;
+    private List<WifiScanResult> wifiScanResults;
 
-    public List<ScanResult> getScanResults() {
+    public List<WifiScanResult> getWifiScanResults() {
         return wifiScanResults;
     }
 
@@ -25,8 +25,8 @@ public class WifiLocation {
         this.localDateTime = localDateTime;
     }
 
-    public void setScanResults(List<ScanResult> scanResults) {
-        wifiScanResults = new ArrayList<>(scanResults);
+    public void setWifiScanResults(List<WifiScanResult> wifiScanResults) {
+        this.wifiScanResults = wifiScanResults;
     }
 
     public double getLatitude() {

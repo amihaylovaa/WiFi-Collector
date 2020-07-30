@@ -7,6 +7,7 @@ import android.util.Log;
 
 
 import com.example.wi_ficollector.wrapper.WifiLocation;
+import com.example.wi_ficollector.wrapper.WifiScanResult;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -72,58 +73,65 @@ public class WifiLocationInput implements InputOperation {
         }
     }
 
-    // todo fix all bugs
+    private void readLocation() {
+        double latitude = Double.parseDouble(xpp.getAttributeValue(null, LATITUDE));
+        double longitude = Double.parseDouble(xpp.getAttributeValue(null, LONGITUDE));
+        wifiLocation = new WifiLocation();
+        wifiLocation.setLongitude(longitude);
+        wifiLocation.setLatitude(latitude);
+    }
+
     @Override
     public void read() {
-        List<ScanResult> scanResults = new ArrayList<>();
         try {
             prepareRead();
             int eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 String tagName = xpp.getName();
                 if (eventType == XmlPullParser.START_TAG && tagName.equals(TRACK_POINT_TAG)) {
-                    double latitude = Double.parseDouble(xpp.getAttributeValue(null, LATITUDE));
-                    double longitude = Double.parseDouble(xpp.getAttributeValue(null, LONGITUDE));
-                    wifiLocation = new WifiLocation();
-                    wifiLocation.setLongitude(longitude);
-                    wifiLocation.setLatitude(latitude);
+                    readLocation();
+                    eventType = xpp.next();
+                    tagName = xpp.getName();
                 }
                 if (eventType == XmlPullParser.START_TAG && tagName.equals(TIME_TAG)) {
                     LocalDateTime localDateTime = LocalDateTime.parse(xpp.nextText());
                     wifiLocation.setLocalDateTime(localDateTime);
-                }
-                if (eventType == XmlPullParser.START_TAG && tagName.equals(WIFI_TAG)) {
-                    String SSID = null;
-                    String BSSID = null;
-                    String RSSI = null;
-                    int frequency = 0;
                     eventType = xpp.next();
-                    while (eventType != XmlPullParser.END_TAG && tagName.equals(EXTENSIONS_TAG)) {
-                        ScanResult scanResult = createScanResultObject();
+                    tagName = xpp.getName();
+                }
+                if (eventType == XmlPullParser.START_TAG && tagName.equals(EXTENSIONS_TAG)) {
+                    eventType = xpp.next();
+                    tagName = xpp.getName();
+                    List<WifiScanResult> wifiScanResults = new ArrayList<>();
+                    while (eventType != XmlPullParser.END_TAG && !tagName.equals(EXTENSIONS_TAG)) {
+                        WifiScanResult scanResult = new WifiScanResult();
+                        eventType = xpp.next();
                         tagName = xpp.getName();
                         if (eventType == XmlPullParser.START_TAG && tagName.equals(SSID_TAG)) {
-                            SSID = xpp.nextText();
-                            scanResult.SSID = SSID;
+                            scanResult.setSSID(xpp.nextText());
                             eventType = xpp.next();
+                            tagName = xpp.getName();
                         }
                         if (eventType == XmlPullParser.START_TAG && tagName.equals(BSSID_TAG)) {
-                            BSSID = xpp.nextText();
-                            scanResult.BSSID = BSSID;
+                            scanResult.setBSSID(xpp.nextText());
                             eventType = xpp.next();
+                            tagName = xpp.getName();
                         }
                         if (eventType == XmlPullParser.START_TAG && tagName.equals(RSSI_TAG)) {
-                            RSSI = xpp.nextText();
+                            scanResult.setRSSI(xpp.nextText());
                             eventType = xpp.next();
+                            tagName = xpp.getName();
                         }
                         if (eventType == XmlPullParser.START_TAG && tagName.equals(FREQUENCY_TAG)) {
-                            frequency = Integer.parseInt(xpp.nextText());
-                            scanResult.frequency = frequency;
+                            scanResult.setFrequency(Integer.parseInt(xpp.nextText()));
+                            wifiScanResults.add(scanResult);
                             eventType = xpp.next();
-                            scanResults.add(scanResult);
+                            tagName = xpp.getName();
                         }
                         eventType = xpp.next();
+                        tagName = xpp.getName();
                     }
-                    wifiLocation.setScanResults(scanResults);
+                    wifiLocation.setWifiScanResults(wifiScanResults);
                     mWifiLocations.add(wifiLocation);
                 }
                 eventType = xpp.next();
@@ -133,21 +141,6 @@ public class WifiLocationInput implements InputOperation {
         }
     }
 
-    private ScanResult createScanResultObject() {
-        ScanResult scanResult = null;
-        try {
-            Constructor<ScanResult> scanResultConstructor = ScanResult.class.getConstructor();
-            scanResult = scanResultConstructor.newInstance();
-        } catch (NoSuchMethodException e) {
-            ;
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
-        return scanResult;
-    }
-
     public void openFileInputStream() {
         try {
             mFileInputStream = mContext.openFileInput(FILE_NAME);
@@ -155,5 +148,4 @@ public class WifiLocationInput implements InputOperation {
             Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
         }
     }
-
 }

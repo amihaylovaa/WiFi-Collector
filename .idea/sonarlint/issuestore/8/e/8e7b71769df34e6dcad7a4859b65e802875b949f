@@ -1,16 +1,29 @@
 
-^
-java:S18547"<Remove this useless assignment to local variable "latitude".(Ô¶ú¢ùÿÿÿÿ8ÎşÖ‹¹.
-O
-java:S14817"-Remove this unused "latitude" local variable.(Ô¶ú¢ùÿÿÿÿ8ÎşÖ‹¹.
+\
+java:S1128":Remove this unused import 'java.lang.reflect.Constructor'.(¿ã–şúÿÿÿÿ8½Š‚ú¹.
+H
+java:S1172L"&Remove these unused method parameters.(ÿ¥ıäøÿÿÿÿ8Šİ¾ú¹.
 >
-java:S1116*"Remove this empty statement.(Åñ­õşÿÿÿÿ8ÖËÇ„¹.
+java:S1116F"Remove this empty statement.(Åñ­õşÿÿÿÿ8ĞäÂ²¹.
+[
+java:S1854…"=Remove this useless assignment to local variable "eventType".(¸¶™ı8Å§‘û¹.
+S
+java:S1144L"1Remove this unused private "readLocation" method.(ÿ¥ıäøÿÿÿÿ8é½ú¹.
+F	java:S108")Either remove or fill this block of code.(İ«úÔ8Å§‘û¹.
+X	java:S125o"<This block of commented-out lines of code should be removed.(¢·8ô˜™û¹.
+R
+java:S1128"0Remove this unused import 'java.time.LocalTime'.(à®øÃùÿÿÿÿ8³ÌÕ¨¹.
+t
+java:S3776R"RRefactor this method to reduce its Cognitive Complexity from 35 to the 15 allowed.(ù˜‚òÿÿÿÿÿ8…Ğ¸²¹.
+Z
+java:S1128"8Remove this unused import 'android.net.wifi.ScanResult'.(º¨û€ûÿÿÿÿ8Ñü¸ú¹.
+£
+java:S1186L"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÿ¥ıäøÿÿÿÿ8é½ú¹.
+X
+java:S1128"6Remove this unused import 'android.location.Location'.(›¡ì®øÿÿÿÿ8Ñü¸ú¹.
 O
-java:S1068"2Remove this unused "mWifiLocations" private field.(ß­æã8ÍñïŒ¹.
-J
-java:S14818".Remove this unused "longitude" local variable.(µÂü8¬Ëÿ‹¹.
-Y
-java:S18548"=Remove this useless assignment to local variable "longitude".(µÂü8¬Ëÿ‹¹.
-E	java:S108=")Either remove or fill this block of code.(İ«úÔ8ÙÌç„¹.
-L
-java:S10666"/Merge this if statement with the enclosing one.(€µ¿İ8õ©³‹¹.
+java:S1135P"2Complete the task associated to this TODO comment.(Ü—Ê8ÓÖ²·¹.
+>
+java:S1116@"Remove this empty statement.(Åñ­õşÿÿÿÿ8¶×…µ¹.
+j
+java:S1128"HRemove this unused import 'java.lang.reflect.InvocationTargetException'.(è¾†„øÿÿÿÿ8½Š‚ú¹.
