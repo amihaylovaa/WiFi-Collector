@@ -1,4 +1,4 @@
 
-p	java:S116"ORename this field "SSID" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ü»¥Æûÿÿÿÿ8ûáù¹.
-q	java:S116"PRename this field "BSSID" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¾ä×õÿÿÿÿÿ8àÜù¹.
 p	java:S116"ORename this field "RSSI" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ê‘Ãèùÿÿÿÿ8ûáù¹.
+q	java:S116"PRename this field "BSSID" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¾ä×õÿÿÿÿÿ8àÜù¹.
+p	java:S116"ORename this field "SSID" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ü»¥Æûÿÿÿÿ8ûáù¹.

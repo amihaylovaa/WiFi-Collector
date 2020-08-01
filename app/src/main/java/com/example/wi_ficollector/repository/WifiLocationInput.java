@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.HttpURLConnection;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ import static com.example.wi_ficollector.utils.Constants.RSSI_TAG;
 import static com.example.wi_ficollector.utils.Constants.SSID_TAG;
 import static com.example.wi_ficollector.utils.Constants.TIME_TAG;
 import static com.example.wi_ficollector.utils.Constants.TRACK_POINT_TAG;
-import static com.example.wi_ficollector.utils.Constants.WIFI_TAG;
 
 public class WifiLocationInput implements InputOperation {
 
@@ -60,16 +60,12 @@ public class WifiLocationInput implements InputOperation {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             xpp = factory.newPullParser();
+            if (!isOutputSet) {
+                xpp.setInput(mFileInputStream, ENCODING);
+                isOutputSet = true;
+            }
         } catch (XmlPullParserException e) {
             ;
-        }
-        if (!isOutputSet) {
-            try {
-                xpp.setInput(mFileInputStream, ENCODING);
-            } catch (XmlPullParserException e) {
-                ;
-            }
-            isOutputSet = true;
         }
     }
 
@@ -139,6 +135,7 @@ public class WifiLocationInput implements InputOperation {
         } catch (XmlPullParserException | IOException e) {
 
         }
+        int x = 0;
     }
 
     public void openFileInputStream() {
@@ -147,5 +144,12 @@ public class WifiLocationInput implements InputOperation {
         } catch (FileNotFoundException exception) {
             Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
         }
+    }
+
+    private void sendData() {
+        String host = "localhost";
+        String port = "3306";
+
+
     }
 }
