@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="false"
-    android:background="#FFFF"
+    android:background="#FFFCFD"
     android:fadingEdge="vertical"
     android:gravity="center"
     android:orientation="vertical">

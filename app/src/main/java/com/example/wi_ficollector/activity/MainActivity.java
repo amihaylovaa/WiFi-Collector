@@ -1,18 +1,16 @@
 package com.example.wi_ficollector.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.preference.MainPreference;
-import com.example.wi_ficollector.repository.WifiLocationRepository;
-
-import static com.example.wi_ficollector.utils.Constants.INTRO;
+import com.example.wi_ficollector.repository.WifiLocationInput;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -41,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(this, ScanActivity.class);
             startActivity(intent);
         } else {
+            WifiLocationInput wifiLocationInput = new WifiLocationInput(this);
+            wifiLocationInput.read();
         }
     }
 
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MainPreference mainPreference = new MainPreference(this);
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
-        alertDialog.setMessage(INTRO);
+        alertDialog.setMessage(R.string.intro);
         alertDialog.setPositiveButton(R.string.OK, (dialog, id) -> mainPreference.addIntroKey());
         alertDialog.create().show();
     }

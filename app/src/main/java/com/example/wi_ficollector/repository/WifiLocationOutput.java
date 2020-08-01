@@ -14,53 +14,66 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import static android.content.Context.MODE_APPEND;
 import static com.example.wi_ficollector.utils.Constants.*;
 
-// todo service
-// todo finalize
-public class WifiLocationRepository {
+public class WifiLocationOutput implements OutputOperation {
 
     private FileOutputStream mFileOutputStream;
-    private WifiLocation mWifiLocation;
-    private boolean areBasicTagsAdded;
-    boolean isOutputSet;
+    private boolean isOutputSet;
     private XmlSerializer serializer;
     private Context mContext;
+    private Executor mExecutor;
+    private boolean areBasicTagsAdded;
+    private int numOfWifiLocations;
 
-    public WifiLocationRepository(WifiLocation wifiLocation, Context mContext) {
-        this.mWifiLocation = wifiLocation;
+    public WifiLocationOutput(Context mContext) {
         this.mContext = mContext;
+        this.mExecutor = Executors.newSingleThreadExecutor();
         this.serializer = Xml.newSerializer();
-        this.areBasicTagsAdded = false;
         this.isOutputSet = false;
+        this.numOfWifiLocations = 0;
         openFileOutputStream();
     }
 
-    public void save() throws IOException {
-        double latitude = mWifiLocation.getLatitude();
-        double longitude = mWifiLocation.getLongitude();
-        List<ScanResult> scanResults = mWifiLocation.getScanResults();
-        numberFoundWifiNetworks += scanResults.size();
+    @Override
+    public void write(WifiLocation wifiLocation, List<ScanResult> scanResults) {
+        mExecutor.execute(() -> {
 
-        if (latitude != ZERO && longitude != ZERO) {
-            saveValidWifiLocation(latitude, longitude, scanResults);
-            mWifiLocation.clearResults();
-        }
+            double latitude = wifiLocation.getLatitude();
+            double longitude = wifiLocation.getLongitude();
+
+            try {
+                prepareWrite();
+                writeTrackPoint(latitude, longitude);
+                writeExtensions(scanResults);
+                wifiLocation.clearResults();
+            } catch (IOException IOException) {
+                Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
+            }
+        });
     }
 
-    private void saveValidWifiLocation(double latitude, double longitude, List<ScanResult> scanResults) throws IOException {
+    private void prepareWrite() throws IOException {
         if (isFileEmpty()) {
             addGPXDeclaration();
+            setOutput();
         }
         if (!isOutputSet) {
             setOutput();
         }
-        saveWifiLocation(latitude, longitude, scanResults);
+        if (!areBasicTagsAdded) {
+            serializer.startTag(NO_NAMESPACE, TRACK_TAG)
+                    .startTag(NO_NAMESPACE, TRACK_SEGMENT_TAG);
+
+            areBasicTagsAdded = true;
+        }
     }
 
     private void setOutput() throws IOException {
@@ -82,21 +95,10 @@ public class WifiLocationRepository {
                 .attribute(NO_NAMESPACE, XMLNS_ATTRIBUTE, GPX_NAMESPACE)
                 .attribute(NO_NAMESPACE, XMLNS_XSI, XML_INSTANCE)
                 .attribute(NO_NAMESPACE, XSI_SCHEMA_LOCATION, SCHEMA_LOCATION);
-        serializer.endDocument();
+        serializer.flush();
     }
 
-    private void saveWifiLocation(double latitude, double longitude, List<ScanResult> scanResults) throws IOException {
-        if (!areBasicTagsAdded) {
-            serializer.startTag(NO_NAMESPACE, TRACK_TAG)
-                    .startTag(NO_NAMESPACE, TRACK_SEGMENT_TAG);
-            areBasicTagsAdded = true;
-        }
-
-        saveTrackPoint(latitude, longitude);
-        saveExtensions(scanResults);
-    }
-
-    private void saveTrackPoint(double latitude, double longitude) throws IOException {
+    private void writeTrackPoint(double latitude, double longitude) throws IOException {
         String time = LocalDateTime.now().toString();
 
         serializer.startTag(NO_NAMESPACE, TRACK_POINT_TAG)
@@ -107,9 +109,11 @@ public class WifiLocationRepository {
                 .endTag(NO_NAMESPACE, TIME_TAG);
     }
 
-    private void saveExtensions(List<ScanResult> scanResults) throws IOException {
+    private void writeExtensions(List<ScanResult> scanResults) throws IOException {
         serializer.startTag(NO_NAMESPACE, EXTENSIONS_TAG);
         if (scanResults != null) {
+            numOfWifiLocations += scanResults.size();
+
             for (ScanResult scanResult : scanResults) {
                 serializer.startTag(NO_NAMESPACE, WIFI_TAG);
                 serializer.startTag(NO_NAMESPACE, SSID_TAG)
@@ -126,33 +130,30 @@ public class WifiLocationRepository {
                         .endTag(NO_NAMESPACE, WIFI_TAG);
             }
         }
-        serializer.endTag(NO_NAMESPACE, EXTENSIONS_TAG)
-                .endTag(NO_NAMESPACE, TRACK_POINT_TAG);
+        serializer.endTag(NO_NAMESPACE, EXTENSIONS_TAG);
+        serializer.endTag(NO_NAMESPACE, TRACK_POINT_TAG);
         serializer.flush();
     }
 
+    // todo think for other way
     public void openFileOutputStream() {
         try {
             mFileOutputStream = mContext.openFileOutput(FILE_NAME, MODE_APPEND);
         } catch (FileNotFoundException exception) {
-            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MESSAGE);
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
         }
     }
 
     public void closeFileOutputStream() {
         try {
+            serializer.endDocument();
             mFileOutputStream.close();
         } catch (IOException e) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
     }
 
-  /*  synchronized void closetags() {
-        try {
-            serializer.setOutput(mFileOutputStream, null);
-            serializer.endDocument();
-        } catch (IOException i) {
-
-        }
-    }*/
+    public int getNumOfWifiLocations() {
+        return numOfWifiLocations;
+    }
 }
