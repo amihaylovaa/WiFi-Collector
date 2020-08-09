@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 
+import com.example.wi_ficollector.http.HttpRequest;
 import com.example.wi_ficollector.wrapper.WifiLocation;
 import com.example.wi_ficollector.wrapper.WifiScanResult;
 
@@ -19,19 +20,20 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.wi_ficollector.utils.Constants.BSSID_TAG;
-import static com.example.wi_ficollector.utils.Constants.ENCODING;
-import static com.example.wi_ficollector.utils.Constants.EXTENSIONS_TAG;
-import static com.example.wi_ficollector.utils.Constants.FILE_NAME;
-import static com.example.wi_ficollector.utils.Constants.FILE_NOT_FOUND_EXCEPTION_MSG;
-import static com.example.wi_ficollector.utils.Constants.FILE_NOT_FOUND_EXCEPTION_TAG;
-import static com.example.wi_ficollector.utils.Constants.FREQUENCY_TAG;
-import static com.example.wi_ficollector.utils.Constants.LATITUDE;
-import static com.example.wi_ficollector.utils.Constants.LONGITUDE;
-import static com.example.wi_ficollector.utils.Constants.RSSI_TAG;
-import static com.example.wi_ficollector.utils.Constants.SSID_TAG;
-import static com.example.wi_ficollector.utils.Constants.TIME_TAG;
-import static com.example.wi_ficollector.utils.Constants.TRACK_POINT_TAG;
+import static com.example.wi_ficollector.utility.Constants.BSSID_TAG;
+import static com.example.wi_ficollector.utility.Constants.CAPABILITIES_TAG;
+import static com.example.wi_ficollector.utility.Constants.ENCODING;
+import static com.example.wi_ficollector.utility.Constants.EXTENSIONS_TAG;
+import static com.example.wi_ficollector.utility.Constants.FILE_NAME;
+import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_MSG;
+import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_TAG;
+import static com.example.wi_ficollector.utility.Constants.FREQUENCY_TAG;
+import static com.example.wi_ficollector.utility.Constants.LATITUDE;
+import static com.example.wi_ficollector.utility.Constants.LONGITUDE;
+import static com.example.wi_ficollector.utility.Constants.RSSI_TAG;
+import static com.example.wi_ficollector.utility.Constants.SSID_TAG;
+import static com.example.wi_ficollector.utility.Constants.TIME_TAG;
+import static com.example.wi_ficollector.utility.Constants.TRACK_POINT_TAG;
 
 public class WifiLocationInput implements InputOperation {
 
@@ -97,18 +99,23 @@ public class WifiLocationInput implements InputOperation {
                         WifiScanResult scanResult = new WifiScanResult();
                         eventType = xpp.next();
                         tagName = xpp.getName();
-                        if (eventType == XmlPullParser.START_TAG && tagName.equals(SSID_TAG)) {
-                            scanResult.setSSID(xpp.nextText());
-                            eventType = xpp.next();
-                            tagName = xpp.getName();
-                        }
                         if (eventType == XmlPullParser.START_TAG && tagName.equals(BSSID_TAG)) {
-                            scanResult.setBSSID(xpp.nextText());
+                            scanResult.setBssid(xpp.nextText());
                             eventType = xpp.next();
                             tagName = xpp.getName();
                         }
                         if (eventType == XmlPullParser.START_TAG && tagName.equals(RSSI_TAG)) {
-                            scanResult.setRSSI(xpp.nextText());
+                            scanResult.setRssi(xpp.nextText());
+                            eventType = xpp.next();
+                            tagName = xpp.getName();
+                        }
+                        if (eventType == XmlPullParser.START_TAG && tagName.equals(SSID_TAG)) {
+                            scanResult.setSsid(xpp.nextText());
+                            eventType = xpp.next();
+                            tagName = xpp.getName();
+                        }
+                        if (eventType == XmlPullParser.START_TAG && tagName.equals(CAPABILITIES_TAG)) {
+                            scanResult.setCapabilities(xpp.nextText());
                             eventType = xpp.next();
                             tagName = xpp.getName();
                         }
@@ -128,6 +135,12 @@ public class WifiLocationInput implements InputOperation {
             }
         } catch (XmlPullParserException | IOException e) {
 
+        }
+        HttpRequest httpRequest = new HttpRequest();
+        try {
+            httpRequest.send(mWifiLocations);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         int x = 0;
     }

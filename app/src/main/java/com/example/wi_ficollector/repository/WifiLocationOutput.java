@@ -21,7 +21,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import static android.content.Context.MODE_APPEND;
-import static com.example.wi_ficollector.utils.Constants.*;
+import static com.example.wi_ficollector.utility.Constants.*;
 
 public class WifiLocationOutput implements OutputOperation {
 
@@ -116,14 +116,18 @@ public class WifiLocationOutput implements OutputOperation {
 
             for (ScanResult scanResult : scanResults) {
                 serializer.startTag(NO_NAMESPACE, WIFI_TAG);
-                serializer.startTag(NO_NAMESPACE, SSID_TAG)
-                        .text(scanResult.SSID)
-                        .endTag(NO_NAMESPACE, SSID_TAG)
-                        .startTag(NO_NAMESPACE, BSSID_TAG)
-                        .text(scanResult.BSSID).endTag(NO_NAMESPACE, BSSID_TAG)
+                serializer.startTag(NO_NAMESPACE, BSSID_TAG)
+                        .text(scanResult.BSSID)
+                        .endTag(NO_NAMESPACE, BSSID_TAG)
                         .startTag(NO_NAMESPACE, RSSI_TAG)
                         .text(String.valueOf(scanResult.level))
                         .endTag(NO_NAMESPACE, RSSI_TAG)
+                        .startTag(NO_NAMESPACE, SSID_TAG)
+                        .text(scanResult.SSID)
+                        .endTag(NO_NAMESPACE, SSID_TAG)
+                        .startTag(NO_NAMESPACE, CAPABILITIES_TAG)
+                        .text(scanResult.capabilities)
+                        .endTag(NO_NAMESPACE, CAPABILITIES_TAG)
                         .startTag(NO_NAMESPACE, FREQUENCY_TAG)
                         .text(String.valueOf(scanResult.frequency))
                         .endTag(NO_NAMESPACE, FREQUENCY_TAG)

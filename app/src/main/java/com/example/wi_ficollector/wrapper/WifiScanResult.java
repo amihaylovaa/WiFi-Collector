@@ -2,33 +2,42 @@ package com.example.wi_ficollector.wrapper;
 
 public class WifiScanResult {
 
-    private String BSSID;
-    private String SSID;
-    private String RSSI;
+    private String bssid;
+    private String ssid;
+    private String rssi;
+    private String capabilities;
     private int frequency;
 
-    public String getBSSID() {
-        return BSSID;
+    public String getBssid() {
+        return bssid;
     }
 
-    public void setBSSID(String BSSID) {
-        this.BSSID = BSSID;
+    public void setBssid(String bssid) {
+        this.bssid = bssid;
     }
 
-    public String getSSID() {
-        return SSID;
+    public String getSsid() {
+        return ssid;
     }
 
-    public void setSSID(String SSID) {
-        this.SSID = SSID;
+    public void setSsid(String ssid) {
+        this.ssid = ssid;
     }
 
-    public String getRSSI() {
-        return RSSI;
+    public String getRssi() {
+        return rssi;
     }
 
-    public void setRSSI(String RSSI) {
-        this.RSSI = RSSI;
+    public void setRssi(String rssi) {
+        this.rssi = rssi;
+    }
+
+    public String getCapabilities() {
+        return capabilities;
+    }
+
+    public void setCapabilities(String capabilities) {
+        this.capabilities = capabilities;
     }
 
     public int getFrequency() {

@@ -31,7 +31,7 @@ import com.google.android.gms.location.LocationServices;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.wi_ficollector.utils.Constants.*;
+import static com.example.wi_ficollector.utility.Constants.*;
 
 public class ForegroundWifiLocationService extends Service {
 

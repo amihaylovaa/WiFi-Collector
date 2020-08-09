@@ -29,7 +29,7 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
-import static com.example.wi_ficollector.utils.Constants.*;
+import static com.example.wi_ficollector.utility.Constants.*;
 
 public class ScanActivity extends AppCompatActivity implements
         GPSRequirementDialogFragment.GPSRequirementsListener,

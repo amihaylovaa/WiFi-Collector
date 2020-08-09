@@ -1,4 +1,4 @@
-package com.example.wi_ficollector.utils;
+package com.example.wi_ficollector.utility;
 
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
@@ -44,6 +44,7 @@ public final class Constants {
     public static final String BSSID_TAG = "BSSID";
     public static final String SSID_TAG = "SSID";
     public static final String RSSI_TAG = "RSSI";
+    public static final String CAPABILITIES_TAG = "capabilities";
     public static final String FREQUENCY_TAG = "frequency";
     public static final String FILE_NAME = "Location_Wifi.gpx";
     public static final String XMLNS_ATTRIBUTE = "xmlns";
