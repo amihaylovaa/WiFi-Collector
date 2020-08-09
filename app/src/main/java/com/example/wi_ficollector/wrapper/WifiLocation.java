@@ -1,10 +1,7 @@
 package com.example.wi_ficollector.wrapper;
 
 
-import android.net.wifi.ScanResult;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class WifiLocation {

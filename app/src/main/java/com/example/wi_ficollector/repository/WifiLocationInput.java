@@ -1,8 +1,6 @@
 package com.example.wi_ficollector.repository;
 
 import android.content.Context;
-import android.location.Location;
-import android.net.wifi.ScanResult;
 import android.util.Log;
 
 
@@ -17,11 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.HttpURLConnection;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,12 +138,5 @@ public class WifiLocationInput implements InputOperation {
         } catch (FileNotFoundException exception) {
             Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
         }
-    }
-
-    private void sendData() {
-        String host = "localhost";
-        String port = "3306";
-
-
     }
 }
