@@ -1,6 +1,4 @@
 
-q
-Aapp/src/main/java/com/example/wi_ficollector/utils/Constants.java,2\c\2cb178833ebcfcf0d8137c25465197d28fa5d44a
 w
 Gapp/src/main/java/com/example/wi_ficollector/activity/MainActivity.java,e\2\e2db098d5c9e31d4003428fe7271f46ff70c94d1
 w
@@ -66,3 +64,7 @@ Kapp/src/main/java/com/example/wi_ficollector/repository/InputOperation.java,0\
 Napp/src/main/java/com/example/wi_ficollector/repository/WifiLocationInput.java,8\e\8e7b71769df34e6dcad7a4859b65e802875b949f
 x
 Happ/src/main/java/com/example/wi_ficollector/wrapper/WifiScanResult.java,6\0\601f79ca40edbfadf5607c7f43ea7a83a74440bd
+s
+Capp/src/main/java/com/example/wi_ficollector/utility/Constants.java,b\3\b3cc4c37fa489bcb550488d9448d07a92c36ef4f
+r
+Bapp/src/main/java/com/example/wi_ficollector/http/HttpRequest.java,c\9\c9bd93101a9ae0a550216d9552e47e3ae244951c

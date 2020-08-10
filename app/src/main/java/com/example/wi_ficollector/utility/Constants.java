@@ -41,9 +41,9 @@ public final class Constants {
     public static final String LONGITUDE = "lon";
     public static final String EXTENSIONS_TAG = "extensions";
     public static final String WIFI_TAG = "wap";
-    public static final String BSSID_TAG = "BSSID";
-    public static final String SSID_TAG = "SSID";
-    public static final String RSSI_TAG = "RSSI";
+    public static final String BSSID_TAG = "bssid";
+    public static final String SSID_TAG = "ssid";
+    public static final String RSSI_TAG = "rssi";
     public static final String CAPABILITIES_TAG = "capabilities";
     public static final String FREQUENCY_TAG = "frequency";
     public static final String FILE_NAME = "Location_Wifi.gpx";
