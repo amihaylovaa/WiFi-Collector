@@ -1,19 +1,17 @@
 
-C
-java:S1170"!Make this final field static too.(¯ÆÓÒ¸ˇˇˇˇ8Ö§ï»Ω.
-^
-java:S1075"ARefactor your code to get this URI from a customizable parameter.(›©‰ü8Ö§ï»Ω.
+>
+java:S1170"!Make this final field static too.(Äµˇê8Ö§ï»Ω.
+>
+java:S1170"!Make this final field static too.(‡Ùô…8Ö§ï»Ω.
+k	java:S116"ORename this field "HOST" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‡Ùô…8Ö§ï»Ω.
+o	java:S116"SRename this field "PROTOCOL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(´îüØ8Ö§ï»Ω.
+k	java:S116"ORename this field "PATH" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(›©‰ü8Ö§ï»Ω.
+k	java:S116"ORename this field "PORT" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Äµˇê8Ö§ï»Ω.
+>
+java:S1170"!Make this final field static too.(›©‰ü8Ö§ï»Ω.
+>
+java:S1170"!Make this final field static too.(´îüØ8Ö§ï»Ω.
 H
-java:S1481"",Remove this unused "message" local variable.(ªÒ«x8Ö§ï»Ω.
->
-java:S1170"!Make this final field static too.(´îüØ8Ö§ï»Ω.
-é
-java:S1130"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(ïê∑–¯ˇˇˇˇ8ìÏë•Ω.
-k	java:S116"ORename this field "PATH" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(›©‰ü8Ö§ï»Ω.
-o	java:S116"SRename this field "PROTOCOL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(´îüØ8Ö§ï»Ω.
->
-java:S1170"!Make this final field static too.(›©‰ü8Ö§ï»Ω.
-p	java:S116"ORename this field "HOST" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¯ÆÓÒ¸ˇˇˇˇ8Ö§ï»Ω.
-k	java:S116"ORename this field "PORT" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(‰Ä¥Ÿ8Ö§ï»Ω.
->
-java:S1170"!Make this final field static too.(‰Ä¥Ÿ8Ö§ï»Ω.
+java:S1481#",Remove this unused "message" local variable.(ªÒ«x8Ö§ï»Ω.
+^
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(›©‰ü8Ö§ï»Ω.
