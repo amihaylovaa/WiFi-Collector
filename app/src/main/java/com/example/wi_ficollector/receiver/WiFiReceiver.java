@@ -35,9 +35,7 @@ public class WiFiReceiver extends BroadcastReceiver {
 
     private void setScanResults(List<ScanResult> scanResults) {
         if (scanResults != null && shouldSaveScanResults()) {
-            if (mWifiLocationOutput != null) {
-                mWifiLocationOutput.write(mWifiLocation, scanResults);
-            }
+            mWifiLocationOutput.write(mWifiLocation, scanResults);
         }
     }
 

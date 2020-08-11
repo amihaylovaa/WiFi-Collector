@@ -1,16 +1,24 @@
 
-t
-java:S3776U"RRefactor this method to reduce its Cognitive Complexity from 40 to the 15 allowed.(ù˜‚òÿÿÿÿÿ8€¤Ê½.
->
-java:S1116P"Remove this empty statement.(Åñ­õşÿÿÿÿ8€¤Ê½.
-[
-java:S1854‡"=Remove this useless assignment to local variable "eventType".(¸¶™ı8€¤Ê½.
+X	java:S1256"<This block of commented-out lines of code should be removed.(ñ†…È8¢íÌÊ½.
 ^
-java:S1854ˆ";Remove this useless assignment to local variable "tagName".(¼Á±¢şÿÿÿÿ8‹ŞüÍ½.
+java:S1854…";Remove this useless assignment to local variable "tagName".(¼Á±¢şÿÿÿÿ8‡¿Öî½.
+K	java:S108")Either remove or fill this block of code.(’Ç‡Ñùÿÿÿÿ8‡¿Öî½.
+S
+java:S1128"1Remove this unused import 'android.widget.Toast'.(©›ïÍúÿÿÿÿ8Ù™ì½.
+[
+java:S1854„"=Remove this useless assignment to local variable "eventType".(¸¶™ı8€¤Ê½.
 >
-java:S1116D"Remove this empty statement.(Åñ­õşÿÿÿÿ8ÖÁö¡º.
-X	java:S125i"<This block of commented-out lines of code should be removed.(˜îë¿8¢íÌÊ½.
-G
-java:S1068."%Remove this unused "x" private field.(ÛÛ²·úÿÿÿÿ8şÁ¡Î½.
-X	java:S1255"<This block of commented-out lines of code should be removed.(ñ†…È8¢íÌÊ½.
-K	java:S108’")Either remove or fill this block of code.(’Ç‡Ñùÿÿÿÿ8‹ŞüÍ½.
+java:S1116Q"Remove this empty statement.(Åñ­õşÿÿÿÿ8€¤Ê½.
+>
+java:S1116E"Remove this empty statement.(Åñ­õşÿÿÿÿ8ÖÁö¡º.
+k
+java:S1128
+"NRemove this unused import 'com.example.wi_ficollector.wrapper.WifiScanResult'.(ˆ¸ŸË8×°«í½.
+I
+java:S1481“"&Remove this unused "x" local variable.(¾„ëüÿÿÿÿ8‡¿Öî½.
+X
+java:S1128"6Remove this unused import 'java.net.ConnectException'.(éâ¿Šüÿÿÿÿ8½Ë–ì½.
+t
+java:S3776V"RRefactor this method to reduce its Cognitive Complexity from 40 to the 15 allowed.(ÈáÌÒøÿÿÿÿ8€¤Ê½.
+^
+java:S1854";Remove this useless assignment to local variable "tagName".(¼Á±¢şÿÿÿÿ8Œî¾ï½.

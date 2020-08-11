@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         } else {
             WifiLocationInput wifiLocationInput = new WifiLocationInput(this);
-            wifiLocationInput.read();
+            wifiLocationInput.read(this);
         }
     }
 
