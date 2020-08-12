@@ -55,6 +55,7 @@ public class HttpRequest {
                 urlConnection.disconnect();
 
             } catch (IOException e) {
+                e.printStackTrace();
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(() -> Toast.makeText(context, "Enable Internet and try again ", Toast.LENGTH_LONG).show());
             }

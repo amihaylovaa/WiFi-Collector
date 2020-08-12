@@ -20,18 +20,26 @@ import java.time.LocalDateTime;
 
 import static com.example.wi_ficollector.utility.Constants.BSSID_TAG;
 import static com.example.wi_ficollector.utility.Constants.CAPABILITIES_TAG;
+import static com.example.wi_ficollector.utility.Constants.DATE_TIME;
 import static com.example.wi_ficollector.utility.Constants.ENCODING;
 import static com.example.wi_ficollector.utility.Constants.EXTENSIONS_TAG;
 import static com.example.wi_ficollector.utility.Constants.FILE_NAME;
 import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_MSG;
 import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_TAG;
 import static com.example.wi_ficollector.utility.Constants.FREQUENCY_TAG;
+import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_MESSAGE;
+import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_TAG;
 import static com.example.wi_ficollector.utility.Constants.LATITUDE;
+import static com.example.wi_ficollector.utility.Constants.LATITUDE_ATTRIBUTE;
 import static com.example.wi_ficollector.utility.Constants.LONGITUDE;
+import static com.example.wi_ficollector.utility.Constants.LONGITUDE_ATTRIBUTE;
 import static com.example.wi_ficollector.utility.Constants.RSSI_TAG;
 import static com.example.wi_ficollector.utility.Constants.SSID_TAG;
 import static com.example.wi_ficollector.utility.Constants.TIME_TAG;
 import static com.example.wi_ficollector.utility.Constants.TRACK_POINT_TAG;
+import static com.example.wi_ficollector.utility.Constants.WIFI_SCAN_RESULTS;
+import static com.example.wi_ficollector.utility.Constants.XML_PULL_PARSER_EXCEPTION_MESSAGE;
+import static com.example.wi_ficollector.utility.Constants.XML_PULL_PARSER_EXCEPTION_TAG;
 
 public class WifiLocationInput implements InputOperation {
 
@@ -59,23 +67,24 @@ public class WifiLocationInput implements InputOperation {
                 isOutputSet = true;
             }
         } catch (XmlPullParserException e) {
+            Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
         }
     }
 
     private void readLocation() {
-        double latitude = Double.parseDouble(xpp.getAttributeValue(null, LATITUDE));
-        double longitude = Double.parseDouble(xpp.getAttributeValue(null, LONGITUDE));
+        double latitude = Double.parseDouble(xpp.getAttributeValue(null, LATITUDE_ATTRIBUTE));
+        double longitude = Double.parseDouble(xpp.getAttributeValue(null, LONGITUDE_ATTRIBUTE));
         wifiLocation = new JSONObject();
         try {
-            wifiLocation.put("latitude", latitude);
-            wifiLocation.put("longitude", longitude);
+            wifiLocation.put(LATITUDE, latitude);
+            wifiLocation.put(LATITUDE, longitude);
         } catch (JSONException e) {
-
+            Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
         }
     }
 
     @Override
-    public void read(Context context) {
+    public void read() {
         try {
             prepareRead();
             int eventType = xpp.getEventType();
@@ -88,7 +97,7 @@ public class WifiLocationInput implements InputOperation {
                 }
                 if (eventType == XmlPullParser.START_TAG && tagName.equals(TIME_TAG)) {
                     LocalDateTime localDateTime = LocalDateTime.parse(xpp.nextText());
-                    wifiLocation.put("localDateTime", localDateTime);
+                    wifiLocation.put(DATE_TIME, localDateTime);
                     eventType = xpp.next();
                     tagName = xpp.getName();
                 }
@@ -129,7 +138,7 @@ public class WifiLocationInput implements InputOperation {
                         eventType = xpp.next();
                         tagName = xpp.getName();
                     }
-                    wifiLocation.put("wifiScanResults", wifiScanResults);
+                    wifiLocation.put(WIFI_SCAN_RESULTS, wifiScanResults);
                     jsonArray.put(wifiLocation);
                 }
                 eventType = xpp.next();
@@ -138,8 +147,10 @@ public class WifiLocationInput implements InputOperation {
         } catch (XmlPullParserException | IOException | JSONException e) {
 
         }
-        HttpRequest httpRequest = new HttpRequest();
-        httpRequest.send(jsonArray, mContext);
+    }
+
+    public JSONArray getJsonArray() {
+        return jsonArray;
     }
 
     public void openFileInputStream() {

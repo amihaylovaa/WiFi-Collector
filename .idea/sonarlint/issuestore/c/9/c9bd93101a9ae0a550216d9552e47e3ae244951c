@@ -1,22 +1,5 @@
 
-X
-java:S1128"6Remove this unused import 'java.net.ConnectException'.(éâ¿Šüÿÿÿÿ8Ë£ì½.
-o	java:S116"SRename this field "PROTOCOL" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(«”Ÿ¯8…¤•È½.
->
-java:S1170"!Make this final field static too.(«”Ÿ¯8…¤•È½.
-C
-java:S1170"!Make this final field static too.(ø®îñüÿÿÿÿ8…¤•È½.
-k	java:S116"ORename this field "PATH" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ý©äŸ8…¤•È½.
-k	java:S116"ORename this field "PORT" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ä€´Ù8…¤•È½.
->
-java:S1170"!Make this final field static too.(ä€´Ù8…¤•È½.
+O
+java:S1135"2Complete the task associated to this TODO comment.(ë’àæ8ôô¥ù½.
 ^
-java:S1075"ARefactor your code to get this URI from a customizable parameter.(Ý©äŸ8…¤•È½.
->
-java:S1170"!Make this final field static too.(Ý©äŸ8…¤•È½.
-p	java:S116"ORename this field "HOST" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ø®îñüÿÿÿÿ8…¤•È½.
-H
-java:S1481(",Remove this unused "message" local variable.(»ñÇx8…¤•È½.
-J
-java:S1172".Remove this unused method parameter "context".(é¢•/8žÏ¾ì½.
-]	java:S125/"<This block of commented-out lines of code should be removed.(»²«ˆùÿÿÿÿ8žÏ¾ì½.
+java:S1075#"ARefactor your code to get this URI from a customizable parameter.(¦ùÛý8…¤•È½.

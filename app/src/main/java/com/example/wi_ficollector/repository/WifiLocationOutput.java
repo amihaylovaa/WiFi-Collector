@@ -102,8 +102,8 @@ public class WifiLocationOutput implements OutputOperation {
         String time = LocalDateTime.now().toString();
 
         serializer.startTag(NO_NAMESPACE, TRACK_POINT_TAG)
-                .attribute(NO_NAMESPACE, LATITUDE, String.valueOf(latitude))
-                .attribute(NO_NAMESPACE, LONGITUDE, String.valueOf(longitude))
+                .attribute(NO_NAMESPACE, LATITUDE_ATTRIBUTE, String.valueOf(latitude))
+                .attribute(NO_NAMESPACE, LONGITUDE_ATTRIBUTE, String.valueOf(longitude))
                 .startTag(NO_NAMESPACE, TIME_TAG)
                 .text(time)
                 .endTag(NO_NAMESPACE, TIME_TAG);

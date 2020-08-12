@@ -183,9 +183,8 @@ public class ScanActivity extends AppCompatActivity implements
 
     private LocationSettingsRequest createLocationSettingsRequest(LocationRequest locationRequest) {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        builder.addLocationRequest(locationRequest);
 
-        return builder.build();
+        return builder.addLocationRequest(locationRequest).build();
     }
 
     private LocationRequest createLocationRequest() {
