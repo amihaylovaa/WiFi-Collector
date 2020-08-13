@@ -1,6 +1,5 @@
 package com.example.wi_ficollector.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.*;
 import android.content.pm.PackageManager;
@@ -35,9 +34,6 @@ public class ScanActivity extends AppCompatActivity implements
         GPSRequirementDialogFragment.GPSRequirementsListener,
         LocationRequestRationaleDialogFragment.LocationRequestRationaleListener {
 
-    private static final String FINE_LOCATION_PERMISSION;
-    private static final String ANDROID_GPS_DIALOG_SHOWN_KEY;
-    private static final String ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY;
     private boolean isLocationRequestDialogShown;
     private boolean isGPSRequestDialogShown;
     private boolean isServiceStarted;
@@ -49,12 +45,6 @@ public class ScanActivity extends AppCompatActivity implements
     private BroadcastReceiver mUIUpdateReceiver;
     private FragmentManager mFragmentManager;
     private LocalBroadcastManager mLocalBroadcastManager;
-
-    static {
-        FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
-        ANDROID_GPS_DIALOG_SHOWN_KEY = "ANDROID_GPS_DIALOG_SHOWN";
-        ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY = "ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN";
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,6 +71,7 @@ public class ScanActivity extends AppCompatActivity implements
         }
         outState.putBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY, isGPSRequestDialogShown);
         outState.putBoolean(ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY, isLocationRequestDialogShown);
+        outState.putBoolean(ANDROID_SERVICE_STARTED_KEY, isServiceStarted);
     }
 
     @Override
@@ -205,12 +196,12 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     public void requestLocationPermission() {
-        if (!isFineLocationPermissionGranted()) {
+        if (isFineLocationPermissionGranted()) {
+            startForegroundService();
+        } else {
             if (!isLocationRequestDialogShown) {
                 requestFineLocationPermission();
             }
-        } else {
-            startForegroundService();
         }
     }
 
@@ -236,6 +227,7 @@ public class ScanActivity extends AppCompatActivity implements
     private void restorePreviousState(Bundle savedInstanceState) {
         isGPSRequestDialogShown = savedInstanceState.getBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY);
         isLocationRequestDialogShown = savedInstanceState.getBoolean(ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY);
+        isServiceStarted = savedInstanceState.getBoolean(ANDROID_SERVICE_STARTED_KEY);
 
         mGPSRequirementsDialogFragment = (GPSRequirementDialogFragment) mFragmentManager
                 .getFragment(savedInstanceState, GPS_DIALOG_TAG);

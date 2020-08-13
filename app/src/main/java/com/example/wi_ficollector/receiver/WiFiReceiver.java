@@ -27,6 +27,7 @@ public class WiFiReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
+
         if (wifiManager != null && hasSuccess) {
             List<ScanResult> scanResults = wifiManager.getScanResults();
             setScanResults(scanResults);
@@ -40,12 +41,12 @@ public class WiFiReceiver extends BroadcastReceiver {
     }
 
     private boolean shouldSaveScanResults() {
-        LocalDateTime foundNetworksTime = LocalDateTime.now();
-        LocalDateTime savedLocationTime = mWifiLocation.getLocalDateTime();
+        LocalDateTime networksTime = LocalDateTime.now();
+        LocalDateTime locationTime = mWifiLocation.getLocalDateTime();
         long difference = -1L;
 
-        if (savedLocationTime != null) {
-            difference = ChronoUnit.SECONDS.between(savedLocationTime, foundNetworksTime);
+        if (locationTime != null) {
+            difference = ChronoUnit.SECONDS.between(locationTime, networksTime);
         }
 
         return (difference <= 5L && difference != -1L);

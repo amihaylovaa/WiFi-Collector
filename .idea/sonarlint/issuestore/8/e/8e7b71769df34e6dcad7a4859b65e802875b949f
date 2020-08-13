@@ -1,12 +1,14 @@
 
-E	java:S108=")Either remove or fill this block of code.(å÷•£8â—ù½.
+[
+java:S1854‡"=Remove this useless assignment to local variable "eventType".(¸¶™ı8ù±ãŸ¾.
+j
+java:S1128"HRemove this unused import 'com.example.wi_ficollector.http.HttpRequest'.(‘¡á…úÿÿÿÿ8äãŸ¾.
 ^
-java:S1854ˆ";Remove this useless assignment to local variable "tagName".(¼Á±¢şÿÿÿÿ8ß§î÷½.
+java:S1854ˆ";Remove this useless assignment to local variable "tagName".(¼Á±¢şÿÿÿÿ8ù±ãŸ¾.
+^
+java:S1854‘";Remove this useless assignment to local variable "tagName".(¼Á±¢şÿÿÿÿ8ù±ãŸ¾.
+K	java:S108“")Either remove or fill this block of code.(’Ç‡Ñùÿÿÿÿ8ù±ãŸ¾.
+p
+java:S1128""SRemove this unused import 'com.example.wi_ficollector.utility.Constants.LONGITUDE'.(š—8ĞöœŸ¾.
 t
-java:S3776N"RRefactor this method to reduce its Cognitive Complexity from 40 to the 15 allowed.(ÈáÌÒøÿÿÿÿ8ß§î÷½.
-]
-java:S1854";Remove this useless assignment to local variable "tagName".(¼Á±¢şÿÿÿÿ8¤ĞÆó½.
-K	java:S108Š")Either remove or fill this block of code.(’Ç‡Ñùÿÿÿÿ8ß§î÷½.
-Z
-java:S1854~"=Remove this useless assignment to local variable "eventType".(¸¶™ı8ß§î÷½.
-J	java:S108H")Either remove or fill this block of code.(÷¿­¹ÿÿÿÿÿ8§Êù½.
+java:S3776W"RRefactor this method to reduce its Cognitive Complexity from 40 to the 15 allowed.(ù˜‚òÿÿÿÿÿ8ù±ãŸ¾.

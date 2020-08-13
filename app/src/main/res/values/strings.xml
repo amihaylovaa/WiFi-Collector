@@ -21,5 +21,7 @@
     <string name="yes_button">Yes</string>
     <string name="no_button">No</string>
     <string name="intro">This application collect your location and wireless access points based on your current location. This data is stored on your device and is expected to be sent later.</string>
+    <string name="internet_connection_disabled">Please, enable Internet and try again</string>
+    <string name="send_data_success">Data has been successfully sent</string>
 
 </resources>

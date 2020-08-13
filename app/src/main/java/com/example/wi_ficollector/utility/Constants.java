@@ -1,5 +1,6 @@
 package com.example.wi_ficollector.utility;
 
+import android.Manifest;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 
@@ -14,6 +15,14 @@ public final class Constants {
     public static final int FIVE_SECONDS = 5000;
     public static final int THREE_SECONDS = 3000;
     public static final double ZERO = 0.00;
+    public static final String FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
+    public static final String CONTENT_TYPE = "Content-type";
+    public static final String TYPE = "application/json";
+    public static final String PROVIDERS_CHANGED = "android.location.PROVIDERS_CHANGED";
+    public static final String ANDROID_GPS_DIALOG_SHOWN_KEY = "ANDROID_GPS_DIALOG_SHOWN";
+    public static final String ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY = "ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN";
+    public static final String ANDROID_SERVICE_STARTED_KEY = "ANDROID_SERVICE_STARTED";
+    public static final String FOUND_WIFI_COUNT_KEY = "FOUND_WIFI_COUNT";
     public static final String GPS_DIALOG_TAG = "GPS Dialog";
     public static final String INTRO_DIALOG_TAG = "Intro dialog";
     public static final String ACTION = "UI_UPDATE";

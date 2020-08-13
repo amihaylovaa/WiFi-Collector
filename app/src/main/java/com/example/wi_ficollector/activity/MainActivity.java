@@ -1,6 +1,5 @@
 package com.example.wi_ficollector.activity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +16,10 @@ import com.example.wi_ficollector.preference.MainPreference;
 import com.example.wi_ficollector.repository.WifiLocationInput;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 
 import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
 
@@ -57,38 +60,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         } else {
             WifiLocationInput wifiLocationInput = new WifiLocationInput(this);
-            HttpRequest httpRequest = new HttpRequest();
 
-            wifiLocationInput.read();
-
+            try {
+                wifiLocationInput.read();
+            } catch (XmlPullParserException | IOException | JSONException e) {
+                // TODO add handling
+            }
             JSONArray wifiLocations = wifiLocationInput.getJsonArray();
+            HttpRequest httpRequest = new HttpRequest();
 
             httpRequest.send(wifiLocations, this);
         }
     }
 
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (mIntroDialogFragment != null && mIntroDialogFragment.isAdded()) {
-            fragmentManager.putFragment(outState, INTRO_DIALOG_TAG, mIntroDialogFragment);
+            mFragmentManager.putFragment(outState, INTRO_DIALOG_TAG, mIntroDialogFragment);
         }
     }
 
     @Override
     public void ok() {
-
+        // This method is called when intro dialog is shown explaining how an app is supposed to work
     }
 
     public void showIntroDialog(MainPreference mainPreference) {
-        mIntroDialogFragment = IntroDialogFragment.newInstance();
+        if (mIntroDialogFragment == null) {
+            mIntroDialogFragment = IntroDialogFragment.newInstance();
 
-        mIntroDialogFragment.setCancelable(false);
-        mIntroDialogFragment.show(mFragmentManager, INTRO_DIALOG_TAG);
-        mainPreference.addIntroKey();
+            mIntroDialogFragment.setCancelable(false);
+            mIntroDialogFragment.show(mFragmentManager, INTRO_DIALOG_TAG);
+            mainPreference.addIntroKey();
+        }
     }
 
     private void restorePreviousState(Bundle savedInstanceState) {

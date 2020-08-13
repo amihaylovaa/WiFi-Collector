@@ -68,3 +68,5 @@ s
 Capp/src/main/java/com/example/wi_ficollector/utility/Constants.java,b\3\b3cc4c37fa489bcb550488d9448d07a92c36ef4f
 r
 Bapp/src/main/java/com/example/wi_ficollector/http/HttpRequest.java,c\9\c9bd93101a9ae0a550216d9552e47e3ae244951c
+„
+Tapp/src/main/java/com/example/wi_ficollector/dialogfragment/IntroDialogFragment.java,1\9\1940280838cb7d69d5d08f02ca4ce28696523c10

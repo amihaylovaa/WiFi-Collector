@@ -1,5 +1,6 @@
 package com.example.wi_ficollector.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,7 +14,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.wi_ficollector.notification.AppNotification;
@@ -51,6 +51,9 @@ public class ForegroundWifiLocationService extends Service {
         super.onCreate();
         createLocationRequest();
 
+        int foregroundServiceNotificationId = 721;
+        AppNotification appNotification = new ForegroundServiceNotification(this);
+        Notification foregroundServiceNotification = appNotification.createNotification();
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
@@ -59,11 +62,8 @@ public class ForegroundWifiLocationService extends Service {
         mGPSStateReceiver = new GPSStateReceiver();
         mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
         mLocalBroadcastIntent = new Intent();
-        AppNotification appNotification = new ForegroundServiceNotification(this);
-        NotificationCompat.Builder notificationBuilder = appNotification.createNotification();
-        int foregroundServiceNotificationId = 721;
 
-        startForeground(foregroundServiceNotificationId, notificationBuilder.build());
+        startForeground(foregroundServiceNotificationId, foregroundServiceNotification);
     }
 
     @Override
@@ -104,9 +104,8 @@ public class ForegroundWifiLocationService extends Service {
     }
 
     public void requestLocationUpdates() {
-        Looper mainLooper = Looper.getMainLooper();
         try {
-            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, mainLooper);
+            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
         } catch (SecurityException securityException) {
             stopServiceWork();
             stopSelf();

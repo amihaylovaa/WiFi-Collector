@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import com.example.wi_ficollector.R;
+
 import org.json.JSONArray;
 
 import java.io.DataOutputStream;
@@ -14,7 +16,9 @@ import java.net.URL;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-// todo - add response code check
+import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
+import static com.example.wi_ficollector.utility.Constants.TYPE;
+
 public class HttpRequest {
 
     private static final String PROTOCOL;
@@ -44,20 +48,30 @@ public class HttpRequest {
 
                 urlConnection.setRequestMethod(REQUEST_METHOD);
                 urlConnection.setChunkedStreamingMode(0);
-                urlConnection.setRequestProperty("Content-type", "application/json");
+                urlConnection.setRequestProperty(CONTENT_TYPE, TYPE);
 
                 DataOutputStream os = new DataOutputStream(urlConnection.getOutputStream());
 
                 os.writeBytes(jsonArray.toString());
-
                 os.flush();
                 os.close();
+
+                if (urlConnection.getResponseCode() == 200) {
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(() ->
+                            Toast
+                                    .makeText(context, R.string.send_data_success, Toast.LENGTH_LONG)
+                                    .show());
+                }
                 urlConnection.disconnect();
 
             } catch (IOException e) {
                 e.printStackTrace();
                 Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() -> Toast.makeText(context, "Enable Internet and try again ", Toast.LENGTH_LONG).show());
+                handler.post(() ->
+                        Toast
+                                .makeText(context, R.string.internet_connection_disabled, Toast.LENGTH_LONG)
+                                .show());
             }
         });
     }

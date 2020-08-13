@@ -15,6 +15,7 @@
         android:fontFamily="monospace"
         android:text="@string/show_content"
         android:textAlignment="center"
+        android:freezesText="true"
         android:textColor="@color/colorPrimary"
         android:textSize="30sp" />
 

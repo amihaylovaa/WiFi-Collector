@@ -1,5 +1,6 @@
 package com.example.wi_ficollector.notification;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -18,7 +19,7 @@ public class GSPNotification extends AppNotification {
     }
 
     @Override
-    public NotificationCompat.Builder createNotification() {
+    public Notification createNotification() {
         String channelId = "Disabled GSP";
         Intent intent = new Intent(mContext, ScanActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -36,7 +37,8 @@ public class GSPNotification extends AppNotification {
                 .setStyle(bigTextStyle)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .build();
     }
 
     @Override
