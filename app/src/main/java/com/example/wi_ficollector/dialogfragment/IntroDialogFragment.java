@@ -38,7 +38,7 @@ public class IntroDialogFragment extends DialogFragment {
                     .setMessage(R.string.intro)
                     .setCancelable(false)
                     .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
-                        ((MainActivity) getActivity()).ok();
+                        ((MainActivity) activity).ok();
                         dismiss();
                     });
             mAlertDialog = alertDialogBuilder.create();

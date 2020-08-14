@@ -1,6 +1,4 @@
 
-]	java:S110"<This class has 9 parents which is greater than 5 authorized.(ûòæÍúÿÿÿÿ8®ëËµ.
-V
-java:S1128"4Remove this unused import 'android.app.AlertDialog'.(ª½øşüÿÿÿÿ8‡š·¡¾.
-£
-java:S1186T"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Ç Õşÿÿÿÿ8¤³¢¾.
+N
+java:S1135C"2Complete the task associated to this TODO comment.(¯ç}8 ÉÈ¾.
+]	java:S110"<This class has 9 parents which is greater than 5 authorized.(ûòæÍúÿÿÿÿ8®ëËµ.

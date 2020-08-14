@@ -1,19 +1,25 @@
-package com.example.wi_ficollector.preference;
+package com.example.wi_ficollector.application;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.wi_ficollector.R;
 
-public class MainPreference {
+public class WifiCollectorApplication extends Application {
 
     private SharedPreferences mSharedPreference;
 
-    public MainPreference(Context context) {
-        mSharedPreference = context.getSharedPreferences(String.valueOf(R.string.launching_key), Context.MODE_PRIVATE);
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        Context context = this.getApplicationContext();
+        String key = String.valueOf(R.string.launching_key);
+        mSharedPreference = context.getSharedPreferences(key, Context.MODE_PRIVATE);
     }
 
-    public boolean isActivityFirstTimeLaunched() {
+    public boolean isAppFirstTimeLaunched() {
         String showDialogIntro = String.valueOf(R.string.launching_key);
 
         return !mSharedPreference.contains(showDialogIntro);

@@ -124,7 +124,7 @@ public class ScanActivity extends AppCompatActivity implements
     public void startGPSResolution() {
         try {
             if (mResolvableApiException != null) {
-                mResolvableApiException.startResolutionForResult(this, LOCATION_SETTINGS_CODE);
+                mResolvableApiException.startResolutionForResult(ScanActivity.this, LOCATION_SETTINGS_CODE);
                 isGPSRequestDialogShown = true;
             }
         } catch (IntentSender.SendIntentException sendEx) {
@@ -150,7 +150,7 @@ public class ScanActivity extends AppCompatActivity implements
             mLocalBroadcastManager.registerReceiver(mUIUpdateReceiver, intentFilter);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                ContextCompat.startForegroundService(this, mIntent);
+                ContextCompat.startForegroundService(ScanActivity.this, mIntent);
             } else {
                 startService(mIntent);
             }
@@ -160,10 +160,10 @@ public class ScanActivity extends AppCompatActivity implements
     public void enableGPS() {
         LocationRequest locationRequest = createLocationRequest();
         LocationSettingsRequest locationSettingsRequest = createLocationSettingsRequest(locationRequest);
-        SettingsClient client = LocationServices.getSettingsClient(this);
+        SettingsClient client = LocationServices.getSettingsClient(ScanActivity.this);
         Task<LocationSettingsResponse> task = client.checkLocationSettings(locationSettingsRequest);
 
-        task.addOnFailureListener(this, e ->
+        task.addOnFailureListener(ScanActivity.this, e ->
         {
             if (e instanceof ResolvableApiException) {
                 mResolvableApiException = (ResolvableApiException) e;
@@ -186,13 +186,13 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     public void requestFineLocationPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{FINE_LOCATION_PERMISSION},
+        ActivityCompat.requestPermissions(ScanActivity.this, new String[]{FINE_LOCATION_PERMISSION},
                 FINE_LOCATION_PERMISSION_CODE);
     }
 
     public boolean isFineLocationPermissionGranted() {
         return ContextCompat.checkSelfPermission
-                (this, FINE_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
+                (ScanActivity.this, FINE_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
     }
 
     public void requestLocationPermission() {
@@ -250,8 +250,8 @@ public class ScanActivity extends AppCompatActivity implements
 
     private void initializeFields() {
         mFragmentManager = getSupportFragmentManager();
-        mIntent = new Intent(this, ForegroundWifiLocationService.class);
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+        mIntent = new Intent(ScanActivity.this, ForegroundWifiLocationService.class);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(ScanActivity.this);
         tv = findViewById(R.id.numberOfWifiNetworks);
     }
 

@@ -27,9 +27,11 @@ public class HttpRequest {
     private static final String PATH;
     private static final String REQUEST_METHOD;
     private Executor mExecutor;
+    private Handler mHandler;
 
     public HttpRequest() {
         mExecutor = Executors.newSingleThreadExecutor();
+         mHandler = new Handler(Looper.getMainLooper());
     }
 
     static {
@@ -57,18 +59,15 @@ public class HttpRequest {
                 os.close();
 
                 if (urlConnection.getResponseCode() == 200) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(() ->
+                    mHandler.post(() ->
                             Toast
                                     .makeText(context, R.string.send_data_success, Toast.LENGTH_LONG)
                                     .show());
                 }
                 urlConnection.disconnect();
-
             } catch (IOException e) {
                 e.printStackTrace();
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() ->
+                mHandler.post(() ->
                         Toast
                                 .makeText(context, R.string.internet_connection_disabled, Toast.LENGTH_LONG)
                                 .show());

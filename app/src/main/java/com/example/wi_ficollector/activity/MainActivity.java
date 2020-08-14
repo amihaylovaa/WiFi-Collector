@@ -10,14 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.wi_ficollector.R;
+import com.example.wi_ficollector.application.WifiCollectorApplication;
 import com.example.wi_ficollector.dialogfragment.IntroDialogFragment;
 import com.example.wi_ficollector.http.HttpRequest;
-import com.example.wi_ficollector.preference.MainPreference;
 import com.example.wi_ficollector.repository.WifiLocationInput;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
@@ -28,48 +26,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private IntroDialogFragment mIntroDialogFragment;
     private FragmentManager mFragmentManager;
+    private WifiLocationInput mWifiLocationInput;
+    private Button sendDataBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button scanningBtn = findViewById(R.id.scanning_button);
+        sendDataBtn = findViewById(R.id.sending_button);
+        mWifiLocationInput = new WifiLocationInput(MainActivity.this);
         mFragmentManager = getSupportFragmentManager();
-        MainPreference mainPreference = new MainPreference(this);
-        Button startScanningBtn = findViewById(R.id.start_scanning_button);
-        Button sendDataBtn = findViewById(R.id.send_data_button);
 
-        if (savedInstanceState != null) {
-            restorePreviousState(savedInstanceState);
+        if (((WifiCollectorApplication) getApplication()).isAppFirstTimeLaunched()) {
+            showIntroDialog();
+            ((WifiCollectorApplication) getApplication()).addIntroKey();
         }
 
-        if (mainPreference.isActivityFirstTimeLaunched()) {
-            showIntroDialog(mainPreference);
-        }
+        scanningBtn.setOnClickListener(MainActivity.this);
+        sendDataBtn.setOnClickListener(MainActivity.this);
+    }
 
-        startScanningBtn.setOnClickListener(this);
-        sendDataBtn.setOnClickListener(this);
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mIntroDialogFragment = (IntroDialogFragment) mFragmentManager.getFragment(savedInstanceState, INTRO_DIALOG_TAG);
     }
 
     @Override
     public void onClick(View v) {
         int buttonId = v.getId();
 
-        if (buttonId == R.id.start_scanning_button) {
-            Intent intent = new Intent(this, ScanActivity.class);
-            startActivity(intent);
+        if (buttonId == R.id.scanning_button) {
+            startScanningActivity();
         } else {
-            WifiLocationInput wifiLocationInput = new WifiLocationInput(this);
-
             try {
-                wifiLocationInput.read();
-            } catch (XmlPullParserException | IOException | JSONException e) {
-                // TODO add handling
+                if (mWifiLocationInput.isFileEmpty()) {
+                    sendDataBtn.setEnabled(false);
+                } else {
+                    sendDataBtn.setEnabled(true);
+                    sendCollectedData();
+                }
+            } catch (IOException e) {
+                ;
             }
-            JSONArray wifiLocations = wifiLocationInput.getJsonArray();
-            HttpRequest httpRequest = new HttpRequest();
-
-            httpRequest.send(wifiLocations, this);
         }
     }
 
@@ -87,18 +88,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // This method is called when intro dialog is shown explaining how an app is supposed to work
     }
 
-    public void showIntroDialog(MainPreference mainPreference) {
+    public void startScanningActivity() {
+        Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+        startActivity(intent);
+    }
+
+    private void sendCollectedData() {
+        mWifiLocationInput.read();
+
+        JSONArray wifiLocations = mWifiLocationInput.getWifiLocations();
+        HttpRequest httpRequest = new HttpRequest();
+
+        httpRequest.send(wifiLocations, MainActivity.this);
+    }
+
+    public void showIntroDialog() {
         if (mIntroDialogFragment == null) {
             mIntroDialogFragment = IntroDialogFragment.newInstance();
 
             mIntroDialogFragment.setCancelable(false);
             mIntroDialogFragment.show(mFragmentManager, INTRO_DIALOG_TAG);
-            mainPreference.addIntroKey();
         }
-    }
-
-    private void restorePreviousState(Bundle savedInstanceState) {
-        mIntroDialogFragment = (IntroDialogFragment) mFragmentManager
-                .getFragment(savedInstanceState, INTRO_DIALOG_TAG);
     }
 }
