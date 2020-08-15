@@ -39,7 +39,7 @@ public final class Constants {
     public static final String JSON_EXCEPTION_TAG = "JSON exception has been thrown";
     public static final String JSON_EXCEPTION_MESSAGE = "An exception occurred during working with JSON format";
     public static final String FILE_NOT_FOUND_EXCEPTION_TAG = "File not found exception thrown";
-    public static final String FILE_NOT_FOUND_EXCEPTION_MSG = "File does not exist,  but is going to be created";
+    public static final String FILE_NOT_FOUND_EXCEPTION_MSG = "File does not exist";
     public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG = "Illegal argument exception thrown";
     public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MSG = "Broadcast receiver has not been registered";
     public static final String NULL_POINTER_EXCEPTION_THROWN_TAG = "Null pointer exception thrown";

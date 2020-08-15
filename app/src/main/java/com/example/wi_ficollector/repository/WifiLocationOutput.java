@@ -139,7 +139,6 @@ public class WifiLocationOutput implements OutputOperation {
         serializer.flush();
     }
 
-    // todo think for other way
     public void openFileOutputStream() {
         try {
             mFileOutputStream = mContext.openFileOutput(FILE_NAME, MODE_APPEND);

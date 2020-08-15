@@ -31,7 +31,7 @@ public class HttpRequest {
 
     public HttpRequest() {
         mExecutor = Executors.newSingleThreadExecutor();
-         mHandler = new Handler(Looper.getMainLooper());
+        mHandler = new Handler(Looper.getMainLooper());
     }
 
     static {
@@ -60,17 +60,12 @@ public class HttpRequest {
 
                 if (urlConnection.getResponseCode() == 200) {
                     mHandler.post(() ->
-                            Toast
-                                    .makeText(context, R.string.send_data_success, Toast.LENGTH_LONG)
-                                    .show());
+                            Toast.makeText(context, R.string.send_data_success, Toast.LENGTH_LONG).show());
                 }
                 urlConnection.disconnect();
             } catch (IOException e) {
-                e.printStackTrace();
                 mHandler.post(() ->
-                        Toast
-                                .makeText(context, R.string.internet_connection_disabled, Toast.LENGTH_LONG)
-                                .show());
+                        Toast.makeText(context, R.string.internet_connection_disabled, Toast.LENGTH_LONG).show());
             }
         });
     }

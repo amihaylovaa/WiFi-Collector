@@ -1,0 +1,14 @@
+
+p
+java:S4042W"NUse "java.nio.file.Files#delete" here for better messages on error conditions.(‰®èÛúÿÿÿÿ8¢¿€•¿.
+\	java:S899W";Do something with the "boolean" value returned by "delete".(‰®èÛúÿÿÿÿ8¢¿€•¿.
+N
+java:S1481W",Remove this unused "deleted" local variable.(‰®èÛúÿÿÿÿ8©¸ê•¿.
+H
+java:S1481Z"&Remove this unused "x" local variable.(¾„ëüÿÿÿÿ8úó•¿.
+H
+java:S1481X"&Remove this unused "x" local variable.(¾„ëüÿÿÿÿ8©¸ê•¿.
+]
+java:S1854W";Remove this useless assignment to local variable "deleted".(‰®èÛúÿÿÿÿ8©¸ê•¿.
+^
+java:S1075U"ARefactor your code to get this URI from a customizable parameter.(çêùû8×ù•¿.

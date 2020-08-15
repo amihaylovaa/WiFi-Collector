@@ -34,8 +34,6 @@ A
 gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
 w
 Gapp/src/main/java/com/example/wi_ficollector/activity/ScanActivity.java,6\9\696c04046a80eb0383cef7986767bf95d601e53f
-{
-Kapp/src/main/java/com/example/wi_ficollector/preference/MainPreference.java,5\1\5177e9bf45e61e2e62567de2575b325d90baa194
 v
 Fapp/src/main/java/com/example/wi_ficollector/wrapper/WiFiLocation.java,9\d\9da8f6d4e6c20597a75bd3970137bc93f54615b0
 v
@@ -70,3 +68,5 @@ r
 Bapp/src/main/java/com/example/wi_ficollector/http/HttpRequest.java,c\9\c9bd93101a9ae0a550216d9552e47e3ae244951c
 „
 Tapp/src/main/java/com/example/wi_ficollector/dialogfragment/IntroDialogFragment.java,1\9\1940280838cb7d69d5d08f02ca4ce28696523c10
+†
+Vapp/src/main/java/com/example/wi_ficollector/application/WifiCollectorApplication.java,4\c\4c309f4b78658bb6dce9c62493062d4092c7d173

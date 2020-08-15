@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +18,6 @@ import com.example.wi_ficollector.repository.WifiLocationInput;
 
 import org.json.JSONArray;
 
-import java.io.IOException;
-
 import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
 
 
@@ -26,8 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private IntroDialogFragment mIntroDialogFragment;
     private FragmentManager mFragmentManager;
-    private WifiLocationInput mWifiLocationInput;
-    private Button sendDataBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         Button scanningBtn = findViewById(R.id.scanning_button);
-        sendDataBtn = findViewById(R.id.sending_button);
-        mWifiLocationInput = new WifiLocationInput(MainActivity.this);
+        Button sendDataBtn = findViewById(R.id.sending_button);
         mFragmentManager = getSupportFragmentManager();
 
         if (((WifiCollectorApplication) getApplication()).isAppFirstTimeLaunched()) {
@@ -51,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+
         mIntroDialogFragment = (IntroDialogFragment) mFragmentManager.getFragment(savedInstanceState, INTRO_DIALOG_TAG);
     }
 
@@ -59,18 +56,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int buttonId = v.getId();
 
         if (buttonId == R.id.scanning_button) {
-            startScanningActivity();
+            startScanning();
         } else {
-            try {
-                if (mWifiLocationInput.isFileEmpty()) {
-                    sendDataBtn.setEnabled(false);
-                } else {
-                    sendDataBtn.setEnabled(true);
-                    sendCollectedData();
-                }
-            } catch (IOException e) {
-                ;
-            }
+            sendCollectedData();
         }
     }
 
@@ -88,21 +76,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // This method is called when intro dialog is shown explaining how an app is supposed to work
     }
 
-    public void startScanningActivity() {
+    private void startScanning() {
         Intent intent = new Intent(MainActivity.this, ScanActivity.class);
+
         startActivity(intent);
     }
 
     private void sendCollectedData() {
-        mWifiLocationInput.read();
+        WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
+        JSONArray wifiLocations = wifiLocationInput.read();
 
-        JSONArray wifiLocations = mWifiLocationInput.getWifiLocations();
-        HttpRequest httpRequest = new HttpRequest();
+        if (wifiLocations.length() == 0) {
+            Toast.makeText(MainActivity.this, " No data found, please scan", Toast.LENGTH_SHORT).show();
+        } else {
+            HttpRequest httpRequest = new HttpRequest();
 
-        httpRequest.send(wifiLocations, MainActivity.this);
+            httpRequest.send(wifiLocations, MainActivity.this);
+            wifiLocationInput.deleteSendData();
+        }
     }
 
-    public void showIntroDialog() {
+    private void showIntroDialog() {
         if (mIntroDialogFragment == null) {
             mIntroDialogFragment = IntroDialogFragment.newInstance();
 

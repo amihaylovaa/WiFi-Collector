@@ -20,12 +20,12 @@ public class IntroDialogFragment extends DialogFragment {
         void ok();
     }
 
-    public IntroDialogFragment() {
-        // Needed when dialog fragment is recreated
-    }
-
     public static IntroDialogFragment newInstance() {
         return new IntroDialogFragment();
+    }
+
+    public IntroDialogFragment() {
+        // Needed when dialog fragment is recreated
     }
 
     @NonNull

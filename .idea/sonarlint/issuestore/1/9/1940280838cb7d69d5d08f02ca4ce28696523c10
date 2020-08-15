@@ -1,3 +1,5 @@
 
 x
-java:S1905)"VRemove this unnecessary cast to "org.sonar.java.resolve.Symbols$UnknownType@4da19958".(ˆ÷®£øÿÿÿÿ8ž‡©¡¾.
+java:S1905*"VRemove this unnecessary cast to "org.sonar.java.resolve.Symbols$UnknownType@36d0df38".(Ò®þ·ÿÿÿÿÿ8´ÿ·”¿.
+O
+java:S1128"-Remove this unused import 'android.util.Log'.(Ô¦Ø²øÿÿÿÿ8ÑÄº’¿.

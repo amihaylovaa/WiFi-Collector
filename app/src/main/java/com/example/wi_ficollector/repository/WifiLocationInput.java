@@ -3,8 +3,6 @@ package com.example.wi_ficollector.repository;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.wi_ficollector.activity.MainActivity;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,17 +10,16 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.time.LocalDateTime;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
 
-import static android.content.Context.MODE_APPEND;
 import static com.example.wi_ficollector.utility.Constants.BSSID_TAG;
 import static com.example.wi_ficollector.utility.Constants.CAPABILITIES_TAG;
 import static com.example.wi_ficollector.utility.Constants.DATE_TIME;
@@ -55,19 +52,17 @@ public class WifiLocationInput implements InputOperation {
     private XmlPullParser xpp;
     private JSONArray wifiLocations;
     private JSONObject wifiLocation;
+    Lock lock;
     private Executor mExecutor;
 
     public WifiLocationInput(Context mContext) {
         this.mContext = mContext;
         wifiLocations = new JSONArray();
         mExecutor = Executors.newSingleThreadExecutor();
-
-        openFileOutputStream();
-    //    openFileInputStream();
     }
 
     @Override
-    public void read() {
+    public JSONArray read() {
         mExecutor.execute(() -> {
             try {
                 prepareReading();
@@ -87,6 +82,7 @@ public class WifiLocationInput implements InputOperation {
                 Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
             }
         });
+        return wifiLocations;
     }
 
     private void readGpx(int eventType, String tagName) {
@@ -105,12 +101,13 @@ public class WifiLocationInput implements InputOperation {
     }
 
     private void prepareReading() {
+        openFileInputStream();
+
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
 
             xpp = factory.newPullParser();
-
             xpp.setInput(mFileInputStream, ENCODING);
         } catch (XmlPullParserException e) {
             Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
@@ -213,33 +210,21 @@ public class WifiLocationInput implements InputOperation {
         return wifiScanResults;
     }
 
-    public JSONArray getWifiLocations() {
-        return wifiLocations;
-    }
-
     public void openFileInputStream() {
         try {
-            if (!isFileEmpty()) {
+            if (mFileInputStream == null) {
                 mFileInputStream = mContext.openFileInput(FILE_NAME);
             }
         } catch (FileNotFoundException e) {
             Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
-        } catch (IOException e) {
-
-        }
-    }
-    public void openFileOutputStream() {
-        try {
-            FileOutputStream FileOutputStream = mContext.openFileOutput(FILE_NAME, MODE_APPEND);
-        } catch (FileNotFoundException exception) {
-            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
         }
     }
 
-    public boolean isFileEmpty() throws IOException {
-        openFileInputStream();
-        FileChannel channel = mFileInputStream.getChannel();
-
-        return channel.size() == 0;
+    public void deleteSendData() {
+        String path = "-";
+        File file = new File(path);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 }

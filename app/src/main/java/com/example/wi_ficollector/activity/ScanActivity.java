@@ -60,6 +60,20 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        enableGPS();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!isChangingConfigurations()) {
+            stopForegroundService();
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
@@ -72,20 +86,6 @@ public class ScanActivity extends AppCompatActivity implements
         outState.putBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY, isGPSRequestDialogShown);
         outState.putBoolean(ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY, isLocationRequestDialogShown);
         outState.putBoolean(ANDROID_SERVICE_STARTED_KEY, isServiceStarted);
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        enableGPS();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (!isChangingConfigurations()) {
-            stopForegroundService();
-        }
     }
 
     @Override
@@ -105,17 +105,6 @@ public class ScanActivity extends AppCompatActivity implements
             if (requestCode == FINE_LOCATION_PERMISSION_CODE) {
                 isLocationRequestDialogShown = true;
                 handleFineLocationPermissionRequestResults(permissions[i], grantResults[i]);
-            }
-        }
-    }
-
-    private void handleFineLocationPermissionRequestResults(String permission, int grantResult) {
-        if (grantResult == PackageManager.PERMISSION_GRANTED) {
-            startForegroundService();
-        } else {
-            isLocationRequestDialogShown = false;
-            if (shouldShowRequestPermissionRationale(permission)) {
-                showLocationPermissionRequestRationale();
             }
         }
     }
@@ -141,6 +130,17 @@ public class ScanActivity extends AppCompatActivity implements
     public void negativeButton() {
         mLocationPermissionDialogFragment = null;
         isLocationRequestDialogShown = false;
+    }
+
+    private void handleFineLocationPermissionRequestResults(String permission, int grantResult) {
+        if (grantResult == PackageManager.PERMISSION_GRANTED) {
+            startForegroundService();
+        } else {
+            isLocationRequestDialogShown = false;
+            if (shouldShowRequestPermissionRationale(permission)) {
+                showLocationPermissionRequestRationale();
+            }
+        }
     }
 
     private void startForegroundService() {
