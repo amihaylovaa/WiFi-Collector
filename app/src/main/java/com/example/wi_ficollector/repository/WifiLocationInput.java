@@ -15,10 +15,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Lock;
 
 import static com.example.wi_ficollector.utility.Constants.BSSID_TAG;
 import static com.example.wi_ficollector.utility.Constants.CAPABILITIES_TAG;
@@ -52,19 +52,17 @@ public class WifiLocationInput implements InputOperation {
     private XmlPullParser xpp;
     private JSONArray wifiLocations;
     private JSONObject wifiLocation;
-    Lock lock;
-    private Executor mExecutor;
 
     public WifiLocationInput(Context mContext) {
         this.mContext = mContext;
         wifiLocations = new JSONArray();
-        mExecutor = Executors.newSingleThreadExecutor();
+        openFileInputStream();
     }
 
     @Override
     public JSONArray read() {
-        mExecutor.execute(() -> {
-            try {
+        try {
+            if (mFileInputStream != null) {
                 prepareReading();
 
                 int eventType = xpp.getEventType();
@@ -76,12 +74,12 @@ public class WifiLocationInput implements InputOperation {
                     eventType = xpp.next();
                     tagName = xpp.getName();
                 }
-            } catch (IOException e) {
-                Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-            } catch (XmlPullParserException e) {
-                Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
             }
-        });
+        } catch (IOException e) {
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
+        } catch (XmlPullParserException e) {
+            Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
+        }
         return wifiLocations;
     }
 
@@ -101,8 +99,6 @@ public class WifiLocationInput implements InputOperation {
     }
 
     private void prepareReading() {
-        openFileInputStream();
-
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -221,10 +217,15 @@ public class WifiLocationInput implements InputOperation {
     }
 
     public void deleteSendData() {
-        String path = "-";
-        File file = new File(path);
+        File file = new File(mContext.getFilesDir(), FILE_NAME);
+        Path path = Paths.get(file.toString());
+
         if (file.exists()) {
-            file.delete();
+            try {
+                Files.delete(path);
+            } catch (IOException e) {
+                Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
+            }
         }
     }
 }

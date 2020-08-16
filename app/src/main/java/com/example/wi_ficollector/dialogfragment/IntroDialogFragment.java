@@ -2,6 +2,7 @@ package com.example.wi_ficollector.dialogfragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,15 +10,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.wi_ficollector.listener.IntroDialogFragmentListener;
 import com.example.wi_ficollector.R;
-import com.example.wi_ficollector.activity.MainActivity;
 
 public class IntroDialogFragment extends DialogFragment {
 
     private AlertDialog mAlertDialog;
+    private IntroDialogFragmentListener introDialogFragmentListener;
 
-    public interface IntroDialogFragmentListener {
-        void ok();
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        introDialogFragmentListener = (IntroDialogFragmentListener) context;
     }
 
     public static IntroDialogFragment newInstance() {
@@ -26,6 +30,12 @@ public class IntroDialogFragment extends DialogFragment {
 
     public IntroDialogFragment() {
         // Needed when dialog fragment is recreated
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        introDialogFragmentListener = null;
     }
 
     @NonNull
@@ -38,7 +48,7 @@ public class IntroDialogFragment extends DialogFragment {
                     .setMessage(R.string.intro)
                     .setCancelable(false)
                     .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
-                        ((MainActivity) activity).ok();
+                        introDialogFragmentListener.ok();
                         dismiss();
                     });
             mAlertDialog = alertDialogBuilder.create();
@@ -46,4 +56,5 @@ public class IntroDialogFragment extends DialogFragment {
         }
         return mAlertDialog;
     }
+
 }

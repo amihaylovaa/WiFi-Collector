@@ -2,6 +2,7 @@ package com.example.wi_ficollector.dialogfragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,16 +11,23 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.wi_ficollector.R;
-import com.example.wi_ficollector.activity.ScanActivity;
+import com.example.wi_ficollector.listener.LocationRequestRationaleListener;
 
 public class LocationRequestRationaleDialogFragment extends DialogFragment {
 
     private AlertDialog mAlertDialog;
+    private LocationRequestRationaleListener locationRequestRationaleListener;
 
-    public interface LocationRequestRationaleListener {
-        void positiveButton();
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        locationRequestRationaleListener = (LocationRequestRationaleListener) context;
+    }
 
-        void negativeButton();
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        locationRequestRationaleListener = null;
     }
 
     public LocationRequestRationaleDialogFragment() {
@@ -40,11 +48,11 @@ public class LocationRequestRationaleDialogFragment extends DialogFragment {
                     .setMessage(R.string.location_permission_rationale_dialog_fragment_message)
                     .setCancelable(false)
                     .setNegativeButton(R.string.disagree, (dialog, whichButton) -> {
-                        ((ScanActivity) getActivity()).negativeButton();
-                          dismiss();
+                        locationRequestRationaleListener.negativeButton();
+                        dismiss();
                     })
                     .setPositiveButton(R.string.agree, (dialog, whichButton) -> {
-                        ((ScanActivity) getActivity()).positiveButton();
+                        locationRequestRationaleListener.positiveButton();
                         dismiss();
                     });
 

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.wi_ficollector.listener.IntroDialogFragmentListener;
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.application.WifiCollectorApplication;
 import com.example.wi_ficollector.dialogfragment.IntroDialogFragment;
@@ -21,7 +22,7 @@ import org.json.JSONArray;
 import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, IntroDialogFragment.IntroDialogFragmentListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, IntroDialogFragmentListener {
 
     private IntroDialogFragment mIntroDialogFragment;
     private FragmentManager mFragmentManager;
@@ -82,12 +83,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
+    // todo fix threading issues
     private void sendCollectedData() {
         WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
         JSONArray wifiLocations = wifiLocationInput.read();
 
         if (wifiLocations.length() == 0) {
-            Toast.makeText(MainActivity.this, " No data found, please scan", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, R.string.no_data_found, Toast.LENGTH_SHORT).show();
         } else {
             HttpRequest httpRequest = new HttpRequest();
 

@@ -22,6 +22,8 @@ import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.dialogfragment.LocationRequestRationaleDialogFragment;
 import com.example.wi_ficollector.dialogfragment.GPSRequirementDialogFragment;
 
+import com.example.wi_ficollector.listener.GPSRequirementsListener;
+import com.example.wi_ficollector.listener.LocationRequestRationaleListener;
 import com.example.wi_ficollector.service.ForegroundWifiLocationService;
 
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -31,8 +33,8 @@ import com.google.android.gms.tasks.Task;
 import static com.example.wi_ficollector.utility.Constants.*;
 
 public class ScanActivity extends AppCompatActivity implements
-        GPSRequirementDialogFragment.GPSRequirementsListener,
-        LocationRequestRationaleDialogFragment.LocationRequestRationaleListener {
+        GPSRequirementsListener,
+        LocationRequestRationaleListener {
 
     private boolean isLocationRequestDialogShown;
     private boolean isGPSRequestDialogShown;
