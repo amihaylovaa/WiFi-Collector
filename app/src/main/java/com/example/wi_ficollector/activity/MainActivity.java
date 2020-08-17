@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -93,21 +92,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Executor mExecutor = Executors.newSingleThreadExecutor();
 
         mExecutor.execute(() -> {
-
+            Handler handler = new Handler(Looper.getMainLooper());
             WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
             JSONArray wifiLocations = wifiLocationInput.read();
 
             if (wifiLocations.length() == 0) {
-                Handler handler = new Handler(Looper.getMainLooper());
-
                 handler.post(() ->
                         Toast.makeText(MainActivity.this, R.string.no_data_found, Toast.LENGTH_LONG).show());
             } else {
                 HttpRequest httpRequest = new HttpRequest();
 
                 httpRequest.send(wifiLocations, MainActivity.this);
-                wifiLocationInput.deleteLocalStoredData();
-                wifiLocationInput.closeFileInputStream();
+                if (httpRequest.getResponseCode() == 200) {
+                    wifiLocationInput.deleteLocalStoredData();
+                    wifiLocationInput.closeFileInputStream();
+                }
             }
         });
     }

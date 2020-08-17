@@ -1,3 +1,7 @@
 
-^
-java:S1075)"ARefactor your code to get this URI from a customizable parameter.(¦ùÛı8•ƒ½Å¿.
+X
+java:S1128"6Remove this unused import 'java.net.ConnectException'.(éâ¿Šüÿÿÿÿ8Öòöî¿.
+O
+java:S1128"-Remove this unused import 'android.util.Log'.(Ô¦Ø²øÿÿÿÿ8Öòöî¿.
+O
+java:S1135 "2Complete the task associated to this TODO comment.(é×Ã½8±ƒªï¿.

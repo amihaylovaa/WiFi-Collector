@@ -12,8 +12,13 @@ import org.json.JSONArray;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import lombok.Getter;
+import lombok.Setter;
+
 import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
 import static com.example.wi_ficollector.utility.Constants.HOST;
 import static com.example.wi_ficollector.utility.Constants.PATH;
@@ -22,11 +27,16 @@ import static com.example.wi_ficollector.utility.Constants.PROTOCOL;
 import static com.example.wi_ficollector.utility.Constants.REQUEST_METHOD;
 import static com.example.wi_ficollector.utility.Constants.TYPE;
 
+@Getter
+@Setter
+// TODO  add broadcast receiver to listen for connection changes
 public class HttpRequest {
 
+    private int responseCode;
     private Handler mHandler;
 
     public HttpRequest() {
+        responseCode = 0;
         mHandler = new Handler(Looper.getMainLooper());
     }
 
@@ -44,6 +54,7 @@ public class HttpRequest {
             os.writeBytes(jsonArray.toString());
             os.flush();
             os.close();
+            setResponseCode(urlConnection.getResponseCode());
 
             if (urlConnection.getResponseCode() == 200) {
                 mHandler.post(() ->
@@ -51,6 +62,7 @@ public class HttpRequest {
             }
             urlConnection.disconnect();
         } catch (IOException e) {
+            e.printStackTrace();
             mHandler.post(() ->
                     Toast.makeText(context, R.string.internet_connection_disabled, Toast.LENGTH_LONG).show());
         }

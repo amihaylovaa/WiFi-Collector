@@ -18,7 +18,7 @@ public final class Constants {
     public static final String FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
 
     public static final String PROTOCOL = "http";
-    public static final String HOST = "xxx.xxx.xx.xx";
+    public static final String HOST = "xxxxxxx";
     public static final int PORT = 0;
     public static final String PATH = "/wifi/locations";
     public static final String REQUEST_METHOD = "POST";
