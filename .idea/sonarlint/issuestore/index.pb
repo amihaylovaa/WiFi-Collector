@@ -70,3 +70,9 @@ Bapp/src/main/java/com/example/wi_ficollector/http/HttpRequest.java,c\9\c9bd931
 Tapp/src/main/java/com/example/wi_ficollector/dialogfragment/IntroDialogFragment.java,1\9\1940280838cb7d69d5d08f02ca4ce28696523c10
 †
 Vapp/src/main/java/com/example/wi_ficollector/application/WifiCollectorApplication.java,4\c\4c309f4b78658bb6dce9c62493062d4092c7d173
+‚
+Rapp/src/main/java/com/example/wi_ficollector/listener/GPSRequirementsListener.java,6\2\6205d47cfa304a81d0a5238234b708f56c60e999
+†
+Vapp/src/main/java/com/example/wi_ficollector/listener/IntroDialogFragmentListener.java,9\a\9ab3848e5bfb55be08f8d36cb362a56e16d3746f
+‹
+[app/src/main/java/com/example/wi_ficollector/listener/LocationRequestRationaleListener.java,b\2\b295e2ade911898fd5c8e6825d74d4f7d16fc551

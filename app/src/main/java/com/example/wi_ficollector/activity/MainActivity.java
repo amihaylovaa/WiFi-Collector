@@ -2,6 +2,9 @@ package com.example.wi_ficollector.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,6 +21,9 @@ import com.example.wi_ficollector.http.HttpRequest;
 import com.example.wi_ficollector.repository.WifiLocationInput;
 
 import org.json.JSONArray;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
 
@@ -83,19 +89,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
-    // todo fix threading issues
     private void sendCollectedData() {
-        WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
-        JSONArray wifiLocations = wifiLocationInput.read();
+        Executor mExecutor = Executors.newSingleThreadExecutor();
 
-        if (wifiLocations.length() == 0) {
-            Toast.makeText(MainActivity.this, R.string.no_data_found, Toast.LENGTH_SHORT).show();
-        } else {
-            HttpRequest httpRequest = new HttpRequest();
+        mExecutor.execute(() -> {
 
-            httpRequest.send(wifiLocations, MainActivity.this);
-            wifiLocationInput.deleteSendData();
-        }
+            WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
+            JSONArray wifiLocations = wifiLocationInput.read();
+
+            if (wifiLocations.length() == 0) {
+                Handler handler = new Handler(Looper.getMainLooper());
+
+                handler.post(() ->
+                        Toast.makeText(MainActivity.this, R.string.no_data_found, Toast.LENGTH_LONG).show());
+            } else {
+                HttpRequest httpRequest = new HttpRequest();
+
+                httpRequest.send(wifiLocations, MainActivity.this);
+                wifiLocationInput.deleteLocalStoredData();
+                wifiLocationInput.closeFileInputStream();
+            }
+        });
     }
 
     private void showIntroDialog() {

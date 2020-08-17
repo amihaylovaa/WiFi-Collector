@@ -51,20 +51,20 @@ public class WifiLocationInput implements InputOperation {
     private Context mContext;
     private XmlPullParser xpp;
     private JSONArray wifiLocations;
+
     private JSONObject wifiLocation;
 
     public WifiLocationInput(Context mContext) {
         this.mContext = mContext;
         wifiLocations = new JSONArray();
-        openFileInputStream();
     }
 
     @Override
     public JSONArray read() {
         try {
+            openFileInputStream();
             if (mFileInputStream != null) {
                 prepareReading();
-
                 int eventType = xpp.getEventType();
                 String tagName = xpp.getName();
 
@@ -216,7 +216,7 @@ public class WifiLocationInput implements InputOperation {
         }
     }
 
-    public void deleteSendData() {
+    public void deleteLocalStoredData() {
         File file = new File(mContext.getFilesDir(), FILE_NAME);
         Path path = Paths.get(file.toString());
 
@@ -226,6 +226,14 @@ public class WifiLocationInput implements InputOperation {
             } catch (IOException e) {
                 Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
             }
+        }
+    }
+
+    public void closeFileInputStream() {
+        try {
+            mFileInputStream.close();
+        } catch (IOException e) {
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
     }
 }

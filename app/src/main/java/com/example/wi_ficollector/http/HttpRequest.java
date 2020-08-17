@@ -3,6 +3,7 @@ package com.example.wi_ficollector.http;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.wi_ficollector.R;
@@ -13,60 +14,45 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
+import static com.example.wi_ficollector.utility.Constants.HOST;
+import static com.example.wi_ficollector.utility.Constants.PATH;
+import static com.example.wi_ficollector.utility.Constants.PORT;
+import static com.example.wi_ficollector.utility.Constants.PROTOCOL;
+import static com.example.wi_ficollector.utility.Constants.REQUEST_METHOD;
 import static com.example.wi_ficollector.utility.Constants.TYPE;
 
 public class HttpRequest {
 
-    private static final String PROTOCOL;
-    private static final String HOST;
-    private static final int PORT;
-    private static final String PATH;
-    private static final String REQUEST_METHOD;
-    private Executor mExecutor;
     private Handler mHandler;
 
     public HttpRequest() {
-        mExecutor = Executors.newSingleThreadExecutor();
         mHandler = new Handler(Looper.getMainLooper());
     }
 
-    static {
-        PROTOCOL = "http";
-        HOST = "xxx.xxx.x.xxx";
-        PORT = 0;
-        PATH = "/wifi/locations";
-        REQUEST_METHOD = "POST";
-    }
-
     public void send(JSONArray jsonArray, Context context) {
-        mExecutor.execute(() -> {
-            try {
-                URL url = new URL(PROTOCOL, HOST, PORT, PATH);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
+            URL url = new URL(PROTOCOL, HOST, PORT, PATH);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-                urlConnection.setRequestMethod(REQUEST_METHOD);
-                urlConnection.setChunkedStreamingMode(0);
-                urlConnection.setRequestProperty(CONTENT_TYPE, TYPE);
+            urlConnection.setRequestMethod(REQUEST_METHOD);
+            urlConnection.setChunkedStreamingMode(0);
+            urlConnection.setRequestProperty(CONTENT_TYPE, TYPE);
 
-                DataOutputStream os = new DataOutputStream(urlConnection.getOutputStream());
+            DataOutputStream os = new DataOutputStream(urlConnection.getOutputStream());
 
-                os.writeBytes(jsonArray.toString());
-                os.flush();
-                os.close();
+            os.writeBytes(jsonArray.toString());
+            os.flush();
+            os.close();
 
-                if (urlConnection.getResponseCode() == 200) {
-                    mHandler.post(() ->
-                            Toast.makeText(context, R.string.send_data_success, Toast.LENGTH_LONG).show());
-                }
-                urlConnection.disconnect();
-            } catch (IOException e) {
+            if (urlConnection.getResponseCode() == 200) {
                 mHandler.post(() ->
-                        Toast.makeText(context, R.string.internet_connection_disabled, Toast.LENGTH_LONG).show());
+                        Toast.makeText(context, R.string.send_data_success, Toast.LENGTH_LONG).show());
             }
-        });
+            urlConnection.disconnect();
+        } catch (IOException e) {
+            mHandler.post(() ->
+                    Toast.makeText(context, R.string.internet_connection_disabled, Toast.LENGTH_LONG).show());
+        }
     }
 }
