@@ -61,24 +61,36 @@ public class WifiLocationInput implements InputOperation {
 
     @Override
     public JSONArray read() {
+        int eventType = 0;
+        String tagName = "";
+
         try {
-            openFileInputStream();
-            if (mFileInputStream != null) {
-                prepareReading();
-                int eventType = xpp.getEventType();
-                String tagName = xpp.getName();
+            mFileInputStream = mContext.openFileInput(FILE_NAME);
+        } catch (
+                FileNotFoundException e) {
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
+            return wifiLocations;
+        }
 
-                while (eventType != XmlPullParser.END_DOCUMENT) {
-                    readGpx(eventType, tagName);
-
-                    eventType = xpp.next();
-                    tagName = xpp.getName();
-                }
-            }
-        } catch (IOException e) {
-            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-        } catch (XmlPullParserException e) {
+        prepareReading();
+        try {
+            eventType = xpp.getEventType();
+        } catch (
+                XmlPullParserException e) {
             Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
+        }
+
+        tagName = xpp.getName();
+
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            readGpx(eventType, tagName);
+
+            try {
+                eventType = xpp.next();
+            } catch (IOException | XmlPullParserException e) {
+
+            }
+            tagName = xpp.getName();
         }
         return wifiLocations;
     }
@@ -123,17 +135,6 @@ public class WifiLocationInput implements InputOperation {
         }
     }
 
-    private void readExtensions(int eventType) {
-        JSONArray wifiScanResults = getReadWifiScanList(eventType);
-
-        try {
-            wifiLocation.put(WIFI_SCAN_RESULTS, wifiScanResults);
-            wifiLocations.put(wifiLocation);
-        } catch (JSONException e) {
-            Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
-        }
-    }
-
     private void readLocalDateTime() {
         LocalDateTime localDateTime = null;
 
@@ -152,6 +153,18 @@ public class WifiLocationInput implements InputOperation {
             Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
         }
     }
+
+    private void readExtensions(int eventType) {
+        JSONArray wifiScanResults = getReadWifiScanList(eventType);
+
+        try {
+            wifiLocation.put(WIFI_SCAN_RESULTS, wifiScanResults);
+            wifiLocations.put(wifiLocation);
+        } catch (JSONException e) {
+            Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
+        }
+    }
+
 
     private JSONArray getReadWifiScanList(int eventType) {
         JSONArray wifiScanResults = new JSONArray();
@@ -204,16 +217,6 @@ public class WifiLocationInput implements InputOperation {
             Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
         }
         return wifiScanResults;
-    }
-
-    public void openFileInputStream() {
-        try {
-            if (mFileInputStream == null) {
-                mFileInputStream = mContext.openFileInput(FILE_NAME);
-            }
-        } catch (FileNotFoundException e) {
-            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
-        }
     }
 
     public void deleteLocalStoredData() {

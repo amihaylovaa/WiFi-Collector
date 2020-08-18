@@ -1,6 +1,8 @@
 package com.example.wi_ficollector.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,12 +27,15 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
+import static com.example.wi_ficollector.utility.Constants.SUCCESS_STATUS_CODE;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, IntroDialogFragmentListener {
 
     private IntroDialogFragment mIntroDialogFragment;
     private FragmentManager mFragmentManager;
+    private WifiManager mWifiManager;
+    private Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button scanningBtn = findViewById(R.id.scanning_button);
         Button sendDataBtn = findViewById(R.id.sending_button);
         mFragmentManager = getSupportFragmentManager();
+        mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        mHandler = new Handler(Looper.getMainLooper());
 
         if (((WifiCollectorApplication) getApplication()).isAppFirstTimeLaunched()) {
             showIntroDialog();
@@ -89,27 +96,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void sendCollectedData() {
-        Executor mExecutor = Executors.newSingleThreadExecutor();
+        Executor executor = Executors.newSingleThreadExecutor();
 
-        mExecutor.execute(() -> {
-            Handler handler = new Handler(Looper.getMainLooper());
+        executor.execute(() -> {
             WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
             JSONArray wifiLocations = wifiLocationInput.read();
 
             if (wifiLocations.length() == 0) {
-                handler.post(() ->
-                        Toast.makeText(MainActivity.this, R.string.no_data_found, Toast.LENGTH_LONG).show());
+                showToastMessage(R.string.no_data_found);
             } else {
-                HttpRequest httpRequest = new HttpRequest();
+                if (!mWifiManager.isWifiEnabled()) {
+                    showToastMessage(R.string.internet_connection_disabled);
+                } else {
+                    HttpRequest httpRequest = new HttpRequest();
 
-                httpRequest.send(wifiLocations, MainActivity.this);
-                if (httpRequest.getResponseCode() == 200) {
-                    wifiLocationInput.deleteLocalStoredData();
-                    wifiLocationInput.closeFileInputStream();
+                    if (httpRequest.send(wifiLocations) == SUCCESS_STATUS_CODE) {
+                        showToastMessage(R.string.send_data_success);
+                        wifiLocationInput.deleteLocalStoredData();
+                        wifiLocationInput.closeFileInputStream();
+                    }
                 }
             }
         });
     }
+
+    private void showToastMessage(int text) {
+        mHandler.post(() ->
+                Toast.makeText(MainActivity.this, text, Toast.LENGTH_LONG).show());
+    }
+
 
     private void showIntroDialog() {
         if (mIntroDialogFragment == null) {

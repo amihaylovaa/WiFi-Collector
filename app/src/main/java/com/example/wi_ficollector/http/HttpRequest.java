@@ -1,18 +1,14 @@
 package com.example.wi_ficollector.http;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.example.wi_ficollector.R;
 
 import org.json.JSONArray;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ConnectException;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -21,6 +17,8 @@ import lombok.Setter;
 
 import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
 import static com.example.wi_ficollector.utility.Constants.HOST;
+import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_MESSAGE;
+import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_TAG;
 import static com.example.wi_ficollector.utility.Constants.PATH;
 import static com.example.wi_ficollector.utility.Constants.PORT;
 import static com.example.wi_ficollector.utility.Constants.PROTOCOL;
@@ -29,7 +27,6 @@ import static com.example.wi_ficollector.utility.Constants.TYPE;
 
 @Getter
 @Setter
-// TODO  add broadcast receiver to listen for connection changes
 public class HttpRequest {
 
     private int responseCode;
@@ -40,7 +37,7 @@ public class HttpRequest {
         mHandler = new Handler(Looper.getMainLooper());
     }
 
-    public void send(JSONArray jsonArray, Context context) {
+    public int send(JSONArray jsonArray) {
         try {
             URL url = new URL(PROTOCOL, HOST, PORT, PATH);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -56,15 +53,10 @@ public class HttpRequest {
             os.close();
             setResponseCode(urlConnection.getResponseCode());
 
-            if (urlConnection.getResponseCode() == 200) {
-                mHandler.post(() ->
-                        Toast.makeText(context, R.string.send_data_success, Toast.LENGTH_LONG).show());
-            }
             urlConnection.disconnect();
         } catch (IOException e) {
-            e.printStackTrace();
-            mHandler.post(() ->
-                    Toast.makeText(context, R.string.internet_connection_disabled, Toast.LENGTH_LONG).show());
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
+        return responseCode;
     }
 }
