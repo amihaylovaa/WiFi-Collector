@@ -16,7 +16,7 @@ public final class Constants {
     public static final int THREE_SECONDS = 3000;
     public static final double ZERO = 0.00;
     public static final String FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
-
+    public static final int SERVER_ERROR_CODE = 503;
     public static final String PROTOCOL = "http";
     public static final String HOST = "xxx.xxx.x.xxx";
     public static final int PORT = 0;

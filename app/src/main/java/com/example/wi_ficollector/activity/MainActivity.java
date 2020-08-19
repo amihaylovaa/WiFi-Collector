@@ -27,6 +27,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
+import static com.example.wi_ficollector.utility.Constants.SERVER_ERROR_CODE;
 import static com.example.wi_ficollector.utility.Constants.SUCCESS_STATUS_CODE;
 
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (buttonId == R.id.scanning_button) {
             startScanning();
         } else {
-            sendCollectedData();
+            sendLocalStoredData();
         }
     }
 
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
-    private void sendCollectedData() {
+    private void sendLocalStoredData() {
         Executor executor = Executors.newSingleThreadExecutor();
 
         executor.execute(() -> {
@@ -105,19 +106,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (wifiLocations.length() == 0) {
                 showToastMessage(R.string.no_data_found);
             } else {
-                if (!mWifiManager.isWifiEnabled()) {
-                    showToastMessage(R.string.internet_connection_disabled);
-                } else {
-                    HttpRequest httpRequest = new HttpRequest();
-
-                    if (httpRequest.send(wifiLocations) == SUCCESS_STATUS_CODE) {
-                        showToastMessage(R.string.send_data_success);
-                        wifiLocationInput.deleteLocalStoredData();
-                        wifiLocationInput.closeFileInputStream();
-                    }
-                }
+                sendRequest(wifiLocationInput, wifiLocations);
             }
         });
+    }
+
+    private void sendRequest(WifiLocationInput wifiLocationInput, JSONArray wifiLocations) {
+        if (!mWifiManager.isWifiEnabled()) {
+            showToastMessage(R.string.internet_connection_disabled);
+        } else {
+            HttpRequest httpRequest = new HttpRequest();
+            int responseCode = httpRequest.send(wifiLocations);
+
+            if (responseCode == SUCCESS_STATUS_CODE) {
+                showToastMessage(R.string.send_data_success);
+                wifiLocationInput.deleteLocalStoredData();
+            } else if (responseCode == SERVER_ERROR_CODE) {
+                showToastMessage(R.string.no_service_available);
+            }
+            wifiLocationInput.closeFileInputStream();
+        }
     }
 
     private void showToastMessage(int text) {

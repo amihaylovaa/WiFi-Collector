@@ -1,5 +1,6 @@
 package com.example.wi_ficollector.repository;
 
+
 import android.content.Context;
 import android.util.Log;
 
@@ -42,6 +43,7 @@ import static com.example.wi_ficollector.utility.Constants.SSID_TAG;
 import static com.example.wi_ficollector.utility.Constants.TIME_TAG;
 import static com.example.wi_ficollector.utility.Constants.TRACK_POINT_TAG;
 import static com.example.wi_ficollector.utility.Constants.WIFI_SCAN_RESULTS;
+import static com.example.wi_ficollector.utility.Constants.WIFI_TAG;
 import static com.example.wi_ficollector.utility.Constants.XML_PULL_PARSER_EXCEPTION_MESSAGE;
 import static com.example.wi_ficollector.utility.Constants.XML_PULL_PARSER_EXCEPTION_TAG;
 
@@ -65,9 +67,9 @@ public class WifiLocationInput implements InputOperation {
         String tagName = "";
 
         try {
+
             mFileInputStream = mContext.openFileInput(FILE_NAME);
-        } catch (
-                FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
             return wifiLocations;
         }
@@ -105,7 +107,7 @@ public class WifiLocationInput implements InputOperation {
                 readLocalDateTime();
             }
             if (tagName.equals(EXTENSIONS_TAG)) {
-                readExtensions(eventType);
+                readExtensions();
             }
         }
     }
@@ -154,8 +156,8 @@ public class WifiLocationInput implements InputOperation {
         }
     }
 
-    private void readExtensions(int eventType) {
-        JSONArray wifiScanResults = getReadWifiScanList(eventType);
+    private void readExtensions() {
+        JSONArray wifiScanResults = getReadWifiScanList();
 
         try {
             wifiLocation.put(WIFI_SCAN_RESULTS, wifiScanResults);
@@ -165,58 +167,63 @@ public class WifiLocationInput implements InputOperation {
         }
     }
 
-
-    private JSONArray getReadWifiScanList(int eventType) {
+    private JSONArray getReadWifiScanList() {
         JSONArray wifiScanResults = new JSONArray();
 
         try {
-            xpp.next();
+            int eventType = xpp.next();
             String tagName = xpp.getName();
 
             while (eventType != XmlPullParser.END_TAG && !tagName.equals(EXTENSIONS_TAG)) {
-                JSONObject wifi = new JSONObject();
 
-                if (tagName.equals(BSSID_TAG)) {
-                    wifi.put(BSSID_TAG, xpp.nextText());
-                    xpp.next();
+                if (eventType == XmlPullParser.START_TAG && tagName.equals(WIFI_TAG)) {
+                    JSONObject wifiScanResult = getWifiScanResult();
 
-                    tagName = xpp.getName();
-                }
-                if (tagName.equals(RSSI_TAG)) {
-                    wifi.put(RSSI_TAG, xpp.nextText());
-                    xpp.next();
-
-                    tagName = xpp.getName();
-                }
-                if (tagName.equals(SSID_TAG)) {
-                    wifi.put(SSID_TAG, xpp.nextText());
-                    xpp.next();
-
-                    tagName = xpp.getName();
-                }
-                if (tagName.equals(CAPABILITIES_TAG)) {
-                    wifi.put(CAPABILITIES_TAG, xpp.nextText());
-                    xpp.next();
-
-                    tagName = xpp.getName();
-                }
-                if (tagName.equals(FREQUENCY_TAG)) {
-                    wifi.put(FREQUENCY_TAG, Integer.parseInt(xpp.nextText()));
-                    wifiScanResults.put(wifi);
-                    xpp.next();
+                    wifiScanResults.put(wifiScanResult);
                 }
                 eventType = xpp.next();
                 tagName = xpp.getName();
             }
         } catch (IOException e) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-        } catch (JSONException e) {
-            Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
-
         } catch (XmlPullParserException e) {
             Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
+        } catch (JSONException e) {
+            Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
         }
         return wifiScanResults;
+    }
+
+    private JSONObject getWifiScanResult() throws IOException, XmlPullParserException, JSONException {
+        JSONObject wifiScanResult = new JSONObject();
+        int eventType = xpp.next();
+        String tagName = xpp.getName();
+
+        while (eventType != XmlPullParser.END_TAG && !tagName.equals(WIFI_TAG)) {
+
+            switch (tagName) {
+                case BSSID_TAG:
+                    wifiScanResult.put(BSSID_TAG, xpp.nextText());
+                    break;
+                case RSSI_TAG:
+                    wifiScanResult.put(RSSI_TAG, xpp.nextText());
+                    break;
+                case SSID_TAG:
+                    wifiScanResult.put(SSID_TAG, xpp.nextText());
+                    break;
+                case CAPABILITIES_TAG:
+                    wifiScanResult.put(CAPABILITIES_TAG, xpp.nextText());
+                    break;
+                case FREQUENCY_TAG:
+                    wifiScanResult.put(FREQUENCY_TAG, xpp.nextText());
+                    break;
+                default:
+                    break;
+            }
+            eventType = xpp.next();
+            tagName = xpp.getName();
+        }
+        return wifiScanResult;
     }
 
     public void deleteLocalStoredData() {
