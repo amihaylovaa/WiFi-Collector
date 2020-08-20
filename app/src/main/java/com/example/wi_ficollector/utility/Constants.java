@@ -20,16 +20,15 @@ public final class Constants {
     public static final String PROTOCOL = "http";
     public static final String HOST = "xxx.xxx.x.xxx";
     public static final int PORT = 0;
-    public static final int SUCCESS_STATUS_CODE = 200;
     public static final String PATH = "/wifi/locations";
     public static final String REQUEST_METHOD = "POST";
     public static final String CONTENT_TYPE = "Content-type";
+    public static final String ACCEPT="Accept";
     public static final String TYPE = "application/json";
     public static final String PROVIDERS_CHANGED = "android.location.PROVIDERS_CHANGED";
     public static final String ANDROID_GPS_DIALOG_SHOWN_KEY = "ANDROID_GPS_DIALOG_SHOWN";
     public static final String ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY = "ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN";
     public static final String ANDROID_SERVICE_STARTED_KEY = "ANDROID_SERVICE_STARTED";
-    public static final String FOUND_WIFI_COUNT_KEY = "FOUND_WIFI_COUNT";
     public static final String GPS_DIALOG_TAG = "GPS Dialog";
     public static final String INTRO_DIALOG_TAG = "Intro dialog";
     public static final String ACTION = "UI_UPDATE";

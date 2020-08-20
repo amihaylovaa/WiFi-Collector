@@ -48,11 +48,11 @@ public class LocationRequestRationaleDialogFragment extends DialogFragment {
                     .setMessage(R.string.location_permission_rationale_dialog_fragment_message)
                     .setCancelable(false)
                     .setNegativeButton(R.string.disagree, (dialog, whichButton) -> {
-                        locationRequestRationaleListener.negativeButton();
+                        locationRequestRationaleListener.disagree();
                         dismiss();
                     })
                     .setPositiveButton(R.string.agree, (dialog, whichButton) -> {
-                        locationRequestRationaleListener.positiveButton();
+                        locationRequestRationaleListener.agree();
                         dismiss();
                     });
 

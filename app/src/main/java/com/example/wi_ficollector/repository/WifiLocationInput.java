@@ -21,31 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
-import static com.example.wi_ficollector.utility.Constants.BSSID_TAG;
-import static com.example.wi_ficollector.utility.Constants.CAPABILITIES_TAG;
-import static com.example.wi_ficollector.utility.Constants.DATE_TIME;
-import static com.example.wi_ficollector.utility.Constants.ENCODING;
-import static com.example.wi_ficollector.utility.Constants.EXTENSIONS_TAG;
-import static com.example.wi_ficollector.utility.Constants.FILE_NAME;
-import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_MSG;
-import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_TAG;
-import static com.example.wi_ficollector.utility.Constants.FREQUENCY_TAG;
-import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_MESSAGE;
-import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_TAG;
-import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_MESSAGE;
-import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_TAG;
-import static com.example.wi_ficollector.utility.Constants.LATITUDE;
-import static com.example.wi_ficollector.utility.Constants.LATITUDE_ATTRIBUTE;
-import static com.example.wi_ficollector.utility.Constants.LONGITUDE;
-import static com.example.wi_ficollector.utility.Constants.LONGITUDE_ATTRIBUTE;
-import static com.example.wi_ficollector.utility.Constants.RSSI_TAG;
-import static com.example.wi_ficollector.utility.Constants.SSID_TAG;
-import static com.example.wi_ficollector.utility.Constants.TIME_TAG;
-import static com.example.wi_ficollector.utility.Constants.TRACK_POINT_TAG;
-import static com.example.wi_ficollector.utility.Constants.WIFI_SCAN_RESULTS;
-import static com.example.wi_ficollector.utility.Constants.WIFI_TAG;
-import static com.example.wi_ficollector.utility.Constants.XML_PULL_PARSER_EXCEPTION_MESSAGE;
-import static com.example.wi_ficollector.utility.Constants.XML_PULL_PARSER_EXCEPTION_TAG;
+import static com.example.wi_ficollector.utility.Constants.*;
 
 public class WifiLocationInput implements InputOperation {
 
@@ -63,11 +39,7 @@ public class WifiLocationInput implements InputOperation {
 
     @Override
     public JSONArray read() {
-        int eventType = 0;
-        String tagName = "";
-
         try {
-
             mFileInputStream = mContext.openFileInput(FILE_NAME);
         } catch (FileNotFoundException e) {
             Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
@@ -76,23 +48,17 @@ public class WifiLocationInput implements InputOperation {
 
         prepareReading();
         try {
-            eventType = xpp.getEventType();
-        } catch (
-                XmlPullParserException e) {
-            Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
-        }
+            int eventType = xpp.getEventType();
+            String tagName = xpp.getName();
 
-        tagName = xpp.getName();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                readGpx(eventType, tagName);
 
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            readGpx(eventType, tagName);
-
-            try {
                 eventType = xpp.next();
-            } catch (IOException | XmlPullParserException e) {
-
+                tagName = xpp.getName();
             }
-            tagName = xpp.getName();
+        } catch (IOException | XmlPullParserException e) {
+            return wifiLocations;
         }
         return wifiLocations;
     }

@@ -48,7 +48,7 @@ public class IntroDialogFragment extends DialogFragment {
                     .setMessage(R.string.intro)
                     .setCancelable(false)
                     .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
-                        introDialogFragmentListener.ok();
+                        introDialogFragmentListener.accept();
                         dismiss();
                     });
             mAlertDialog = alertDialogBuilder.create();

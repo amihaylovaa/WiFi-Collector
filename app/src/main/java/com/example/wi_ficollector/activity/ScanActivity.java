@@ -124,12 +124,12 @@ public class ScanActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void positiveButton() {
+    public void agree() {
         requestFineLocationPermission();
     }
 
     @Override
-    public void negativeButton() {
+    public void disagree() {
         mLocationPermissionDialogFragment = null;
         isLocationRequestDialogShown = false;
     }

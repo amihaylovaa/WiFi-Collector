@@ -14,9 +14,8 @@ public class WifiCollectorApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Context context = this.getApplicationContext();
         String key = String.valueOf(R.string.launching_key);
-        mSharedPreference = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        mSharedPreference = getApplicationContext().getSharedPreferences(key, Context.MODE_PRIVATE);
     }
 
     public boolean isAppFirstTimeLaunched() {

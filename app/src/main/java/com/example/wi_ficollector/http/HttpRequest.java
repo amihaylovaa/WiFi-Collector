@@ -6,16 +6,18 @@ import android.util.Log;
 
 import org.json.JSONArray;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
+import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import static com.example.wi_ficollector.utility.Constants.ACCEPT;
 import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
 import static com.example.wi_ficollector.utility.Constants.HOST;
 import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_MESSAGE;
@@ -24,7 +26,6 @@ import static com.example.wi_ficollector.utility.Constants.PATH;
 import static com.example.wi_ficollector.utility.Constants.PORT;
 import static com.example.wi_ficollector.utility.Constants.PROTOCOL;
 import static com.example.wi_ficollector.utility.Constants.REQUEST_METHOD;
-import static com.example.wi_ficollector.utility.Constants.SERVER_ERROR_CODE;
 import static com.example.wi_ficollector.utility.Constants.TYPE;
 
 @Getter
@@ -35,31 +36,55 @@ public class HttpRequest {
     private Handler mHandler;
 
     public HttpRequest() {
-        responseCode = 0;
         mHandler = new Handler(Looper.getMainLooper());
     }
 
     public int send(JSONArray jsonArray) {
+        URL url;
+        OutputStream os = null;
+        HttpURLConnection urlConnection = null;
+        String strings = jsonArray.toString();
+        byte[] bytes = strings.getBytes();
+
         try {
-            URL url = new URL(PROTOCOL, HOST, PORT, PATH);
-            DataOutputStream os = null;
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            url = new URL(PROTOCOL, HOST, PORT, PATH);
+        } catch (MalformedURLException e) {
+            // may be bad request
+            return HttpURLConnection.HTTP_NOT_FOUND;
+        }
 
-            urlConnection.setRequestMethod(REQUEST_METHOD);
-            urlConnection.setChunkedStreamingMode(0);
-            urlConnection.setRequestProperty(CONTENT_TYPE, TYPE);
+        try {
+            urlConnection = (HttpURLConnection) url.openConnection();
+        } catch (IOException e) {
+            //
+            return HttpURLConnection.HTTP_NOT_FOUND;
+        }
 
-            try {
-                os = new DataOutputStream(urlConnection.getOutputStream());
+        urlConnection.setDoOutput(true);
+        urlConnection.setFixedLengthStreamingMode(bytes.length);
+        urlConnection.setRequestProperty(CONTENT_TYPE, TYPE);
+        urlConnection.setRequestProperty(ACCEPT, TYPE);
 
-                os.writeBytes(jsonArray.toString());
-                os.flush();
+        try {
+            os = urlConnection.getOutputStream();
+        } catch (IOException e) {
+            urlConnection.disconnect();
+            return HttpURLConnection.HTTP_UNAVAILABLE;
+        }
+
+        try {
+            os.write(bytes);
+        } catch (IOException e) {
+            urlConnection.disconnect();
+            // lost internet connection
+            return HttpURLConnection.HTTP_UNAVAILABLE;
+        }
+
+        try {
+            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 os.close();
-                setResponseCode(urlConnection.getResponseCode());
-
                 urlConnection.disconnect();
-            } catch (ConnectException e) {
-                setResponseCode(SERVER_ERROR_CODE);
+                setResponseCode(HttpURLConnection.HTTP_OK);
             }
         } catch (IOException e) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);

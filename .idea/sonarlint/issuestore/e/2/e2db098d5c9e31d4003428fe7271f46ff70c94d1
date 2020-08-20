@@ -1,8 +1,2 @@
 
-
-java:S1128"]Remove this unused import 'com.example.wi_ficollector.utility.Constants.SUCCESS_STATUS_CODE'.(¾ùÒİşÿÿÿÿ8…­™ºÀ.
-[
-java:S1128"9Remove this unused import 'android.net.wifi.WifiManager'.(‰şéùÿÿÿÿ8…­™ºÀ.
-Q
-java:S1128"4Remove this unused import 'android.content.Context'.(©Ê‰è8…­™ºÀ.
 X	java:S110""<This class has 9 parents which is greater than 5 authorized.(µ¬­€8…­™ºÀ.
