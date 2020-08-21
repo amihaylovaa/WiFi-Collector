@@ -123,18 +123,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case HttpURLConnection.HTTP_OK:
                 showToastMessage(R.string.send_data_success);
                 wifiLocationInput.deleteLocalStoredData();
-                wifiLocationInput.closeFileInputStream();
                 break;
-            case HttpURLConnection.HTTP_UNAVAILABLE:
-                showToastMessage(R.string.no_service_available);
+            case HttpURLConnection.HTTP_CLIENT_TIMEOUT:
+                showToastMessage(R.string.send_request_timeout);
                 break;
             case HttpURLConnection.HTTP_NOT_FOUND:
-                showToastMessage(R.string.not_found_resource);
                 break;
             default:
                 showToastMessage(R.string.lost_internet_connection);
                 break;
         }
+        wifiLocationInput.closeFileInputStream();
     }
 
     private void showToastMessage(int text) {

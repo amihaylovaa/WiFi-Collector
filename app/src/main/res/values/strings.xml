@@ -24,7 +24,7 @@
     <string name="internet_connection_disabled">Please, enable Internet and try again</string>
     <string name="send_data_success">Data has been successfully sent</string>
     <string name="no_data_found">Nothing found, please start scanning</string>
-    <string name="no_service_available">Data can not be sent, please try later</string>
+    <string name="send_request_timeout">Data can not be sent, please try later</string>
     <string name="lost_internet_connection">Lost Internet connection, please try again</string>
     <string name="not_found_resource">Not found resource</string>
 

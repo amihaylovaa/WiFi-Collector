@@ -1,7 +1,5 @@
 package com.example.wi_ficollector.http;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -9,9 +7,9 @@ import org.json.JSONArray;
 import java.io.IOException;
 
 import java.io.OutputStream;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URL;
 
 import lombok.Getter;
@@ -22,72 +20,78 @@ import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
 import static com.example.wi_ficollector.utility.Constants.HOST;
 import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_MESSAGE;
 import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_TAG;
+import static com.example.wi_ficollector.utility.Constants.NEGATIVE_ONE;
 import static com.example.wi_ficollector.utility.Constants.PATH;
 import static com.example.wi_ficollector.utility.Constants.PORT;
 import static com.example.wi_ficollector.utility.Constants.PROTOCOL;
-import static com.example.wi_ficollector.utility.Constants.REQUEST_METHOD;
+import static com.example.wi_ficollector.utility.Constants.TEN_SECONDS;
 import static com.example.wi_ficollector.utility.Constants.TYPE;
 
 @Getter
 @Setter
 public class HttpRequest {
 
+    private OutputStream mOutputStream;
+    private HttpURLConnection mHttpUrlConnection;
+    private URL mURL;
     private int responseCode;
-    private Handler mHandler;
-
-    public HttpRequest() {
-        mHandler = new Handler(Looper.getMainLooper());
-    }
 
     public int send(JSONArray jsonArray) {
-        URL url;
-        OutputStream os = null;
-        HttpURLConnection urlConnection = null;
         String strings = jsonArray.toString();
         byte[] bytes = strings.getBytes();
 
         try {
-            url = new URL(PROTOCOL, HOST, PORT, PATH);
+            mURL = new URL(PROTOCOL, HOST, PORT, PATH);
         } catch (MalformedURLException e) {
-            // may be bad request
             return HttpURLConnection.HTTP_NOT_FOUND;
         }
 
         try {
-            urlConnection = (HttpURLConnection) url.openConnection();
+            mHttpUrlConnection = (HttpURLConnection) mURL.openConnection();
         } catch (IOException e) {
-            //
             return HttpURLConnection.HTTP_NOT_FOUND;
         }
 
-        urlConnection.setDoOutput(true);
-        urlConnection.setFixedLengthStreamingMode(bytes.length);
-        urlConnection.setRequestProperty(CONTENT_TYPE, TYPE);
-        urlConnection.setRequestProperty(ACCEPT, TYPE);
+        mHttpUrlConnection.setDoOutput(true);
+        mHttpUrlConnection.setFixedLengthStreamingMode(bytes.length);
+        mHttpUrlConnection.setRequestProperty(CONTENT_TYPE, TYPE);
+        mHttpUrlConnection.setRequestProperty(ACCEPT, TYPE);
+        mHttpUrlConnection.setConnectTimeout(TEN_SECONDS);
+        mHttpUrlConnection.setReadTimeout(TEN_SECONDS);
 
         try {
-            os = urlConnection.getOutputStream();
+            mOutputStream = mHttpUrlConnection.getOutputStream();
         } catch (IOException e) {
-            urlConnection.disconnect();
-            return HttpURLConnection.HTTP_UNAVAILABLE;
+            mHttpUrlConnection.disconnect();
+            return HttpURLConnection.HTTP_CLIENT_TIMEOUT;
         }
 
         try {
-            os.write(bytes);
+            mOutputStream.write(bytes);
+            mOutputStream.flush();
+        } catch (SocketException e) {
+            mHttpUrlConnection.disconnect();
+            return NEGATIVE_ONE;
         } catch (IOException e) {
-            urlConnection.disconnect();
-            // lost internet connection
-            return HttpURLConnection.HTTP_UNAVAILABLE;
+            return NEGATIVE_ONE;
         }
 
         try {
-            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                os.close();
-                urlConnection.disconnect();
-                setResponseCode(HttpURLConnection.HTTP_OK);
+            responseCode = mHttpUrlConnection.getResponseCode();
+        } catch (IOException e) {
+            mHttpUrlConnection.disconnect();
+            return NEGATIVE_ONE;
+        }
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            try {
+                mOutputStream.close();
+                mHttpUrlConnection.disconnect();
+            } catch (IOException e) {
+                Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
             }
-        } catch (IOException e) {
-            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
+        } else {
+            return HttpURLConnection.HTTP_NOT_FOUND;
         }
         return responseCode;
     }

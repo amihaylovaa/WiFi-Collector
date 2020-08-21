@@ -151,7 +151,6 @@ public class ForegroundWifiLocationService extends Service {
             unregisterReceiver(mWifiReceiver);
             unregisterReceiver(mGPSStateReceiver);
         } catch (IllegalArgumentException illegalArgumentException) {
-            illegalArgumentException.printStackTrace();
             Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MSG);
         }
         try {

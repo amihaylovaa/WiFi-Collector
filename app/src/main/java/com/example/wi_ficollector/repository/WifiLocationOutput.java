@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 import static android.content.Context.MODE_APPEND;
 import static com.example.wi_ficollector.utility.Constants.*;
 
+// TODO FIX EXCEP
 public class WifiLocationOutput implements OutputOperation {
 
     private FileOutputStream mFileOutputStream;

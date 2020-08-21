@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 
 import static com.example.wi_ficollector.utility.Constants.*;
 
+// TODO FIX EXCEP
 public class WifiLocationInput implements InputOperation {
 
     private FileInputStream mFileInputStream;

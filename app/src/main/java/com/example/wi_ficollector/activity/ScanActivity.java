@@ -119,6 +119,7 @@ public class ScanActivity extends AppCompatActivity implements
                 isGPSRequestDialogShown = true;
             }
         } catch (IntentSender.SendIntentException sendEx) {
+            // TODO FIX EXCEP
             Log.d(SEND_INTENT_EXCEPTION_THROWN_TAG, SEND_INTENT_EXCEPTION_EXCEPTION_THROWN_MSG);
         }
     }
@@ -256,7 +257,6 @@ public class ScanActivity extends AppCompatActivity implements
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(ScanActivity.this);
         tv = findViewById(R.id.numberOfWifiNetworks);
     }
-
     private void stopForegroundService() {
         stopService(mIntent);
         isServiceStarted = false;

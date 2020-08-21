@@ -1,3 +1,5 @@
 
-W
-java:S11414"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ8¸£¥»À.
+z
+java:S1128"XRemove this unused import 'com.example.wi_ficollector.utility.Constants.REQUEST_METHOD'.(¬¦¯ôøÿÿÿÿ8½à’ëÀ.
+X
+java:S1128"6Remove this unused import 'java.net.ConnectException'.(éâ¿Šüÿÿÿÿ8ì„†ëÀ.
