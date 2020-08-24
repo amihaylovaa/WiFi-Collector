@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WifiLocation {
+
     private double latitude;
     private double longitude;
     private LocalDateTime localDateTime;

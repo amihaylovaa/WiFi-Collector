@@ -8,6 +8,7 @@ import android.os.*;
 
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,9 +33,7 @@ import com.google.android.gms.tasks.Task;
 
 import static com.example.wi_ficollector.utility.Constants.*;
 
-public class ScanActivity extends AppCompatActivity implements
-        GPSRequirementsListener,
-        LocationRequestRationaleListener {
+public class ScanActivity extends AppCompatActivity implements GPSRequirementsListener, LocationRequestRationaleListener {
 
     private boolean isLocationRequestDialogShown;
     private boolean isGPSRequestDialogShown;
@@ -119,8 +118,7 @@ public class ScanActivity extends AppCompatActivity implements
                 isGPSRequestDialogShown = true;
             }
         } catch (IntentSender.SendIntentException sendEx) {
-            // TODO FIX EXCEP
-            Log.d(SEND_INTENT_EXCEPTION_THROWN_TAG, SEND_INTENT_EXCEPTION_EXCEPTION_THROWN_MSG);
+            Toast.makeText(ScanActivity.this, R.string.send_intent_exception ,Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -18,6 +18,7 @@ import lombok.Setter;
 import static com.example.wi_ficollector.utility.Constants.ACCEPT;
 import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
 import static com.example.wi_ficollector.utility.Constants.HOST;
+import static com.example.wi_ficollector.utility.Constants.INTEGER_ZERO;
 import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_MESSAGE;
 import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_TAG;
 import static com.example.wi_ficollector.utility.Constants.NEGATIVE_ONE;
@@ -80,7 +81,7 @@ public class HttpRequest {
             responseCode = mHttpUrlConnection.getResponseCode();
         } catch (IOException e) {
             mHttpUrlConnection.disconnect();
-            return NEGATIVE_ONE;
+            return INTEGER_ZERO;
         }
 
         if (responseCode == HttpURLConnection.HTTP_OK) {

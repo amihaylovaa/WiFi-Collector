@@ -27,8 +27,8 @@ import java.net.HttpURLConnection;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static com.example.wi_ficollector.utility.Constants.INTEGER_ZERO;
 import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
-
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, IntroDialogFragmentListener {
 
@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (responseCode) {
             case HttpURLConnection.HTTP_OK:
                 showToastMessage(R.string.send_data_success);
+                wifiLocationInput.closeFileInputStream();
                 wifiLocationInput.deleteLocalStoredData();
                 break;
             case HttpURLConnection.HTTP_CLIENT_TIMEOUT:
@@ -129,11 +130,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case HttpURLConnection.HTTP_NOT_FOUND:
                 break;
+            case INTEGER_ZERO:
+                showToastMessage(R.string.data_send_waiting_for_response);
+                wifiLocationInput.closeFileInputStream();
+                wifiLocationInput.deleteLocalStoredData();
+                break;
             default:
                 showToastMessage(R.string.lost_internet_connection);
                 break;
         }
-        wifiLocationInput.closeFileInputStream();
     }
 
     private void showToastMessage(int text) {

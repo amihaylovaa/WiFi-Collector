@@ -23,14 +23,12 @@ import java.time.LocalDateTime;
 
 import static com.example.wi_ficollector.utility.Constants.*;
 
-// TODO FIX EXCEP
 public class WifiLocationInput implements InputOperation {
 
     private FileInputStream mFileInputStream;
     private Context mContext;
     private XmlPullParser xpp;
     private JSONArray wifiLocations;
-
     private JSONObject wifiLocation;
 
     public WifiLocationInput(Context mContext) {
@@ -40,6 +38,7 @@ public class WifiLocationInput implements InputOperation {
 
     @Override
     public JSONArray read() {
+
         try {
             mFileInputStream = mContext.openFileInput(FILE_NAME);
         } catch (FileNotFoundException e) {
@@ -47,14 +46,23 @@ public class WifiLocationInput implements InputOperation {
             return wifiLocations;
         }
 
-        prepareReading();
+        try {
+            prepareReading();
+        } catch (XmlPullParserException e) {
+            Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
+            return wifiLocations;
+        }
+
         try {
             int eventType = xpp.getEventType();
             String tagName = xpp.getName();
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                readGpx(eventType, tagName);
-
+                try {
+                    readGpx(eventType, tagName);
+                } catch (JSONException e) {
+                    return new JSONArray();
+                }
                 eventType = xpp.next();
                 tagName = xpp.getName();
             }
@@ -64,7 +72,7 @@ public class WifiLocationInput implements InputOperation {
         return wifiLocations;
     }
 
-    private void readGpx(int eventType, String tagName) {
+    private void readGpx(int eventType, String tagName) throws JSONException {
         if (eventType == XmlPullParser.START_TAG) {
 
             if (tagName.equals(TRACK_POINT_TAG)) {
@@ -79,62 +87,45 @@ public class WifiLocationInput implements InputOperation {
         }
     }
 
-    private void prepareReading() {
-        try {
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            factory.setNamespaceAware(true);
+    private void prepareReading() throws XmlPullParserException {
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        factory.setNamespaceAware(true);
 
-            xpp = factory.newPullParser();
-            xpp.setInput(mFileInputStream, ENCODING);
-        } catch (XmlPullParserException e) {
-            Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
-        }
+        xpp = factory.newPullParser();
+        xpp.setInput(mFileInputStream, ENCODING);
     }
 
-    private void readLocation() {
+    private void readLocation() throws JSONException {
         double latitude = Double.parseDouble(xpp.getAttributeValue(null, LATITUDE_ATTRIBUTE));
         double longitude = Double.parseDouble(xpp.getAttributeValue(null, LONGITUDE_ATTRIBUTE));
         wifiLocation = new JSONObject();
 
-        try {
-            wifiLocation.put(LATITUDE, latitude);
-            wifiLocation.put(LONGITUDE, longitude);
-        } catch (JSONException e) {
-            Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
-        }
+        wifiLocation.put(LATITUDE, latitude);
+        wifiLocation.put(LONGITUDE, longitude);
     }
 
-    private void readLocalDateTime() {
-        LocalDateTime localDateTime = null;
+    private void readLocalDateTime() throws JSONException {
+        String dateTime = "";
 
         try {
-            String dateTime = xpp.nextText();
-            localDateTime = LocalDateTime.parse(dateTime);
-        } catch (IOException e) {
-            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-        } catch (XmlPullParserException e) {
-            Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
+            dateTime = xpp.nextText();
+        } catch (XmlPullParserException | IOException e) {
+            wifiLocation.put(DATE_TIME, LocalDateTime.now());
+            return;
         }
+        LocalDateTime localDateTime = LocalDateTime.parse(dateTime);
 
-        try {
-            wifiLocation.put(DATE_TIME, localDateTime);
-        } catch (JSONException e) {
-            Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
-        }
+        wifiLocation.put(DATE_TIME, localDateTime);
     }
 
-    private void readExtensions() {
+    private void readExtensions() throws JSONException {
         JSONArray wifiScanResults = getReadWifiScanList();
 
-        try {
-            wifiLocation.put(WIFI_SCAN_RESULTS, wifiScanResults);
-            wifiLocations.put(wifiLocation);
-        } catch (JSONException e) {
-            Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
-        }
+        wifiLocation.put(WIFI_SCAN_RESULTS, wifiScanResults);
+        wifiLocations.put(wifiLocation);
     }
 
-    private JSONArray getReadWifiScanList() {
+    private JSONArray getReadWifiScanList() throws JSONException {
         JSONArray wifiScanResults = new JSONArray();
 
         try {
@@ -155,8 +146,6 @@ public class WifiLocationInput implements InputOperation {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         } catch (XmlPullParserException e) {
             Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
-        } catch (JSONException e) {
-            Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
         }
         return wifiScanResults;
     }
@@ -201,7 +190,7 @@ public class WifiLocationInput implements InputOperation {
             try {
                 Files.delete(path);
             } catch (IOException e) {
-                Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
+                Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_INPUT_MSG);
             }
         }
     }
@@ -210,7 +199,7 @@ public class WifiLocationInput implements InputOperation {
         try {
             mFileInputStream.close();
         } catch (IOException e) {
-            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_INPUT_MSG);
         }
     }
 }
