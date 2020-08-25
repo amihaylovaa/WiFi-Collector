@@ -6,6 +6,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -22,19 +23,23 @@ import com.example.wi_ficollector.http.HttpRequest;
 import com.example.wi_ficollector.repository.WifiLocationInput;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.net.HttpURLConnection;
-import java.util.concurrent.Executor;
+
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.example.wi_ficollector.utility.Constants.INTEGER_ZERO;
 import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
+import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_MESSAGE;
+import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_TAG;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, IntroDialogFragmentListener {
 
     private IntroDialogFragment mIntroDialogFragment;
     private FragmentManager mFragmentManager;
-    private Executor mExecutor;
+    private ExecutorService mExecutorService;
     private WifiManager mWifiManager;
     private Handler mHandler;
 
@@ -46,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFragmentManager = getSupportFragmentManager();
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mHandler = new Handler(Looper.getMainLooper());
-        mExecutor = Executors.newSingleThreadExecutor();
+        mExecutorService = Executors.newSingleThreadExecutor();
         Button scanningBtn = findViewById(R.id.scanning_button);
         Button sendDataBtn = findViewById(R.id.sending_button);
 
@@ -55,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (((WifiCollectorApplication) getApplication()).isAppFirstTimeLaunched()) {
             showIntroDialog();
-            ((WifiCollectorApplication) getApplication()).addIntroKey();
+            ((WifiCollectorApplication) getApplication()).addKeyForShownIntroDialog();
         }
     }
 
@@ -64,6 +69,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onRestoreInstanceState(savedInstanceState);
 
         mIntroDialogFragment = (IntroDialogFragment) mFragmentManager.getFragment(savedInstanceState, INTRO_DIALOG_TAG);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mExecutorService.shutdown();
     }
 
     @Override
@@ -98,14 +109,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void sendLocalStoredData() {
-        mExecutor.execute(() -> {
+        mExecutorService.execute(() -> {
             WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
-            JSONArray wifiLocations = wifiLocationInput.read();
+            JSONArray wifiLocations;
+
+            try {
+                wifiLocations = wifiLocationInput.read();
+            } catch (JSONException e) {
+                Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
+                wifiLocations = new JSONArray();
+            }
 
             if (!mWifiManager.isWifiEnabled()) {
                 showToastMessage(R.string.internet_connection_disabled);
             } else {
-
                 if (wifiLocations.length() == 0) {
                     showToastMessage(R.string.no_data_found);
                 } else {
@@ -127,8 +144,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case HttpURLConnection.HTTP_CLIENT_TIMEOUT:
                 showToastMessage(R.string.send_request_timeout);
+                wifiLocationInput.closeFileInputStream();
                 break;
             case HttpURLConnection.HTTP_NOT_FOUND:
+                wifiLocationInput.closeFileInputStream();
+                break;
+            case HttpURLConnection.HTTP_INTERNAL_ERROR:
+                wifiLocationInput.closeFileInputStream();
+                showToastMessage(R.string.internal_server_error);
                 break;
             case INTEGER_ZERO:
                 showToastMessage(R.string.data_send_waiting_for_response);
@@ -137,13 +160,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             default:
                 showToastMessage(R.string.lost_internet_connection);
+                wifiLocationInput.closeFileInputStream();
                 break;
         }
     }
 
     private void showToastMessage(int text) {
-        mHandler.post(() ->
-                Toast.makeText(MainActivity.this, text, Toast.LENGTH_LONG).show());
+        mHandler.post(() -> Toast.makeText(MainActivity.this, text, Toast.LENGTH_LONG).show());
     }
 
     private void showIntroDialog() {

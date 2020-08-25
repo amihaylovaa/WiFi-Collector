@@ -19,12 +19,12 @@ public class WifiCollectorApplication extends Application {
     }
 
     public boolean isAppFirstTimeLaunched() {
-        String showDialogIntro = String.valueOf(R.string.launching_key);
+        String dialogIntro = String.valueOf(R.string.launching_key);
 
-        return !mSharedPreference.contains(showDialogIntro);
+        return !mSharedPreference.contains(dialogIntro);
     }
 
-    public void addIntroKey() {
+    public void addKeyForShownIntroDialog() {
         SharedPreferences.Editor editor = mSharedPreference.edit();
         String launchingKey = String.valueOf(R.string.launching_key);
 

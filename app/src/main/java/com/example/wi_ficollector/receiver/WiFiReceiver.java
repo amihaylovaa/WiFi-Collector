@@ -28,14 +28,17 @@ public class WiFiReceiver extends BroadcastReceiver {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
 
-        if (wifiManager != null && hasSuccess) {
+        if (hasSuccess) {
             List<ScanResult> scanResults = wifiManager.getScanResults();
-            setScanResults(scanResults);
+
+            if (scanResults != null) {
+                saveScanResults(scanResults);
+            }
         }
     }
 
-    private void setScanResults(List<ScanResult> scanResults) {
-        if (scanResults != null && shouldSaveScanResults()) {
+    private void saveScanResults(List<ScanResult> scanResults) {
+        if (shouldSaveScanResults()) {
             mWifiLocationOutput.write(mWifiLocation, scanResults);
         }
     }

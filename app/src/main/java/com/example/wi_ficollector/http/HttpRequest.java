@@ -12,9 +12,6 @@ import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import static com.example.wi_ficollector.utility.Constants.ACCEPT;
 import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
 import static com.example.wi_ficollector.utility.Constants.HOST;
@@ -28,18 +25,15 @@ import static com.example.wi_ficollector.utility.Constants.PROTOCOL;
 import static com.example.wi_ficollector.utility.Constants.TEN_SECONDS;
 import static com.example.wi_ficollector.utility.Constants.TYPE;
 
-@Getter
-@Setter
 public class HttpRequest {
 
     private OutputStream mOutputStream;
     private HttpURLConnection mHttpUrlConnection;
-    private URL mURL;
-    private int responseCode;
 
     public int send(JSONArray jsonArray) {
         String strings = jsonArray.toString();
         byte[] bytes = strings.getBytes();
+        URL mURL;
 
         try {
             mURL = new URL(PROTOCOL, HOST, PORT, PATH);
@@ -53,12 +47,7 @@ public class HttpRequest {
             return HttpURLConnection.HTTP_NOT_FOUND;
         }
 
-        mHttpUrlConnection.setDoOutput(true);
-        mHttpUrlConnection.setFixedLengthStreamingMode(bytes.length);
-        mHttpUrlConnection.setRequestProperty(CONTENT_TYPE, TYPE);
-        mHttpUrlConnection.setRequestProperty(ACCEPT, TYPE);
-        mHttpUrlConnection.setConnectTimeout(TEN_SECONDS);
-        mHttpUrlConnection.setReadTimeout(TEN_SECONDS);
+        createRequest(bytes);
 
         try {
             mOutputStream = mHttpUrlConnection.getOutputStream();
@@ -77,6 +66,12 @@ public class HttpRequest {
             return NEGATIVE_ONE;
         }
 
+        return getResponseCode();
+    }
+
+    private int getResponseCode() {
+        int responseCode;
+
         try {
             responseCode = mHttpUrlConnection.getResponseCode();
         } catch (IOException e) {
@@ -91,9 +86,20 @@ public class HttpRequest {
             } catch (IOException e) {
                 Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
             }
-        } else {
+        } else if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
             return HttpURLConnection.HTTP_NOT_FOUND;
+        } else {
+            return HttpURLConnection.HTTP_INTERNAL_ERROR;
         }
         return responseCode;
+    }
+
+    private void createRequest(byte[] bytes) {
+        mHttpUrlConnection.setDoOutput(true);
+        mHttpUrlConnection.setFixedLengthStreamingMode(bytes.length);
+        mHttpUrlConnection.setRequestProperty(CONTENT_TYPE, TYPE);
+        mHttpUrlConnection.setRequestProperty(ACCEPT, TYPE);
+        mHttpUrlConnection.setConnectTimeout(TEN_SECONDS);
+        mHttpUrlConnection.setReadTimeout(TEN_SECONDS);
     }
 }

@@ -17,7 +17,7 @@ import java.nio.channels.FileChannel;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static android.content.Context.MODE_APPEND;
@@ -30,13 +30,13 @@ public class WifiLocationOutput implements OutputOperation {
     private boolean isOutputSet;
     private XmlSerializer serializer;
     private Context mContext;
-    private Executor mExecutor;
+    private ExecutorService mExecutorService;
     private boolean areBasicTagsAdded;
     private int numOfWifiLocations;
 
     public WifiLocationOutput(Context mContext) {
         this.mContext = mContext;
-        this.mExecutor = Executors.newSingleThreadExecutor();
+        this.mExecutorService = Executors.newSingleThreadExecutor();
         this.serializer = Xml.newSerializer();
         this.isOutputSet = false;
         this.numOfWifiLocations = 0;
@@ -45,7 +45,7 @@ public class WifiLocationOutput implements OutputOperation {
 
     @Override
     public void write(WifiLocation wifiLocation, List<ScanResult> scanResults) {
-        mExecutor.execute(() -> {
+        mExecutorService.execute(() -> {
 
             double latitude = wifiLocation.getLatitude();
             double longitude = wifiLocation.getLongitude();
@@ -57,6 +57,7 @@ public class WifiLocationOutput implements OutputOperation {
                 wifiLocation.clearResults();
             } catch (IOException IOException) {
                 Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
+                return;
             }
         });
     }
@@ -77,13 +78,25 @@ public class WifiLocationOutput implements OutputOperation {
         }
     }
 
-    private void setOutput() throws IOException {
-        serializer.setOutput(mFileOutputStream, null);
+    private void setOutput() {
+        try {
+            serializer.setOutput(mFileOutputStream, null);
+        } catch (IOException e) {
+            isOutputSet = false;
+            return;
+        }
         isOutputSet = true;
     }
 
     private boolean isFileEmpty() throws IOException {
-        FileInputStream fileInputStream = mContext.openFileInput(FILE_NAME);
+        FileInputStream fileInputStream;
+
+        try {
+            fileInputStream = mContext.openFileInput(FILE_NAME);
+        } catch (FileNotFoundException e) {
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
+            return false;
+        }
         FileChannel channel = fileInputStream.getChannel();
 
         return channel.size() == 0;
@@ -123,6 +136,7 @@ public class WifiLocationOutput implements OutputOperation {
                         .startTag(NO_NAMESPACE, RSSI_TAG)
                         .text(String.valueOf(scanResult.level))
                         .endTag(NO_NAMESPACE, RSSI_TAG)
+                        // todo add escape for &
                         .startTag(NO_NAMESPACE, SSID_TAG)
                         .text(scanResult.SSID)
                         .endTag(NO_NAMESPACE, SSID_TAG)
@@ -143,7 +157,7 @@ public class WifiLocationOutput implements OutputOperation {
     public void openFileOutputStream() {
         try {
             mFileOutputStream = mContext.openFileOutput(FILE_NAME, MODE_APPEND);
-        } catch (FileNotFoundException exception) {
+        } catch (FileNotFoundException e) {
             Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_OUTPUT_MSG);
         }
     }
@@ -155,6 +169,10 @@ public class WifiLocationOutput implements OutputOperation {
         } catch (IOException e) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
+    }
+
+    public void stopExecutorService() {
+        mExecutorService.shutdown();
     }
 
     public int getNumOfWifiLocations() {

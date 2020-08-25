@@ -37,7 +37,7 @@ public class WifiLocationInput implements InputOperation {
     }
 
     @Override
-    public JSONArray read() {
+    public JSONArray read() throws JSONException {
 
         try {
             mFileInputStream = mContext.openFileInput(FILE_NAME);
@@ -58,21 +58,21 @@ public class WifiLocationInput implements InputOperation {
             String tagName = xpp.getName();
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                try {
-                    readGpx(eventType, tagName);
-                } catch (JSONException e) {
-                    return new JSONArray();
-                }
+                readGpx(eventType, tagName);
+
                 eventType = xpp.next();
                 tagName = xpp.getName();
             }
-        } catch (IOException | XmlPullParserException e) {
-            return wifiLocations;
+        } catch (XmlPullParserException e) {
+            Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
+        } catch (IOException e) {
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
+
         return wifiLocations;
     }
 
-    private void readGpx(int eventType, String tagName) throws JSONException {
+    private void readGpx(int eventType, String tagName) throws XmlPullParserException, IOException, JSONException {
         if (eventType == XmlPullParser.START_TAG) {
 
             if (tagName.equals(TRACK_POINT_TAG)) {
@@ -104,48 +104,34 @@ public class WifiLocationInput implements InputOperation {
         wifiLocation.put(LONGITUDE, longitude);
     }
 
-    private void readLocalDateTime() throws JSONException {
-        String dateTime = "";
-
-        try {
-            dateTime = xpp.nextText();
-        } catch (XmlPullParserException | IOException e) {
-            wifiLocation.put(DATE_TIME, LocalDateTime.now());
-            return;
-        }
+    private void readLocalDateTime() throws JSONException, XmlPullParserException, IOException {
+        String dateTime = xpp.nextText();
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime);
 
         wifiLocation.put(DATE_TIME, localDateTime);
     }
 
-    private void readExtensions() throws JSONException {
+    private void readExtensions() throws JSONException, XmlPullParserException, IOException {
         JSONArray wifiScanResults = getReadWifiScanList();
 
         wifiLocation.put(WIFI_SCAN_RESULTS, wifiScanResults);
         wifiLocations.put(wifiLocation);
     }
 
-    private JSONArray getReadWifiScanList() throws JSONException {
+    private JSONArray getReadWifiScanList() throws JSONException, IOException, XmlPullParserException {
+        int eventType = xpp.next();
+        String tagName = xpp.getName();
         JSONArray wifiScanResults = new JSONArray();
 
-        try {
-            int eventType = xpp.next();
-            String tagName = xpp.getName();
+        while (eventType != XmlPullParser.END_TAG && !tagName.equals(EXTENSIONS_TAG)) {
 
-            while (eventType != XmlPullParser.END_TAG && !tagName.equals(EXTENSIONS_TAG)) {
+            if (eventType == XmlPullParser.START_TAG && tagName.equals(WIFI_TAG)) {
+                JSONObject wifiScanResult = getWifiScanResult();
 
-                if (eventType == XmlPullParser.START_TAG && tagName.equals(WIFI_TAG)) {
-                    JSONObject wifiScanResult = getWifiScanResult();
-
-                    wifiScanResults.put(wifiScanResult);
-                }
-                eventType = xpp.next();
-                tagName = xpp.getName();
+                wifiScanResults.put(wifiScanResult);
             }
-        } catch (IOException e) {
-            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-        } catch (XmlPullParserException e) {
-            Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
+            eventType = xpp.next();
+            tagName = xpp.getName();
         }
         return wifiScanResults;
     }

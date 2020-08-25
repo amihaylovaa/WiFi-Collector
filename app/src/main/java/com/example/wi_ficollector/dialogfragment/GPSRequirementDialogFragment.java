@@ -48,7 +48,7 @@ public class GPSRequirementDialogFragment extends DialogFragment {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity, R.style.GPSDialogFragment)
                     .setMessage(R.string.gps_requirements_fragment_dialog_message)
                     .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
-                        gpsRequirementsListener.startGPSResolution();
+                        gpsRequirementsListener.startGPSRequirementsResolution();
                         dismiss();
                     });
 

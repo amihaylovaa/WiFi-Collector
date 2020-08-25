@@ -41,7 +41,7 @@ public class ForegroundWifiLocationService extends Service {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
-    private WifiLocationOutput mWifiLocationRepository;
+    private WifiLocationOutput mWifiLocationOutput;
     private WifiLocation mWifiLocation;
     private LocalBroadcastManager mLocalBroadcastManager;
     private Intent mLocalBroadcastIntent;
@@ -57,10 +57,10 @@ public class ForegroundWifiLocationService extends Service {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        mWifiLocationRepository = new WifiLocationOutput(this);
+        mWifiLocationOutput = new WifiLocationOutput(this);
         mWifiLocation = new WifiLocation();
         mGPSStateReceiver = new GPSStateReceiver();
-        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
+        mWifiReceiver = new WiFiReceiver(mWifiLocationOutput, mWifiLocation);
         mLocalBroadcastIntent = new Intent();
 
         startForeground(foregroundServiceNotificationId, foregroundServiceNotification);
@@ -139,7 +139,7 @@ public class ForegroundWifiLocationService extends Service {
     }
 
     private void sendBroadcast() {
-        int numOfWifiLocations = mWifiLocationRepository.getNumOfWifiLocations();
+        int numOfWifiLocations = mWifiLocationOutput.getNumOfWifiLocations();
 
         mLocalBroadcastIntent.putExtra(EXTRA_NAME, numOfWifiLocations);
         mLocalBroadcastIntent.setAction(ACTION);
@@ -158,6 +158,7 @@ public class ForegroundWifiLocationService extends Service {
         } catch (NullPointerException npe) {
             Log.d(NULL_POINTER_EXCEPTION_THROWN_TAG, NULL_POINTER_EXCEPTION_THROWN_MESSAGE);
         }
-        mWifiLocationRepository.closeFileOutputStream();
+        mWifiLocationOutput.closeFileOutputStream();
+        mWifiLocationOutput.stopExecutorService();
     }
 }

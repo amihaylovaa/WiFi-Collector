@@ -29,7 +29,7 @@ public final class Constants {
     public static final String ANDROID_GPS_DIALOG_SHOWN_KEY = "ANDROID_GPS_DIALOG_SHOWN";
     public static final String ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY = "ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN";
     public static final String ANDROID_SERVICE_STARTED_KEY = "ANDROID_SERVICE_STARTED";
-    public static final String GPS_DIALOG_TAG = "GPS Dialog";
+    public static final String GPS_REQUIREMENTS_DIALOG_TAG = "GPS Dialog";
     public static final String INTRO_DIALOG_TAG = "Intro dialog";
     public static final String ACTION = "UI_UPDATE";
     public static final String LATITUDE = "latitude";

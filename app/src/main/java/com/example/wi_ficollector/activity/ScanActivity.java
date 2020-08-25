@@ -57,6 +57,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         if (savedInstanceState != null) {
             restorePreviousState(savedInstanceState);
         }
+
         enableGPS();
     }
 
@@ -79,7 +80,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         super.onSaveInstanceState(outState);
 
         if (mGPSRequirementsDialogFragment != null && mGPSRequirementsDialogFragment.isAdded()) {
-            mFragmentManager.putFragment(outState, GPS_DIALOG_TAG, mGPSRequirementsDialogFragment);
+            mFragmentManager.putFragment(outState, GPS_REQUIREMENTS_DIALOG_TAG, mGPSRequirementsDialogFragment);
         }
         if (mLocationPermissionDialogFragment != null && mLocationPermissionDialogFragment.isAdded()) {
             mFragmentManager.putFragment(outState, LOCATION_PERMISSION_DIALOG_TAG, mLocationPermissionDialogFragment);
@@ -111,14 +112,14 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
     }
 
     @Override
-    public void startGPSResolution() {
+    public void startGPSRequirementsResolution() {
         try {
             if (mResolvableApiException != null) {
                 mResolvableApiException.startResolutionForResult(ScanActivity.this, LOCATION_SETTINGS_CODE);
                 isGPSRequestDialogShown = true;
             }
         } catch (IntentSender.SendIntentException sendEx) {
-            Toast.makeText(ScanActivity.this, R.string.send_intent_exception ,Toast.LENGTH_SHORT).show();
+            Toast.makeText(ScanActivity.this, R.string.send_intent_exception, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -221,7 +222,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
             mGPSRequirementsDialogFragment = GPSRequirementDialogFragment.newInstance();
 
             mGPSRequirementsDialogFragment.setCancelable(false);
-            mGPSRequirementsDialogFragment.show(mFragmentManager, GPS_DIALOG_TAG);
+            mGPSRequirementsDialogFragment.show(mFragmentManager, GPS_REQUIREMENTS_DIALOG_TAG);
         }
     }
 
@@ -231,7 +232,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         isServiceStarted = savedInstanceState.getBoolean(ANDROID_SERVICE_STARTED_KEY);
 
         mGPSRequirementsDialogFragment = (GPSRequirementDialogFragment) mFragmentManager
-                .getFragment(savedInstanceState, GPS_DIALOG_TAG);
+                .getFragment(savedInstanceState, GPS_REQUIREMENTS_DIALOG_TAG);
 
         mLocationPermissionDialogFragment = (LocationRequestRationaleDialogFragment) mFragmentManager
                 .getFragment(savedInstanceState, LOCATION_PERMISSION_DIALOG_TAG);
@@ -255,6 +256,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(ScanActivity.this);
         tv = findViewById(R.id.numberOfWifiNetworks);
     }
+
     private void stopForegroundService() {
         stopService(mIntent);
         isServiceStarted = false;
