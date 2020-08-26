@@ -23,7 +23,6 @@ import java.util.concurrent.Executors;
 import static android.content.Context.MODE_APPEND;
 import static com.example.wi_ficollector.utility.Constants.*;
 
-// TODO FIX EXCEP
 public class WifiLocationOutput implements OutputOperation {
 
     private FileOutputStream mFileOutputStream;
@@ -51,7 +50,7 @@ public class WifiLocationOutput implements OutputOperation {
             double longitude = wifiLocation.getLongitude();
 
             try {
-                prepareWrite();
+                prepareWriting();
                 writeTrackPoint(latitude, longitude);
                 writeExtensions(scanResults);
                 wifiLocation.clearResults();
@@ -62,7 +61,32 @@ public class WifiLocationOutput implements OutputOperation {
         });
     }
 
-    private void prepareWrite() throws IOException {
+    public void openFileOutputStream() {
+        try {
+            mFileOutputStream = mContext.openFileOutput(FILE_NAME, MODE_APPEND);
+        } catch (FileNotFoundException e) {
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_OUTPUT_MSG);
+        }
+    }
+
+    public void closeFileOutputStream() {
+        try {
+            serializer.endDocument();
+            mFileOutputStream.close();
+        } catch (IOException e) {
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
+        }
+    }
+
+    public void stopExecutorService() {
+        mExecutorService.shutdown();
+    }
+
+    public int getNumOfWifiLocations() {
+        return numOfWifiLocations;
+    }
+
+    private void prepareWriting() throws IOException {
         if (isFileEmpty()) {
             addGPXDeclaration();
             setOutput();
@@ -95,7 +119,7 @@ public class WifiLocationOutput implements OutputOperation {
             fileInputStream = mContext.openFileInput(FILE_NAME);
         } catch (FileNotFoundException e) {
             Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
-            return false;
+            return true;
         }
         FileChannel channel = fileInputStream.getChannel();
 
@@ -115,7 +139,8 @@ public class WifiLocationOutput implements OutputOperation {
     private void writeTrackPoint(double latitude, double longitude) throws IOException {
         String time = LocalDateTime.now().toString();
 
-        serializer.startTag(NO_NAMESPACE, TRACK_POINT_TAG)
+        serializer
+                .startTag(NO_NAMESPACE, TRACK_POINT_TAG)
                 .attribute(NO_NAMESPACE, LATITUDE_ATTRIBUTE, String.valueOf(latitude))
                 .attribute(NO_NAMESPACE, LONGITUDE_ATTRIBUTE, String.valueOf(longitude))
                 .startTag(NO_NAMESPACE, TIME_TAG)
@@ -136,7 +161,6 @@ public class WifiLocationOutput implements OutputOperation {
                         .startTag(NO_NAMESPACE, RSSI_TAG)
                         .text(String.valueOf(scanResult.level))
                         .endTag(NO_NAMESPACE, RSSI_TAG)
-                        // todo add escape for &
                         .startTag(NO_NAMESPACE, SSID_TAG)
                         .text(scanResult.SSID)
                         .endTag(NO_NAMESPACE, SSID_TAG)
@@ -152,30 +176,5 @@ public class WifiLocationOutput implements OutputOperation {
         serializer.endTag(NO_NAMESPACE, EXTENSIONS_TAG);
         serializer.endTag(NO_NAMESPACE, TRACK_POINT_TAG);
         serializer.flush();
-    }
-
-    public void openFileOutputStream() {
-        try {
-            mFileOutputStream = mContext.openFileOutput(FILE_NAME, MODE_APPEND);
-        } catch (FileNotFoundException e) {
-            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_OUTPUT_MSG);
-        }
-    }
-
-    public void closeFileOutputStream() {
-        try {
-            serializer.endDocument();
-            mFileOutputStream.close();
-        } catch (IOException e) {
-            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-        }
-    }
-
-    public void stopExecutorService() {
-        mExecutorService.shutdown();
-    }
-
-    public int getNumOfWifiLocations() {
-        return numOfWifiLocations;
     }
 }

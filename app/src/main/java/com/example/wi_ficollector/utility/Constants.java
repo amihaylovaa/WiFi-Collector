@@ -14,14 +14,14 @@ public final class Constants {
     public static final int LOCATION_SETTINGS_CODE = 104;
     public static final int FIVE_SECONDS = 5000;
     public static final int THREE_SECONDS = 3000;
-    public static final double ZERO = 0.00;
+    public static final double DOUBLE_ZERO = 0.00;
     public static final String FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String PROTOCOL = "http";
-    public static final String HOST = "xxx.xxx.x.xxx";
+    public static final String HOST = "0";
     public static final int PORT = 0;
     public static final String PATH = "/wifi/locations";
     public static final int TEN_SECONDS = 10_000;
-    public static final int NEGATIVE_ONE = -1;
+    public static final int NEGATIVE_INTEGER = -1;
     public static final String CONTENT_TYPE = "Content-type";
     public static final String ACCEPT = "Accept";
     public static final String TYPE = "application/json";
@@ -40,7 +40,7 @@ public final class Constants {
     public static final String SCAN_RESULTS_AVAILABLE_ACTION = WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;
     public static final String PROVIDERS_CHANGED_ACTION = LocationManager.PROVIDERS_CHANGED_ACTION;
     public static final String DATE_TIME = "localDateTime";
-    public static final int INTEGER_ZERO = 0;
+    public static final int ZERO_INTEGER = 0;
     public static final String XML_PULL_PARSER_EXCEPTION_TAG = "XML pull parser exception has been thrown";
     public static final String XML_PULL_PARSER_EXCEPTION_MESSAGE = "An exception occurred during working with xml pull parser";
     public static final String JSON_EXCEPTION_TAG = "JSON exception has been thrown";

@@ -56,5 +56,4 @@ public class IntroDialogFragment extends DialogFragment {
         }
         return mAlertDialog;
     }
-
 }

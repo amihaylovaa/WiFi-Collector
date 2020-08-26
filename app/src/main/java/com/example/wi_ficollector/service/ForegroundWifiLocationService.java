@@ -127,7 +127,7 @@ public class ForegroundWifiLocationService extends Service {
                 for (Location location : locations) {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
-                    if (latitude != ZERO && longitude != ZERO) {
+                    if (latitude != DOUBLE_ZERO && longitude != DOUBLE_ZERO) {
                         mWifiLocation.setLocalDateTime(LocalDateTime.now());
                         mWifiLocation.setLatitude(latitude);
                         mWifiLocation.setLongitude(longitude);
@@ -147,17 +147,17 @@ public class ForegroundWifiLocationService extends Service {
     }
 
     private void stopServiceWork() {
+        if (mFusedLocationProviderClient != null) {
+            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        }
+
         try {
             unregisterReceiver(mWifiReceiver);
             unregisterReceiver(mGPSStateReceiver);
         } catch (IllegalArgumentException illegalArgumentException) {
             Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MSG);
         }
-        try {
-            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-        } catch (NullPointerException npe) {
-            Log.d(NULL_POINTER_EXCEPTION_THROWN_TAG, NULL_POINTER_EXCEPTION_THROWN_MESSAGE);
-        }
+
         mWifiLocationOutput.closeFileOutputStream();
         mWifiLocationOutput.stopExecutorService();
     }

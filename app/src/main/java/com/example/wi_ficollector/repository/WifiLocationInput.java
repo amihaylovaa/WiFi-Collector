@@ -68,11 +68,31 @@ public class WifiLocationInput implements InputOperation {
         } catch (IOException e) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
-
         return wifiLocations;
     }
 
-    private void readGpx(int eventType, String tagName) throws XmlPullParserException, IOException, JSONException {
+    public void deleteLocalStoredData() {
+        File file = new File(mContext.getFilesDir(), FILE_NAME);
+        Path path = Paths.get(file.toString());
+
+        if (file.exists()) {
+            try {
+                Files.delete(path);
+            } catch (IOException e) {
+                Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_INPUT_MSG);
+            }
+        }
+    }
+
+    public void closeFileInputStream() {
+        try {
+            mFileInputStream.close();
+        } catch (IOException e) {
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_INPUT_MSG);
+        }
+    }
+
+    public void readGpx(int eventType, String tagName) throws XmlPullParserException, IOException, JSONException {
         if (eventType == XmlPullParser.START_TAG) {
 
             if (tagName.equals(TRACK_POINT_TAG)) {
@@ -87,7 +107,7 @@ public class WifiLocationInput implements InputOperation {
         }
     }
 
-    private void prepareReading() throws XmlPullParserException {
+    public void prepareReading() throws XmlPullParserException {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
 
@@ -95,7 +115,7 @@ public class WifiLocationInput implements InputOperation {
         xpp.setInput(mFileInputStream, ENCODING);
     }
 
-    private void readLocation() throws JSONException {
+    public void readLocation() throws JSONException {
         double latitude = Double.parseDouble(xpp.getAttributeValue(null, LATITUDE_ATTRIBUTE));
         double longitude = Double.parseDouble(xpp.getAttributeValue(null, LONGITUDE_ATTRIBUTE));
         wifiLocation = new JSONObject();
@@ -104,21 +124,21 @@ public class WifiLocationInput implements InputOperation {
         wifiLocation.put(LONGITUDE, longitude);
     }
 
-    private void readLocalDateTime() throws JSONException, XmlPullParserException, IOException {
+    public void readLocalDateTime() throws JSONException, XmlPullParserException, IOException {
         String dateTime = xpp.nextText();
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime);
 
         wifiLocation.put(DATE_TIME, localDateTime);
     }
 
-    private void readExtensions() throws JSONException, XmlPullParserException, IOException {
-        JSONArray wifiScanResults = getReadWifiScanList();
+    public void readExtensions() throws JSONException, XmlPullParserException, IOException {
+        JSONArray wifiScanResults = getWifiScanResults();
 
         wifiLocation.put(WIFI_SCAN_RESULTS, wifiScanResults);
         wifiLocations.put(wifiLocation);
     }
 
-    private JSONArray getReadWifiScanList() throws JSONException, IOException, XmlPullParserException {
+    public JSONArray getWifiScanResults() throws JSONException, IOException, XmlPullParserException {
         int eventType = xpp.next();
         String tagName = xpp.getName();
         JSONArray wifiScanResults = new JSONArray();
@@ -136,7 +156,7 @@ public class WifiLocationInput implements InputOperation {
         return wifiScanResults;
     }
 
-    private JSONObject getWifiScanResult() throws IOException, XmlPullParserException, JSONException {
+    public JSONObject getWifiScanResult() throws IOException, XmlPullParserException, JSONException {
         JSONObject wifiScanResult = new JSONObject();
         int eventType = xpp.next();
         String tagName = xpp.getName();
@@ -166,26 +186,5 @@ public class WifiLocationInput implements InputOperation {
             tagName = xpp.getName();
         }
         return wifiScanResult;
-    }
-
-    public void deleteLocalStoredData() {
-        File file = new File(mContext.getFilesDir(), FILE_NAME);
-        Path path = Paths.get(file.toString());
-
-        if (file.exists()) {
-            try {
-                Files.delete(path);
-            } catch (IOException e) {
-                Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_INPUT_MSG);
-            }
-        }
-    }
-
-    public void closeFileInputStream() {
-        try {
-            mFileInputStream.close();
-        } catch (IOException e) {
-            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_INPUT_MSG);
-        }
     }
 }

@@ -31,15 +31,9 @@ public class WiFiReceiver extends BroadcastReceiver {
         if (hasSuccess) {
             List<ScanResult> scanResults = wifiManager.getScanResults();
 
-            if (scanResults != null) {
-                saveScanResults(scanResults);
+            if (shouldSaveScanResults()) {
+                mWifiLocationOutput.write(mWifiLocation, scanResults);
             }
-        }
-    }
-
-    private void saveScanResults(List<ScanResult> scanResults) {
-        if (shouldSaveScanResults()) {
-            mWifiLocationOutput.write(mWifiLocation, scanResults);
         }
     }
 
@@ -52,6 +46,6 @@ public class WiFiReceiver extends BroadcastReceiver {
             difference = ChronoUnit.SECONDS.between(locationTime, networksTime);
         }
 
-        return (difference <= 5L && difference != -1L);
+        return (difference != -1L && difference <= 5L);
     }
 }

@@ -30,7 +30,7 @@ import java.net.HttpURLConnection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.example.wi_ficollector.utility.Constants.INTEGER_ZERO;
+import static com.example.wi_ficollector.utility.Constants.ZERO_INTEGER;
 import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
 import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_MESSAGE;
 import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_TAG;
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 wifiLocationInput.closeFileInputStream();
                 showToastMessage(R.string.internal_server_error);
                 break;
-            case INTEGER_ZERO:
+            case ZERO_INTEGER:
                 showToastMessage(R.string.data_send_waiting_for_response);
                 wifiLocationInput.closeFileInputStream();
                 wifiLocationInput.deleteLocalStoredData();
@@ -165,8 +165,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void showToastMessage(int text) {
-        mHandler.post(() -> Toast.makeText(MainActivity.this, text, Toast.LENGTH_LONG).show());
+    private void showToastMessage(int message) {
+        mHandler.post(() -> Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show());
     }
 
     private void showIntroDialog() {

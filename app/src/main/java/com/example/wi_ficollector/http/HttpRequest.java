@@ -15,10 +15,10 @@ import java.net.URL;
 import static com.example.wi_ficollector.utility.Constants.ACCEPT;
 import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
 import static com.example.wi_ficollector.utility.Constants.HOST;
-import static com.example.wi_ficollector.utility.Constants.INTEGER_ZERO;
+import static com.example.wi_ficollector.utility.Constants.ZERO_INTEGER;
 import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_MESSAGE;
 import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_TAG;
-import static com.example.wi_ficollector.utility.Constants.NEGATIVE_ONE;
+import static com.example.wi_ficollector.utility.Constants.NEGATIVE_INTEGER;
 import static com.example.wi_ficollector.utility.Constants.PATH;
 import static com.example.wi_ficollector.utility.Constants.PORT;
 import static com.example.wi_ficollector.utility.Constants.PROTOCOL;
@@ -30,9 +30,8 @@ public class HttpRequest {
     private OutputStream mOutputStream;
     private HttpURLConnection mHttpUrlConnection;
 
-    public int send(JSONArray jsonArray) {
-        String strings = jsonArray.toString();
-        byte[] bytes = strings.getBytes();
+    public int send(JSONArray wifiLocations) {
+        byte[] bytes = wifiLocations.toString().getBytes();
         URL mURL;
 
         try {
@@ -61,22 +60,22 @@ public class HttpRequest {
             mOutputStream.flush();
         } catch (SocketException e) {
             mHttpUrlConnection.disconnect();
-            return NEGATIVE_ONE;
+            return NEGATIVE_INTEGER;
         } catch (IOException e) {
-            return NEGATIVE_ONE;
+            return NEGATIVE_INTEGER;
         }
 
         return getResponseCode();
     }
 
-    private int getResponseCode() {
+    public int getResponseCode() {
         int responseCode;
 
         try {
             responseCode = mHttpUrlConnection.getResponseCode();
         } catch (IOException e) {
             mHttpUrlConnection.disconnect();
-            return INTEGER_ZERO;
+            return ZERO_INTEGER;
         }
 
         if (responseCode == HttpURLConnection.HTTP_OK) {

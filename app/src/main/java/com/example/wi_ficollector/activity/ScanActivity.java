@@ -134,7 +134,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         isLocationRequestDialogShown = false;
     }
 
-    private void handleFineLocationPermissionRequestResults(String permission, int grantResult) {
+    public void handleFineLocationPermissionRequestResults(String permission, int grantResult) {
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
             startForegroundService();
         } else {
@@ -145,7 +145,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         }
     }
 
-    private void startForegroundService() {
+    public void startForegroundService() {
         if (!isServiceStarted) {
             isServiceStarted = true;
             IntentFilter intentFilter = new IntentFilter(ACTION);
@@ -156,6 +156,18 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
             } else {
                 startService(mIntent);
             }
+        }
+    }
+
+    public void stopForegroundService() {
+        stopService(mIntent);
+
+        isServiceStarted = false;
+
+        try {
+            mLocalBroadcastManager.unregisterReceiver(mUIUpdateReceiver);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MSG);
         }
     }
 
@@ -193,8 +205,8 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
     }
 
     public boolean isFineLocationPermissionGranted() {
-        return ContextCompat.checkSelfPermission
-                (ScanActivity.this, FINE_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission(ScanActivity.this,
+                FINE_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED;
     }
 
     public void requestLocationPermission() {
@@ -217,7 +229,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         }
     }
 
-    private void showGPSRequirements() {
+    public void showGPSRequirements() {
         if (!isGPSRequestDialogShown && mGPSRequirementsDialogFragment == null) {
             mGPSRequirementsDialogFragment = GPSRequirementDialogFragment.newInstance();
 
@@ -226,7 +238,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         }
     }
 
-    private void restorePreviousState(Bundle savedInstanceState) {
+    public void restorePreviousState(Bundle savedInstanceState) {
         isGPSRequestDialogShown = savedInstanceState.getBoolean(ANDROID_GPS_DIALOG_SHOWN_KEY);
         isLocationRequestDialogShown = savedInstanceState.getBoolean(ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY);
         isServiceStarted = savedInstanceState.getBoolean(ANDROID_SERVICE_STARTED_KEY);
@@ -255,15 +267,5 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         mIntent = new Intent(ScanActivity.this, ForegroundWifiLocationService.class);
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(ScanActivity.this);
         tv = findViewById(R.id.numberOfWifiNetworks);
-    }
-
-    private void stopForegroundService() {
-        stopService(mIntent);
-        isServiceStarted = false;
-        try {
-            mLocalBroadcastManager.unregisterReceiver(mUIUpdateReceiver);
-        } catch (IllegalArgumentException illegalArgumentException) {
-            Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MSG);
-        }
     }
 }
