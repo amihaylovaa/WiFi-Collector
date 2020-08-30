@@ -161,7 +161,6 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
 
     public void stopForegroundService() {
         stopService(mIntent);
-
         isServiceStarted = false;
 
         try {

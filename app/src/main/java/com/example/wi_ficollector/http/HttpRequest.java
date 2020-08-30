@@ -13,6 +13,7 @@ import java.net.SocketException;
 import java.net.URL;
 
 import static com.example.wi_ficollector.utility.Constants.ACCEPT;
+import static com.example.wi_ficollector.utility.Constants.CONNECTION_RESET_EXCEPTION_MESSAGE;
 import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
 import static com.example.wi_ficollector.utility.Constants.HOST;
 import static com.example.wi_ficollector.utility.Constants.ZERO_INTEGER;
@@ -73,6 +74,14 @@ public class HttpRequest {
 
         try {
             responseCode = mHttpUrlConnection.getResponseCode();
+        } catch (SocketException e) {
+            if (e.getMessage().equals(CONNECTION_RESET_EXCEPTION_MESSAGE)) {
+                mHttpUrlConnection.disconnect();
+                return HttpURLConnection.HTTP_INTERNAL_ERROR;
+            } else {
+                mHttpUrlConnection.disconnect();
+                return ZERO_INTEGER;
+            }
         } catch (IOException e) {
             mHttpUrlConnection.disconnect();
             return ZERO_INTEGER;
