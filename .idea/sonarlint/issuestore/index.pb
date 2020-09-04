@@ -1,10 +1,6 @@
 
 w
-Gapp/src/main/java/com/example/wi_ficollector/activity/MainActivity.java,e\2\e2db098d5c9e31d4003428fe7271f46ff70c94d1
-w
 Gapp/src/main/java/com/example/wi_ficollector/receiver/WiFiReceiver.java,b\d\bdbe09c60829f8d76087b787a712b543939067a1
-P
- app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
 q
 Aapp/src/test/java/com/example/wi_ficollector/ExampleUnitTest.java,6\3\63fa3746d7db1f66a2211f72a2539379bfdd5cb1
 €
@@ -32,8 +28,6 @@ X
 local.properties,0\7\0712df971a99ac4d2fccb8e0fb19f377f3374cca
 A
 gradle.properties,2\a\2afbb999f001938c88fa43fc2ef52abf0f8213e4
-w
-Gapp/src/main/java/com/example/wi_ficollector/activity/ScanActivity.java,6\9\696c04046a80eb0383cef7986767bf95d601e53f
 v
 Fapp/src/main/java/com/example/wi_ficollector/wrapper/WiFiLocation.java,9\d\9da8f6d4e6c20597a75bd3970137bc93f54615b0
 v

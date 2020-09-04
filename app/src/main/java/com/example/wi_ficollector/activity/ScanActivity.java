@@ -24,7 +24,7 @@ import com.example.wi_ficollector.dialogfragment.LocationRequestRationaleDialogF
 import com.example.wi_ficollector.dialogfragment.GPSRequirementDialogFragment;
 
 import com.example.wi_ficollector.listener.GPSRequirementsListener;
-import com.example.wi_ficollector.listener.LocationRequestRationaleListener;
+import com.example.wi_ficollector.listener.LocationPermissionRequestRationaleListener;
 import com.example.wi_ficollector.service.ForegroundWifiLocationService;
 
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -33,7 +33,7 @@ import com.google.android.gms.tasks.Task;
 
 import static com.example.wi_ficollector.utility.Constants.*;
 
-public class ScanActivity extends AppCompatActivity implements GPSRequirementsListener, LocationRequestRationaleListener {
+public class ScanActivity extends AppCompatActivity implements GPSRequirementsListener, LocationPermissionRequestRationaleListener {
 
     private boolean isLocationRequestDialogShown;
     private boolean isGPSRequestDialogShown;
@@ -106,7 +106,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         for (int i = 0; i < permissions.length; i++) {
             if (requestCode == FINE_LOCATION_PERMISSION_CODE) {
                 isLocationRequestDialogShown = true;
-                handleFineLocationPermissionRequestResults(permissions[i], grantResults[i]);
+                handleFineLocationPermissionRequestResult(permissions[i], grantResults[i]);
             }
         }
     }
@@ -134,7 +134,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         isLocationRequestDialogShown = false;
     }
 
-    public void handleFineLocationPermissionRequestResults(String permission, int grantResult) {
+    public void handleFineLocationPermissionRequestResult(String permission, int grantResult) {
         if (grantResult == PackageManager.PERMISSION_GRANTED) {
             startForegroundService();
         } else {
@@ -147,7 +147,6 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
 
     public void startForegroundService() {
         if (!isServiceStarted) {
-            isServiceStarted = true;
             IntentFilter intentFilter = new IntentFilter(ACTION);
             mLocalBroadcastManager.registerReceiver(mUIUpdateReceiver, intentFilter);
 
@@ -156,6 +155,7 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
             } else {
                 startService(mIntent);
             }
+            isServiceStarted = true;
         }
     }
 
@@ -183,19 +183,6 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
                 showGPSRequirements();
             }
         }).addOnSuccessListener(e -> requestLocationPermission());
-    }
-
-    private LocationSettingsRequest createLocationSettingsRequest(LocationRequest locationRequest) {
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-
-        return builder.addLocationRequest(locationRequest).build();
-    }
-
-    private LocationRequest createLocationRequest() {
-        return new LocationRequest()
-                .setFastestInterval(THREE_SECONDS)
-                .setInterval(FIVE_SECONDS)
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     public void requestFineLocationPermission() {
@@ -249,6 +236,21 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
                 .getFragment(savedInstanceState, LOCATION_PERMISSION_DIALOG_TAG);
     }
 
+    private LocationSettingsRequest createLocationSettingsRequest(LocationRequest locationRequest) {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+
+        return builder
+                .addLocationRequest(locationRequest)
+                .build();
+    }
+
+    private LocationRequest createLocationRequest() {
+        return new LocationRequest()
+                .setFastestInterval(THREE_SECONDS)
+                .setInterval(FIVE_SECONDS)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
     private void implementUIUpdateReceiver() {
         mUIUpdateReceiver = new BroadcastReceiver() {
             @Override
@@ -262,6 +264,9 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
     }
 
     private void initializeFields() {
+        isGPSRequestDialogShown = false;
+        isServiceStarted = false;
+        isLocationRequestDialogShown = false;
         mFragmentManager = getSupportFragmentManager();
         mIntent = new Intent(ScanActivity.this, ForegroundWifiLocationService.class);
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(ScanActivity.this);

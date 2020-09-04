@@ -1,7 +1,6 @@
 package com.example.wi_ficollector.listener;
 
-public interface LocationRequestRationaleListener {
+public interface LocationPermissionRequestRationaleListener {
     void agree();
-
     void disagree();
 }

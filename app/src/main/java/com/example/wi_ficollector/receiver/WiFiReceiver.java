@@ -40,12 +40,12 @@ public class WiFiReceiver extends BroadcastReceiver {
     private boolean shouldSaveScanResults() {
         LocalDateTime networksTime = LocalDateTime.now();
         LocalDateTime locationTime = mWifiLocation.getLocalDateTime();
-        long difference = -1L;
+        long timeDifference = -1L;
 
         if (locationTime != null) {
-            difference = ChronoUnit.SECONDS.between(locationTime, networksTime);
+            timeDifference = ChronoUnit.SECONDS.between(locationTime, networksTime);
         }
 
-        return (difference != -1L && difference <= 5L);
+        return (timeDifference != -1L && timeDifference <= 5L);
     }
 }

@@ -14,10 +14,9 @@ public final class Constants {
     public static final int LOCATION_SETTINGS_CODE = 104;
     public static final int FIVE_SECONDS = 5000;
     public static final int THREE_SECONDS = 3000;
-    public static final double DOUBLE_ZERO = 0.00;
     public static final String FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String PROTOCOL = "http";
-    public static final String HOST = "";
+    public static final String HOST = "xxx";
     public static final int PORT = 0;
     public static final String PATH = "/wifi/locations";
     public static final int TEN_SECONDS = 10_000;
@@ -52,8 +51,6 @@ public final class Constants {
     public static final String IO_EXCEPTION_INPUT_MSG = "File does not exist, operation could not be processed";
     public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG = "Illegal argument exception thrown";
     public static final String ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MSG = "Broadcast receiver has not been registered";
-    public static final String NULL_POINTER_EXCEPTION_THROWN_TAG = "Null pointer exception thrown";
-    public static final String NULL_POINTER_EXCEPTION_THROWN_MESSAGE = "Listener has not been registered and is null";
     public static final String IO_EXCEPTION_THROWN_TAG = "IO exception thrown";
     public static final String IO_EXCEPTION_THROWN_MESSAGE = "IO exception has been thrown during working with file stream";
     public static final String GPX_TAG = "gpx";

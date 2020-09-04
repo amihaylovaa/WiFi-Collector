@@ -18,24 +18,18 @@ public class IntroDialogFragment extends DialogFragment {
     private AlertDialog mAlertDialog;
     private IntroDialogFragmentListener introDialogFragmentListener;
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        introDialogFragmentListener = (IntroDialogFragmentListener) context;
+    public IntroDialogFragment() {
+        // Required during dialog fragment's recreation
     }
 
     public static IntroDialogFragment newInstance() {
         return new IntroDialogFragment();
     }
 
-    public IntroDialogFragment() {
-        // Needed when dialog fragment is recreated
-    }
-
     @Override
-    public void onDetach() {
-        super.onDetach();
-        introDialogFragmentListener = null;
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        introDialogFragmentListener = (IntroDialogFragmentListener) context;
     }
 
     @NonNull
@@ -55,5 +49,11 @@ public class IntroDialogFragment extends DialogFragment {
             mAlertDialog.setCanceledOnTouchOutside(false);
         }
         return mAlertDialog;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        introDialogFragmentListener = null;
     }
 }

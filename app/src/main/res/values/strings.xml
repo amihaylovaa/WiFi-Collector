@@ -24,11 +24,11 @@
     <string name="internet_connection_disabled">Please, enable Internet and try again</string>
     <string name="send_data_success">Data has been successfully sent</string>
     <string name="no_data_found">Nothing found, please start scanning</string>
-    <string name="send_request_timeout">Data can not be sent, please try later</string>
-    <string name="lost_internet_connection">Lost Internet connection, please try again</string>
+    <string name="send_request_timeout">Can not , please try later</string>
+    <string name="lost_internet_connection">Lost Internet connection, please try again later</string>
     <string name="not_found_resource">Not found resource</string>
     <string name="send_intent_exception">Unexpected error occurred, please wait</string>
     <string name="data_send_waiting_for_response">Data has been sent, waiting for response</string>
-    <string name="internal_server_error">Unrecoverable error ocurred</string>
+    <string name="internal_server_error">Unrecoverable error occurred</string>
 
 </resources>

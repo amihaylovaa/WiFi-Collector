@@ -19,24 +19,19 @@ public class GPSRequirementDialogFragment extends DialogFragment {
     private AlertDialog mAlertDialog;
     private GPSRequirementsListener gpsRequirementsListener;
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        gpsRequirementsListener = (GPSRequirementsListener) context;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        gpsRequirementsListener = null;
-    }
 
     public GPSRequirementDialogFragment() {
-        // Needed when dialog fragment is recreated
+        // Required during dialog fragment's recreation
     }
 
     public static GPSRequirementDialogFragment newInstance() {
         return new GPSRequirementDialogFragment();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        gpsRequirementsListener = (GPSRequirementsListener) context;
     }
 
     @NonNull
@@ -56,5 +51,11 @@ public class GPSRequirementDialogFragment extends DialogFragment {
             mAlertDialog.setCanceledOnTouchOutside(false);
         }
         return mAlertDialog;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        gpsRequirementsListener = null;
     }
 }

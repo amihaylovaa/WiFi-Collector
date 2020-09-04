@@ -127,12 +127,11 @@ public class ForegroundWifiLocationService extends Service {
                 for (Location location : locations) {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
-                    if (latitude != DOUBLE_ZERO && longitude != DOUBLE_ZERO) {
-                        mWifiLocation.setLocalDateTime(LocalDateTime.now());
-                        mWifiLocation.setLatitude(latitude);
-                        mWifiLocation.setLongitude(longitude);
-                        mWifiManager.startScan();
-                    }
+
+                    mWifiLocation.setLocalDateTime(LocalDateTime.now());
+                    mWifiLocation.setLatitude(latitude);
+                    mWifiLocation.setLongitude(longitude);
+                    mWifiManager.startScan();
                 }
             }
         };

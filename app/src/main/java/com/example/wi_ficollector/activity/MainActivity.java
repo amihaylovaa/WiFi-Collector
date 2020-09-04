@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void sendLocalStoredData() {
         mExecutorService.execute(() -> {
+
             WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
             JSONArray wifiLocations;
 
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (!mWifiManager.isWifiEnabled()) {
                 showToastMessage(R.string.internet_connection_disabled);
             } else {
-                if (wifiLocations.length() == 0) {
+                if (wifiLocations.length() == ZERO_INTEGER) {
                     showToastMessage(R.string.no_data_found);
                 } else {
                     HttpRequest httpRequest = new HttpRequest();
