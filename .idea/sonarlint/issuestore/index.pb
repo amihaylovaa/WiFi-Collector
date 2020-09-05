@@ -54,8 +54,6 @@ Oapp/src/main/java/com/example/wi_ficollector/repository/WifiLocationOutput.java
 Kapp/src/main/java/com/example/wi_ficollector/repository/InputOperation.java,0\e\0edab10c40df7a4b69a94e007ebdd0c08f4bcb81
 ~
 Napp/src/main/java/com/example/wi_ficollector/repository/WifiLocationInput.java,8\e\8e7b71769df34e6dcad7a4859b65e802875b949f
-x
-Happ/src/main/java/com/example/wi_ficollector/wrapper/WifiScanResult.java,6\0\601f79ca40edbfadf5607c7f43ea7a83a74440bd
 s
 Capp/src/main/java/com/example/wi_ficollector/utility/Constants.java,b\3\b3cc4c37fa489bcb550488d9448d07a92c36ef4f
 r
@@ -68,5 +66,11 @@ Vapp/src/main/java/com/example/wi_ficollector/application/WifiCollectorApplicati
 Rapp/src/main/java/com/example/wi_ficollector/listener/GPSRequirementsListener.java,6\2\6205d47cfa304a81d0a5238234b708f56c60e999
 †
 Vapp/src/main/java/com/example/wi_ficollector/listener/IntroDialogFragmentListener.java,9\a\9ab3848e5bfb55be08f8d36cb362a56e16d3746f
-‹
-[app/src/main/java/com/example/wi_ficollector/listener/LocationRequestRationaleListener.java,b\2\b295e2ade911898fd5c8e6825d74d4f7d16fc551
+•
+eapp/src/main/java/com/example/wi_ficollector/listener/LocationPermissionRequestRationaleListener.java,5\b\5b0802d139ff047778cec4f22dd00a955d44be30
+P
+ app/src/main/AndroidManifest.xml,8\c\8c55c3ccc257e5907959013f99656e4c8ec3903e
+w
+Gapp/src/main/java/com/example/wi_ficollector/activity/MainActivity.java,e\2\e2db098d5c9e31d4003428fe7271f46ff70c94d1
+w
+Gapp/src/main/java/com/example/wi_ficollector/activity/ScanActivity.java,6\9\696c04046a80eb0383cef7986767bf95d601e53f

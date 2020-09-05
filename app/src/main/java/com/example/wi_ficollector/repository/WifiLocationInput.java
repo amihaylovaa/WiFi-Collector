@@ -36,6 +36,7 @@ public class WifiLocationInput implements InputOperation {
         mWiFiLocations = new JSONArray();
     }
 
+
     @Override
     public JSONArray read() throws JSONException {
         try {

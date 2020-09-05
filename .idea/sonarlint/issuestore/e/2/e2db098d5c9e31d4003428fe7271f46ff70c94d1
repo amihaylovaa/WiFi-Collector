@@ -1,0 +1,20 @@
+
+Y	java:S125"<This block of commented-out lines of code should be removed.(¨·…ú8£‚ÒúÅ.
+S
+java:S1144¬"5Remove this unused private "showToastMessage" method.(Í£÷Æ8ÏØÑúÅ.
+}
+java:S1450+"[Remove the "mWifiManager" field and declare it as a local variable in the relevant methods.(£°›ğşÿÿÿÿ8ÏØÑúÅ.
+I
+java:S1172"&Remove these unused method parameters.(Öì‰›ûÿÿÿÿ8£‚ÒúÅ.
+R
+java:S1068+"0Remove this unused "mWifiManager" private field.(£°›ğşÿÿÿÿ8ÏØÑúÅ.
+]
+java:S1144":Remove this unused private "handleRequestResponse" method.(Öì‰›ûÿÿÿÿ8£‚ÒúÅ.
+Q	java:S110&"<This class has 9 parents which is greater than 5 authorized.(µ¬­€
+X	java:S125p"<This block of commented-out lines of code should be removed.(ı‚À­8ÏØÑúÅ.
+x
+java:S1128!"VRemove this unused import 'com.example.wi_ficollector.utility.Constants.ZERO_INTEGER'.(æ¼ğƒüÿÿÿÿ8ÅœÓúÅ.
+‚
+java:S1128#"`Remove this unused import 'com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_MESSAGE'.(ĞüĞıÿÿÿÿ8ÅœÓúÅ.
+~
+java:S1128$"\Remove this unused import 'com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_TAG'.(ñ“ëıøÿÿÿÿ8ÅœÓúÅ.
