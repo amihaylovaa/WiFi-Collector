@@ -17,7 +17,7 @@ public final class Constants {
     public static final String WIFI_TAG = "wap";
     public static final String FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String PROTOCOL = "http";
-    public static final String HOST = "xxx";
+    public static final String HOST = "";
     public static final int PORT = 0;
     public static final String PATH = "/wifi/locations";
     public static final int TEN_SECONDS = 10_000;

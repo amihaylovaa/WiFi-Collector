@@ -25,11 +25,18 @@ import com.example.wi_ficollector.repository.WifiLocationInput;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 
+import java.nio.channels.FileChannel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.example.wi_ficollector.utility.Constants.FILE_NAME;
+import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_MSG;
+import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_TAG;
 import static com.example.wi_ficollector.utility.Constants.ZERO_INTEGER;
 import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
 import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_MESSAGE;
@@ -81,10 +88,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         int buttonId = v.getId();
 
-        if (buttonId == R.id.scanning_button) {
-            startScanning();
-        } else {
+        if (buttonId == R.id.sending_button) {
             sendLocalStoredData();
+        } else {
+            if (!isFileEmpty()) {
+                showToastMessage(R.string.send_data_before_scanning_again);
+            } else {
+                startScanning();
+            }
         }
     }
 
@@ -177,5 +188,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mIntroDialogFragment.setCancelable(false);
             mIntroDialogFragment.show(mFragmentManager, INTRO_DIALOG_TAG);
         }
+    }
+
+    private boolean isFileEmpty() {
+        FileInputStream fileInputStream;
+        long size;
+
+        try {
+            fileInputStream = MainActivity.this.openFileInput(FILE_NAME);
+        } catch (FileNotFoundException e) {
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
+            return true;
+        }
+        FileChannel channel = fileInputStream.getChannel();
+
+        try {
+            size = channel.size();
+        } catch (IOException e) {
+            return true;
+        }
+
+        return size == 0L;
     }
 }

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="src/main/res/xml/wifi_schema.xsd" xmlns:wifi="src/main/res/xml/wifi_schema.xsd">
   <xs:element name="wap">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="bssid"/>
-        <xs:element ref="rssi"/>
-        <xs:element ref="ssid"/>
-        <xs:element ref="capabilities"/>
-        <xs:element ref="frequency"/>
+        <xs:element ref="wifi:bssid"/>
+        <xs:element ref="wifi:rssi"/>
+        <xs:element ref="wifi:ssid"/>
+        <xs:element ref="wifi:capabilities"/>
+        <xs:element ref="wifi:frequency"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

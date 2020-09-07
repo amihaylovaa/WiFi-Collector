@@ -31,6 +31,11 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.*;
 import com.google.android.gms.tasks.Task;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
+
 import static com.example.wi_ficollector.utility.Constants.*;
 
 public class ScanActivity extends AppCompatActivity implements GPSRequirementsListener, LocationPermissionRequestRationaleListener {

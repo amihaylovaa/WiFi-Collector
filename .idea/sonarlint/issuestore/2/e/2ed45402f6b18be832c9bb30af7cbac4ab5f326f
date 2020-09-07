@@ -1,7 +1,10 @@
 
+X	java:S125b"<This block of commented-out lines of code should be removed.(Êéî¤8×”ÓÆ.
+„
+java:S11923"bDefine a constant instead of duplicating this literal "src/main/res/xml/wifi_schema.xsd" 14 times.(›µñˆÿÿÿÿÿ8À‹ÑÆÆ.
+O
+java:S1135a"2Complete the task associated to this TODO comment.(¿ØØ¥8×”ÓÆ.
 P
-java:S10685"3Remove this unused "XMLNS_ATTRIBUTE" private field.(ÿÃ8ÑçûÅ.
-b
-java:S1128"ERemove this unused import 'android.content.Context.SHORTCUT_SERVICE'.(âéŸò8¬ÀƒüÅ.
-[
-java:S1128"9Remove this unused import 'com.example.wi_ficollector.R'.(œ„Æ›üÿÿÿÿ8ÕŒ½üÅ.
+java:S1068#"3Remove this unused "XMLNS_ATTRIBUTE" private field.(ÿÃ8ìäâÿÅ.
+Q
+java:S1068*"/Remove this unused "WIFI_SCHEMA" private field.(ÊŠÌ£üÿÿÿÿ8¥…™ÅÆ.

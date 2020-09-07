@@ -30,5 +30,6 @@
     <string name="send_intent_exception">Unexpected error occurred, please wait</string>
     <string name="data_send_waiting_for_response">Data has been sent, waiting for response</string>
     <string name="internal_server_error">Unrecoverable error occurred</string>
+    <string name="send_data_before_scanning_again">Please send locally stored data before scanning again</string>
 
 </resources>
