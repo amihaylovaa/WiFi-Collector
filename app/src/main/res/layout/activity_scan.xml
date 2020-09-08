@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:fontFamily="monospace"
-        android:text="@string/show_content"
+        android:text="@string/found_wireless_networks"
         android:textAlignment="center"
         android:freezesText="true"
         android:textColor="@color/colorPrimary"

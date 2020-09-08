@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentManager mFragmentManager;
     private ExecutorService mExecutorService;
     private WifiManager mWifiManager;
+    private WifiLocationInput mWifiLocationInput;
     private Handler mHandler;
 
     @Override
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mHandler = new Handler(Looper.getMainLooper());
         mExecutorService = Executors.newSingleThreadExecutor();
+        mWifiLocationInput = new WifiLocationInput(MainActivity.this);
         Button scanningBtn = findViewById(R.id.scanning_button);
         Button sendDataBtn = findViewById(R.id.sending_button);
 
@@ -110,23 +112,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void accept() {
-        // This method is called when intro dialog is shown explaining how an app is supposed to work
+        // Called when intro dialog is shown.
+        // The dialog serves to inform the user how the app is supposed to work, no actions required.
     }
 
-    private void startScanning() {
+    public void startScanning() {
         Intent intent = new Intent(MainActivity.this, ScanActivity.class);
 
         startActivity(intent);
     }
 
-    private void sendLocalStoredData() {
+    public void sendLocalStoredData() {
         mExecutorService.execute(() -> {
-
-            WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
             JSONArray wifiLocations;
 
             try {
-                wifiLocations = wifiLocationInput.read();
+                wifiLocations = mWifiLocationInput.read();
             } catch (JSONException e) {
                 Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
                 wifiLocations = new JSONArray();
@@ -141,13 +142,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     HttpRequest httpRequest = new HttpRequest();
                     int responseCode = httpRequest.send(wifiLocations);
 
-                    handleRequestResponse(responseCode, wifiLocationInput);
+                    handleResponseCode(responseCode, mWifiLocationInput);
                 }
             }
         });
     }
 
-    private void handleRequestResponse(int responseCode, WifiLocationInput wifiLocationInput) {
+    public void handleResponseCode(int responseCode, WifiLocationInput wifiLocationInput) {
         switch (responseCode) {
             case HttpURLConnection.HTTP_OK:
                 showToastMessage(R.string.send_data_success);
@@ -177,11 +178,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void showToastMessage(int message) {
+    public void showToastMessage(int message) {
         mHandler.post(() -> Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show());
     }
 
-    private void showIntroDialog() {
+    public void showIntroDialog() {
         if (mIntroDialogFragment == null) {
             mIntroDialogFragment = IntroDialogFragment.newInstance();
 
@@ -190,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private boolean isFileEmpty() {
+    public boolean isFileEmpty() {
         FileInputStream fileInputStream;
         long size;
 

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 import com.example.wi_ficollector.repository.WifiLocationOutput;
 import com.example.wi_ficollector.wrapper.WifiLocation;
@@ -28,7 +27,6 @@ public class WiFiReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
-        Log.d("DO HAS SUCCESS", String.valueOf(hasSuccess));
 
         if (hasSuccess) {
             List<ScanResult> scanResults = wifiManager.getScanResults();

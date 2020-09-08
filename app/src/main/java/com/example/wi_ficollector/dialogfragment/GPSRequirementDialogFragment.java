@@ -17,11 +17,10 @@ import com.example.wi_ficollector.listener.GPSRequirementsListener;
 public class GPSRequirementDialogFragment extends DialogFragment {
 
     private AlertDialog mAlertDialog;
-    private GPSRequirementsListener gpsRequirementsListener;
-
+    private GPSRequirementsListener mGPSRequirementsListener;
 
     public GPSRequirementDialogFragment() {
-        // Required during dialog fragment's recreation
+        // Required during dialog fragment recreation
     }
 
     public static GPSRequirementDialogFragment newInstance() {
@@ -31,7 +30,7 @@ public class GPSRequirementDialogFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        gpsRequirementsListener = (GPSRequirementsListener) context;
+        mGPSRequirementsListener = (GPSRequirementsListener) context;
     }
 
     @NonNull
@@ -43,7 +42,7 @@ public class GPSRequirementDialogFragment extends DialogFragment {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity, R.style.GPSDialogFragment)
                     .setMessage(R.string.gps_requirements_fragment_dialog_message)
                     .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
-                        gpsRequirementsListener.startGPSRequirementsResolution();
+                        mGPSRequirementsListener.startGPSRequirementsResolution();
                         dismiss();
                     });
 
@@ -56,6 +55,6 @@ public class GPSRequirementDialogFragment extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        gpsRequirementsListener = null;
+        mGPSRequirementsListener = null;
     }
 }

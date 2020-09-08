@@ -35,16 +35,16 @@ import static com.example.wi_ficollector.utility.Constants.*;
 
 public class ForegroundWifiLocationService extends Service {
 
-    private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
-    private GPSStateReceiver mGPSStateReceiver;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private GPSStateReceiver mGPSStateReceiver;
+    private Intent mLocalBroadcastIntent;
+    private LocalBroadcastManager mLocalBroadcastManager;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
+    private WifiManager mWifiManager;
     private WifiLocationOutput mWifiLocationOutput;
     private WifiLocation mWifiLocation;
-    private LocalBroadcastManager mLocalBroadcastManager;
-    private Intent mLocalBroadcastIntent;
 
     @Override
     public void onCreate() {
@@ -52,12 +52,12 @@ public class ForegroundWifiLocationService extends Service {
         createLocationRequest();
 
         int foregroundServiceNotificationId = 721;
-        AppNotification appNotification = new ForegroundServiceNotification(this);
+        AppNotification appNotification = new ForegroundServiceNotification(ForegroundWifiLocationService.this);
         Notification foregroundServiceNotification = appNotification.createNotification();
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(ForegroundWifiLocationService.this);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(ForegroundWifiLocationService.this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        mWifiLocationOutput = new WifiLocationOutput(this);
+        mWifiLocationOutput = new WifiLocationOutput(ForegroundWifiLocationService.this);
         mWifiLocation = new WifiLocation();
         mGPSStateReceiver = new GPSStateReceiver();
         mWifiReceiver = new WiFiReceiver(mWifiLocationOutput, mWifiLocation);
@@ -97,7 +97,8 @@ public class ForegroundWifiLocationService extends Service {
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    private void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
+
+    public void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
         IntentFilter intentFilter = new IntentFilter(action);
 
         registerReceiver(broadcastReceiver, intentFilter);

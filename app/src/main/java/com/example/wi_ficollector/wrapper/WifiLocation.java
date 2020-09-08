@@ -21,6 +21,7 @@ public class WifiLocation {
     public void clearResults() {
         latitude = 0.00;
         longitude = 0.00;
+
         if (scanResults != null) {
             scanResults.clear();
         }

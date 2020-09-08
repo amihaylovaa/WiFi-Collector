@@ -1,10 +1,4 @@
 
-X	java:S125b"<This block of commented-out lines of code should be removed.(Êéî¤8×”ÓÆ.
-„
-java:S11923"bDefine a constant instead of duplicating this literal "src/main/res/xml/wifi_schema.xsd" 14 times.(›µñˆÿÿÿÿÿ8À‹ÑÆÆ.
-O
-java:S1135a"2Complete the task associated to this TODO comment.(¿ØØ¥8×”ÓÆ.
-P
-java:S1068#"3Remove this unused "XMLNS_ATTRIBUTE" private field.(ÿÃ8ìäâÿÅ.
-Q
-java:S1068*"/Remove this unused "WIFI_SCHEMA" private field.(ÊŠÌ£üÿÿÿÿ8¥…™ÅÆ.
+F	java:S108‚")Either remove or fill this block of code.(ï­£Ä8À›êÆ.
+U
+java:S1135“"2Complete the task associated to this TODO comment.(ì§Úèùÿÿÿÿ8ïˆÒêÆ.

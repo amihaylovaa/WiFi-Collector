@@ -9,11 +9,9 @@ import com.example.wi_ficollector.wrapper.WifiLocation;
 
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,16 +23,12 @@ import static com.example.wi_ficollector.utility.Constants.*;
 
 public class WifiLocationOutput implements OutputOperation {
 
-    private boolean isOutputSet;
-    private boolean areTrackTagsAdded;
-    private boolean areSchemasDescribed;
     private int numOfWifiLocations;
     private Context mContext;
     private FileOutputStream mFileOutputStream;
     private XmlSerializer mXmlSerializer;
     private ExecutorService mExecutorService;
     private static final String XMLNS_ATTRIBUTE;
-    private static final String GPX_NAMESPACE_PREFIX;
     private static final String GPX_NAMESPACE;
     private static final String XSI_SCHEMA_LOCATION;
     private static final String GPX_SCHEMA_LOCATION;
@@ -42,6 +36,10 @@ public class WifiLocationOutput implements OutputOperation {
     private static final String XML_INSTANCE;
     private static final String WIFI_NAMESPACE_PREFIX;
     private static final String WIFI_SCHEMA;
+    private static final String GPX_VERSION;
+    private static final String VERSION;
+    private static final String CREATOR;
+    private static final String CREATOR_NAME;
 
     static {
         XMLNS_ATTRIBUTE = "xmlns";
@@ -51,19 +49,25 @@ public class WifiLocationOutput implements OutputOperation {
         XMLNS_XSI = "xmlns:xsi";
         WIFI_SCHEMA = "src/main/res/xml/wifi_schema.xsd";
         WIFI_NAMESPACE_PREFIX = "wifi";
-        GPX_NAMESPACE_PREFIX = "gpxx";
+        GPX_VERSION = "1.1";
+        CREATOR_NAME = "AGM";
+        CREATOR = "creator";
+        VERSION = "version";
         XML_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
     }
 
     public WifiLocationOutput(Context mContext) {
         this.mContext = mContext;
-        this.mExecutorService = Executors.newSingleThreadExecutor();
-        this.mXmlSerializer = Xml.newSerializer();
-        this.isOutputSet = false;
-        this.areSchemasDescribed = false;
-        this.numOfWifiLocations = 0;
+        mExecutorService = Executors.newSingleThreadExecutor();
+        mXmlSerializer = Xml.newSerializer();
+        numOfWifiLocations = 0;
 
+        prepareWriting();
+    }
+
+    private void prepareWriting() {
         openFileOutputStream();
+        addRequiredGPXDescription();
     }
 
     @Override
@@ -74,7 +78,6 @@ public class WifiLocationOutput implements OutputOperation {
             double longitude = wifiLocation.getLongitude();
 
             try {
-                prepareWriting();
                 writeTrackPoint(latitude, longitude);
                 writeExtensions(scanResults);
                 wifiLocation.clearResults();
@@ -83,68 +86,6 @@ public class WifiLocationOutput implements OutputOperation {
                 return;
             }
         });
-    }
-
-    public void openFileOutputStream() {
-        try {
-            mFileOutputStream = mContext.openFileOutput(FILE_NAME, MODE_APPEND);
-        } catch (FileNotFoundException e) {
-            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_OUTPUT_MSG);
-        }
-    }
-
-    public void closeFileOutputStream() {
-        try {
-            mXmlSerializer.endDocument();
-            mFileOutputStream.close();
-        } catch (IOException e) {
-            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
-        }
-    }
-
-    public void stopExecutorService() {
-        mExecutorService.shutdown();
-    }
-
-    public int getNumOfWifiLocations() {
-        return numOfWifiLocations;
-    }
-
-    private void prepareWriting() throws IOException {
-        if (!areSchemasDescribed) {
-            setOutput();
-            addGPXDeclaration();
-        }
-        if (!isOutputSet) {
-            setOutput();
-        }
-        if (!areTrackTagsAdded) {
-            mXmlSerializer.startTag(EMPTY_STRING, TRACK_TAG)
-                    .startTag(EMPTY_STRING, TRACK_SEGMENT_TAG);
-
-            areTrackTagsAdded = true;
-        }
-    }
-
-    private void setOutput() {
-        try {
-            mXmlSerializer.setOutput(mFileOutputStream, null);
-        } catch (IOException e) {
-            isOutputSet = false;
-            return;
-        }
-        isOutputSet = true;
-    }
-
-    private void addGPXDeclaration() throws IOException {
-        mXmlSerializer.startDocument(ENCODING, false);
-        mXmlSerializer.setPrefix(WIFI_NAMESPACE_PREFIX, WIFI_SCHEMA);
-        mXmlSerializer.startTag(EMPTY_STRING, GPX_TAG)
-                .attribute(EMPTY_STRING, XMLNS_ATTRIBUTE, GPX_NAMESPACE)
-                .attribute(EMPTY_STRING, XMLNS_XSI, XML_INSTANCE)
-                .attribute(EMPTY_STRING, XSI_SCHEMA_LOCATION, GPX_SCHEMA_LOCATION)
-                .text(EMPTY_STRING);
-        areSchemasDescribed = true;
     }
 
     private void writeTrackPoint(double latitude, double longitude) throws IOException {
@@ -159,6 +100,7 @@ public class WifiLocationOutput implements OutputOperation {
                 .endTag(EMPTY_STRING, TIME_TAG);
     }
 
+    // todo fix escape
     private void writeExtensions(List<ScanResult> scanResults) throws IOException {
         mXmlSerializer.startTag(EMPTY_STRING, EXTENSIONS_TAG);
         if (scanResults != null) {
@@ -187,5 +129,50 @@ public class WifiLocationOutput implements OutputOperation {
         }
         mXmlSerializer.endTag(EMPTY_STRING, EXTENSIONS_TAG);
         mXmlSerializer.endTag(EMPTY_STRING, TRACK_POINT_TAG);
+    }
+
+    public void openFileOutputStream() {
+        try {
+            mFileOutputStream = mContext.openFileOutput(FILE_NAME, MODE_APPEND);
+        } catch (FileNotFoundException e) {
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_OUTPUT_MSG);
+        }
+    }
+
+    public void closeFileOutputStream() {
+        try {
+            mXmlSerializer.endDocument();
+            mFileOutputStream.close();
+        } catch (IOException e) {
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
+        }
+    }
+
+    public void stopExecutorService() {
+        mExecutorService.shutdown();
+    }
+
+    public int getNumOfWifiLocations() {
+        return numOfWifiLocations;
+    }
+
+    private void addRequiredGPXDescription() {
+        try {
+            mXmlSerializer.setOutput(mFileOutputStream, null);
+            mXmlSerializer.startDocument(ENCODING, false);
+            mXmlSerializer.setPrefix(WIFI_NAMESPACE_PREFIX, WIFI_SCHEMA);
+            mXmlSerializer.startTag(EMPTY_STRING, GPX_TAG)
+                    .attribute(EMPTY_STRING, XMLNS_ATTRIBUTE, GPX_NAMESPACE)
+                    .attribute(EMPTY_STRING, XMLNS_XSI, XML_INSTANCE)
+                    .attribute(EMPTY_STRING, VERSION, GPX_VERSION)
+                    .attribute(EMPTY_STRING, CREATOR, CREATOR_NAME)
+                    .attribute(EMPTY_STRING, XSI_SCHEMA_LOCATION, GPX_SCHEMA_LOCATION)
+                    .text(EMPTY_STRING);
+            mXmlSerializer.startTag(EMPTY_STRING, TRACK_TAG);
+            mXmlSerializer.startTag(EMPTY_STRING, TRACK_SEGMENT_TAG);
+        } catch (IOException e) {
+            Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_INPUT_MSG);
+            return;
+        }
     }
 }

@@ -16,10 +16,10 @@ import com.example.wi_ficollector.R;
 public class IntroDialogFragment extends DialogFragment {
 
     private AlertDialog mAlertDialog;
-    private IntroDialogFragmentListener introDialogFragmentListener;
+    private IntroDialogFragmentListener mIntroDialogFragmentListener;
 
     public IntroDialogFragment() {
-        // Required during dialog fragment's recreation
+        // Required during dialog fragment recreation
     }
 
     public static IntroDialogFragment newInstance() {
@@ -29,7 +29,7 @@ public class IntroDialogFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        introDialogFragmentListener = (IntroDialogFragmentListener) context;
+        mIntroDialogFragmentListener = (IntroDialogFragmentListener) context;
     }
 
     @NonNull
@@ -42,7 +42,7 @@ public class IntroDialogFragment extends DialogFragment {
                     .setMessage(R.string.intro)
                     .setCancelable(false)
                     .setPositiveButton(R.string.OK, (dialog, whichButton) -> {
-                        introDialogFragmentListener.accept();
+                        mIntroDialogFragmentListener.accept();
                         dismiss();
                     });
             mAlertDialog = alertDialogBuilder.create();
@@ -54,6 +54,6 @@ public class IntroDialogFragment extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        introDialogFragmentListener = null;
+        mIntroDialogFragmentListener = null;
     }
 }

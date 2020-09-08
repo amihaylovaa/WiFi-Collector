@@ -16,10 +16,10 @@ import com.example.wi_ficollector.listener.LocationPermissionRequestRationaleLis
 public class LocationRequestRationaleDialogFragment extends DialogFragment {
 
     private AlertDialog mAlertDialog;
-    private LocationPermissionRequestRationaleListener locationPermissionRequestRationaleListener;
+    private LocationPermissionRequestRationaleListener mLocationPermissionRequestRationaleListener;
 
     public LocationRequestRationaleDialogFragment() {
-        // Required during dialog fragment's recreation
+        // Required during dialog fragment recreation
     }
 
     public static LocationRequestRationaleDialogFragment newInstance() {
@@ -29,7 +29,7 @@ public class LocationRequestRationaleDialogFragment extends DialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        locationPermissionRequestRationaleListener = (LocationPermissionRequestRationaleListener) context;
+        mLocationPermissionRequestRationaleListener = (LocationPermissionRequestRationaleListener) context;
     }
 
     @NonNull
@@ -42,11 +42,11 @@ public class LocationRequestRationaleDialogFragment extends DialogFragment {
                     .setMessage(R.string.location_permission_rationale_dialog_fragment_message)
                     .setCancelable(false)
                     .setNegativeButton(R.string.disagree, (dialog, whichButton) -> {
-                        locationPermissionRequestRationaleListener.disagree();
+                        mLocationPermissionRequestRationaleListener.disagree();
                         dismiss();
                     })
                     .setPositiveButton(R.string.agree, (dialog, whichButton) -> {
-                        locationPermissionRequestRationaleListener.agree();
+                        mLocationPermissionRequestRationaleListener.agree();
                         dismiss();
                     });
 
@@ -59,6 +59,6 @@ public class LocationRequestRationaleDialogFragment extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        locationPermissionRequestRationaleListener = null;
+        mLocationPermissionRequestRationaleListener = null;
     }
 }

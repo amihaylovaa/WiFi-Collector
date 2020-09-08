@@ -33,16 +33,16 @@ public class HttpRequest {
 
     public int send(JSONArray wifiLocations) {
         byte[] bytes = wifiLocations.toString().getBytes();
-        URL mURL;
+        URL url;
 
         try {
-            mURL = new URL(PROTOCOL, HOST, PORT, PATH);
+            url = new URL(PROTOCOL, HOST, PORT, PATH);
         } catch (MalformedURLException e) {
             return HttpURLConnection.HTTP_NOT_FOUND;
         }
 
         try {
-            mHttpUrlConnection = (HttpURLConnection) mURL.openConnection();
+            mHttpUrlConnection = (HttpURLConnection) url.openConnection();
         } catch (IOException e) {
             return HttpURLConnection.HTTP_NOT_FOUND;
         }
@@ -58,7 +58,6 @@ public class HttpRequest {
 
         try {
             mOutputStream.write(bytes);
-            mOutputStream.flush();
         } catch (SocketException e) {
             mHttpUrlConnection.disconnect();
             return NEGATIVE_INTEGER;
@@ -94,10 +93,6 @@ public class HttpRequest {
             } catch (IOException e) {
                 Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
             }
-        } else if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
-            return HttpURLConnection.HTTP_NOT_FOUND;
-        } else {
-            return HttpURLConnection.HTTP_INTERNAL_ERROR;
         }
         return responseCode;
     }
