@@ -10,6 +10,11 @@ public final class Constants {
     private Constants() {
     }
 
+    public static final int TEN_SECONDS = 10_000;
+    public static final int NEGATIVE_INTEGER = -1;
+    public static final int ZERO_INTEGER = 0;
+    public static final int POSITIVE_INTEGER = 1;
+    public static final int PORT = 8281;
     public static final int FINE_LOCATION_PERMISSION_CODE = 87;
     public static final int LOCATION_SETTINGS_CODE = 104;
     public static final int FIVE_SECONDS = 5000;
@@ -18,10 +23,7 @@ public final class Constants {
     public static final String FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String PROTOCOL = "http";
     public static final String HOST = "";
-    public static final int PORT = 8281;
     public static final String PATH = "/wifi/locations";
-    public static final int TEN_SECONDS = 10_000;
-    public static final int NEGATIVE_INTEGER = -1;
     public static final String CONTENT_TYPE = "Content-type";
     public static final String ACCEPT = "Accept";
     public static final String TYPE = "application/json";
@@ -56,7 +58,6 @@ public final class Constants {
     public static final String SCAN_RESULTS_AVAILABLE_ACTION = WifiManager.SCAN_RESULTS_AVAILABLE_ACTION;
     public static final String PROVIDERS_CHANGED_ACTION = LocationManager.PROVIDERS_CHANGED_ACTION;
     public static final String DATE_TIME = "localDateTime";
-    public static final int ZERO_INTEGER = 0;
     public static final String FILE_NAME = "Location_Wifi.gpx";
     public static final String XML_PULL_PARSER_EXCEPTION_TAG = "XML pull parser exception has been thrown";
     public static final String XML_PULL_PARSER_EXCEPTION_MESSAGE = "An exception occurred during working with xml pull parser";

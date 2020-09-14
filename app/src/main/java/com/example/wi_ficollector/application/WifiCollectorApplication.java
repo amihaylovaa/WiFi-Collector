@@ -3,32 +3,34 @@ package com.example.wi_ficollector.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import com.example.wi_ficollector.R;
+import android.util.Log;
 
 public class WifiCollectorApplication extends Application {
 
+    private final String name;
+    private final String key;
     private SharedPreferences mSharedPreference;
+
+    {
+        name = "First time launching";
+        key = "is intro dialog shown";
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        String key = String.valueOf(R.string.launching_key);
-        mSharedPreference = getApplicationContext().getSharedPreferences(key, Context.MODE_PRIVATE);
+        mSharedPreference = getApplicationContext().getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
     public boolean isAppFirstTimeLaunched() {
-        String dialogIntro = String.valueOf(R.string.launching_key);
-
-        return !mSharedPreference.contains(dialogIntro);
+        return !mSharedPreference.contains(key);
     }
 
     public void addKeyForShownIntroDialog() {
         SharedPreferences.Editor editor = mSharedPreference.edit();
-        String launchingKey = String.valueOf(R.string.launching_key);
 
-        editor.putBoolean(launchingKey, true);
+        editor.putBoolean(key, true);
         editor.apply();
     }
 }

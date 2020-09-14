@@ -1,4 +1,5 @@
 
-F	java:S108‚")Either remove or fill this block of code.(ï­£Ä8À›êÆ.
-U
-java:S1135“"2Complete the task associated to this TODO comment.(ì§Úèùÿÿÿÿ8ïˆÒêÆ.
+Q
+java:S1068"/Remove this unused "isOutputSet" private field.(÷ÿ¶¥ÿÿÿÿÿ8¢ÜÛôÈ.
+o
+java:S1128"MRemove this unused import 'com.example.wi_ficollector.activity.MainActivity'.(›àß“ûÿÿÿÿ8¸ÉóôÈ.

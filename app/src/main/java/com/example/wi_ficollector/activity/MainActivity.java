@@ -37,6 +37,7 @@ import java.util.concurrent.Executors;
 import static com.example.wi_ficollector.utility.Constants.FILE_NAME;
 import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_MSG;
 import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_TAG;
+import static com.example.wi_ficollector.utility.Constants.NEGATIVE_INTEGER;
 import static com.example.wi_ficollector.utility.Constants.ZERO_INTEGER;
 import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
 import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_MESSAGE;
@@ -64,19 +65,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button scanningBtn = findViewById(R.id.scanning_button);
         Button sendDataBtn = findViewById(R.id.sending_button);
 
-        scanningBtn.setOnClickListener(MainActivity.this);
-        sendDataBtn.setOnClickListener(MainActivity.this);
+        scanningBtn.setOnClickListener(this);
+        sendDataBtn.setOnClickListener(this);
+
+        if (savedInstanceState != null) {
+            restorePreviousInstanceState(savedInstanceState);
+        }
 
         if (((WifiCollectorApplication) getApplication()).isAppFirstTimeLaunched()) {
             showIntroDialog();
-            ((WifiCollectorApplication) getApplication()).addKeyForShownIntroDialog();
         }
     }
 
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
+    private void restorePreviousInstanceState(Bundle savedInstanceState) {
         mIntroDialogFragment = (IntroDialogFragment) mFragmentManager.getFragment(savedInstanceState, INTRO_DIALOG_TAG);
     }
 
@@ -112,8 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void accept() {
-        // Called when intro dialog is shown.
-        // The dialog serves to inform the user how the app is supposed to work, no actions required.
+        ((WifiCollectorApplication) getApplication()).addKeyForShownIntroDialog();
     }
 
     public void startScanning() {
@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void sendLocalStoredData() {
         mExecutorService.execute(() -> {
+
             JSONArray wifiLocations;
 
             try {
@@ -142,37 +143,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     HttpRequest httpRequest = new HttpRequest();
                     int responseCode = httpRequest.send(wifiLocations);
 
-                    handleResponseCode(responseCode, mWifiLocationInput);
+                    handleRequestResult(responseCode, mWifiLocationInput);
                 }
             }
         });
     }
 
-    public void handleResponseCode(int responseCode, WifiLocationInput wifiLocationInput) {
+    public void handleRequestResult(int responseCode, WifiLocationInput wifiLocationInput) {
         switch (responseCode) {
             case HttpURLConnection.HTTP_OK:
                 showToastMessage(R.string.send_data_success);
                 wifiLocationInput.closeFileInputStream();
-                wifiLocationInput.deleteLocalStoredData();
+                wifiLocationInput.deleteLocallyStoredData();
                 break;
             case HttpURLConnection.HTTP_CLIENT_TIMEOUT:
                 showToastMessage(R.string.send_request_timeout);
                 wifiLocationInput.closeFileInputStream();
                 break;
-            case HttpURLConnection.HTTP_NOT_FOUND:
-                wifiLocationInput.closeFileInputStream();
-                break;
             case HttpURLConnection.HTTP_INTERNAL_ERROR:
-                wifiLocationInput.closeFileInputStream();
                 showToastMessage(R.string.internal_server_error);
+                wifiLocationInput.closeFileInputStream();
                 break;
             case ZERO_INTEGER:
                 showToastMessage(R.string.data_send_waiting_for_response);
                 wifiLocationInput.closeFileInputStream();
-                wifiLocationInput.deleteLocalStoredData();
+                wifiLocationInput.deleteLocallyStoredData();
+                break;
+            case NEGATIVE_INTEGER:
+                showToastMessage(R.string.lost_internet_connection);
+                wifiLocationInput.closeFileInputStream();
                 break;
             default:
-                showToastMessage(R.string.lost_internet_connection);
                 wifiLocationInput.closeFileInputStream();
                 break;
         }

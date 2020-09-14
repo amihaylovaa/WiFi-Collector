@@ -5,7 +5,6 @@
     <string name="agree">Yes</string>
     <string name="disagree">No</string>
     <string name="OK">OK</string>
-    <string name="launching_key">Show intro dialog</string>
     <string name="rationale_dialog_key">Show background permission rationale</string>
     <string name="found_wireless_networks">Found wireless networks:</string>
     <string name="foreground_service_channel_name">Foreground service execution</string>
@@ -26,7 +25,6 @@
     <string name="no_data_found">No data found, please start scanning</string>
     <string name="send_request_timeout">Can not connect, please try again later</string>
     <string name="lost_internet_connection">Lost Internet connection, please try again later</string>
-    <string name="not_found_resource">Not found resource</string>
     <string name="send_intent_exception">Unexpected error occurred, please wait</string>
     <string name="data_send_waiting_for_response">Data has been sent, waiting for response</string>
     <string name="internal_server_error">Unrecoverable error occurred</string>

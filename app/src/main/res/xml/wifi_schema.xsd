@@ -14,7 +14,9 @@
   </xs:element>
   <xs:element name="bssid" type="xs:NMTOKEN"/>
   <xs:element name="rssi" type="xs:integer"/>
-  <xs:element name="ssid" type="xs:NCName"/>
+  <xs:element name="ssid" type="xs:string"/>
   <xs:element name="capabilities" type="xs:string"/>
   <xs:element name="frequency" type="xs:integer"/>
 </xs:schema>
+
+

@@ -16,6 +16,7 @@ import static com.example.wi_ficollector.utility.Constants.ACCEPT;
 import static com.example.wi_ficollector.utility.Constants.CONNECTION_RESET_EXCEPTION_MESSAGE;
 import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
 import static com.example.wi_ficollector.utility.Constants.HOST;
+import static com.example.wi_ficollector.utility.Constants.POSITIVE_INTEGER;
 import static com.example.wi_ficollector.utility.Constants.ZERO_INTEGER;
 import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_MESSAGE;
 import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_TAG;
@@ -38,13 +39,13 @@ public class HttpRequest {
         try {
             url = new URL(PROTOCOL, HOST, PORT, PATH);
         } catch (MalformedURLException e) {
-            return HttpURLConnection.HTTP_NOT_FOUND;
+            return POSITIVE_INTEGER;
         }
 
         try {
             mHttpUrlConnection = (HttpURLConnection) url.openConnection();
         } catch (IOException e) {
-            return HttpURLConnection.HTTP_NOT_FOUND;
+            return POSITIVE_INTEGER;
         }
 
         createRequest(bytes);
@@ -65,14 +66,14 @@ public class HttpRequest {
             return NEGATIVE_INTEGER;
         }
 
-        return getResponseCode();
+        return getRequestResult();
     }
 
-    public int getResponseCode() {
-        int responseCode;
+    public int getRequestResult() {
+        int result;
 
         try {
-            responseCode = mHttpUrlConnection.getResponseCode();
+            result = mHttpUrlConnection.getResponseCode();
         } catch (SocketException e) {
             if (e.getMessage().equals(CONNECTION_RESET_EXCEPTION_MESSAGE)) {
                 mHttpUrlConnection.disconnect();
@@ -86,7 +87,7 @@ public class HttpRequest {
             return ZERO_INTEGER;
         }
 
-        if (responseCode == HttpURLConnection.HTTP_OK) {
+        if (result == HttpURLConnection.HTTP_OK) {
             try {
                 mOutputStream.close();
                 mHttpUrlConnection.disconnect();
@@ -94,7 +95,7 @@ public class HttpRequest {
                 Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
             }
         }
-        return responseCode;
+        return result;
     }
 
     private void createRequest(byte[] bytes) {

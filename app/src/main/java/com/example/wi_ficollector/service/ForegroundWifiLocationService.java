@@ -122,6 +122,7 @@ public class ForegroundWifiLocationService extends Service {
                     return;
                 }
 
+                Log.d("FOUND", "LOCATION");
                 sendBroadcast();
                 List<Location> locations = locationResult.getLocations();
 

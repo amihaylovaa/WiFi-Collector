@@ -5,14 +5,17 @@ import android.net.wifi.ScanResult;
 import android.util.Log;
 import android.util.Xml;
 
+import com.example.wi_ficollector.activity.MainActivity;
 import com.example.wi_ficollector.wrapper.WifiLocation;
 
 import org.xmlpull.v1.XmlSerializer;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import java.nio.channels.FileChannel;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -24,6 +27,7 @@ import static com.example.wi_ficollector.utility.Constants.*;
 public class WifiLocationOutput implements OutputOperation {
 
     private int numOfWifiLocations;
+    private boolean isOutputSet;
     private Context mContext;
     private FileOutputStream mFileOutputStream;
     private XmlSerializer mXmlSerializer;
@@ -60,6 +64,7 @@ public class WifiLocationOutput implements OutputOperation {
         this.mContext = mContext;
         mExecutorService = Executors.newSingleThreadExecutor();
         mXmlSerializer = Xml.newSerializer();
+        isOutputSet = false;
         numOfWifiLocations = 0;
 
         prepareWriting();
@@ -71,7 +76,7 @@ public class WifiLocationOutput implements OutputOperation {
     }
 
     @Override
-    public void write(WifiLocation wifiLocation, List<ScanResult> scanResults) {
+    public void write(WifiLocation wifiLocation) {
         mExecutorService.execute(() -> {
 
             double latitude = wifiLocation.getLatitude();
@@ -79,7 +84,7 @@ public class WifiLocationOutput implements OutputOperation {
 
             try {
                 writeTrackPoint(latitude, longitude);
-                writeExtensions(scanResults);
+                writeExtensions(wifiLocation.getScanResults());
                 wifiLocation.clearResults();
             } catch (IOException IOException) {
                 Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
@@ -100,7 +105,6 @@ public class WifiLocationOutput implements OutputOperation {
                 .endTag(EMPTY_STRING, TIME_TAG);
     }
 
-    // todo fix escape
     private void writeExtensions(List<ScanResult> scanResults) throws IOException {
         mXmlSerializer.startTag(EMPTY_STRING, EXTENSIONS_TAG);
         if (scanResults != null) {
@@ -141,11 +145,34 @@ public class WifiLocationOutput implements OutputOperation {
 
     public void closeFileOutputStream() {
         try {
-            mXmlSerializer.endDocument();
+            if (!isFileEmpty()) {
+                mXmlSerializer.endDocument();
+            }
             mFileOutputStream.close();
         } catch (IOException e) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
         }
+    }
+
+    public boolean isFileEmpty() {
+        FileInputStream fileInputStream;
+        long size;
+
+        try {
+            fileInputStream = mContext.openFileInput(FILE_NAME);
+        } catch (FileNotFoundException e) {
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
+            return true;
+        }
+        FileChannel channel = fileInputStream.getChannel();
+
+        try {
+            size = channel.size();
+        } catch (IOException e) {
+            return true;
+        }
+
+        return size == 0L;
     }
 
     public void stopExecutorService() {
@@ -158,6 +185,7 @@ public class WifiLocationOutput implements OutputOperation {
 
     private void addRequiredGPXDescription() {
         try {
+            isOutputSet = true;
             mXmlSerializer.setOutput(mFileOutputStream, null);
             mXmlSerializer.startDocument(ENCODING, false);
             mXmlSerializer.setPrefix(WIFI_NAMESPACE_PREFIX, WIFI_SCHEMA);
@@ -172,7 +200,6 @@ public class WifiLocationOutput implements OutputOperation {
             mXmlSerializer.startTag(EMPTY_STRING, TRACK_SEGMENT_TAG);
         } catch (IOException e) {
             Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_INPUT_MSG);
-            return;
         }
     }
 }

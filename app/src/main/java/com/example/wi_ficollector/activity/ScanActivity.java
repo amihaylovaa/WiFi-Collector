@@ -237,9 +237,11 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
         isLocationRequestRationaleDialogShown = savedInstanceState.getBoolean(ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY);
         isServiceStarted = savedInstanceState.getBoolean(ANDROID_SERVICE_STARTED_KEY);
 
-        mGPSRequirementsDialogFragment = (GPSRequirementDialogFragment) mFragmentManager.getFragment(savedInstanceState, GPS_REQUIREMENTS_DIALOG_TAG);
+        mGPSRequirementsDialogFragment = (GPSRequirementDialogFragment) mFragmentManager
+                .getFragment(savedInstanceState, GPS_REQUIREMENTS_DIALOG_TAG);
 
-        mLocationPermissionDialogFragment = (LocationRequestRationaleDialogFragment) mFragmentManager.getFragment(savedInstanceState, LOCATION_PERMISSION_DIALOG_TAG);
+        mLocationPermissionDialogFragment = (LocationRequestRationaleDialogFragment) mFragmentManager
+                .getFragment(savedInstanceState, LOCATION_PERMISSION_DIALOG_TAG);
     }
 
     private LocationSettingsRequest createLocationSettingsRequest() {

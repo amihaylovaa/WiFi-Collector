@@ -71,7 +71,7 @@ public class WifiLocationInput implements InputOperation {
         return mWiFiLocations;
     }
 
-    public void deleteLocalStoredData() {
+    public void deleteLocallyStoredData() {
         File file = new File(mContext.getFilesDir(), FILE_NAME);
         Path path = Paths.get(file.toString());
 
