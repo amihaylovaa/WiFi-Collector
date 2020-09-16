@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentManager mFragmentManager;
     private ExecutorService mExecutorService;
     private WifiManager mWifiManager;
-    private WifiLocationInput mWifiLocationInput;
     private Handler mHandler;
 
     @Override
@@ -61,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mHandler = new Handler(Looper.getMainLooper());
         mExecutorService = Executors.newSingleThreadExecutor();
-        mWifiLocationInput = new WifiLocationInput(MainActivity.this);
         Button scanningBtn = findViewById(R.id.scanning_button);
         Button sendDataBtn = findViewById(R.id.sending_button);
 
@@ -124,11 +122,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void sendLocalStoredData() {
         mExecutorService.execute(() -> {
-
+            WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
             JSONArray wifiLocations;
 
             try {
-                wifiLocations = mWifiLocationInput.read();
+                wifiLocations = wifiLocationInput.read();
             } catch (JSONException e) {
                 Log.d(JSON_EXCEPTION_TAG, JSON_EXCEPTION_MESSAGE);
                 wifiLocations = new JSONArray();
@@ -143,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     HttpRequest httpRequest = new HttpRequest();
                     int responseCode = httpRequest.send(wifiLocations);
 
-                    handleRequestResult(responseCode, mWifiLocationInput);
+                    handleRequestResult(responseCode, wifiLocationInput);
                 }
             }
         });

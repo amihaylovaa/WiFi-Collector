@@ -3,7 +3,6 @@ package com.example.wi_ficollector.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 public class WifiCollectorApplication extends Application {
 

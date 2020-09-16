@@ -76,6 +76,7 @@ public class HttpRequest {
             result = mHttpUrlConnection.getResponseCode();
         } catch (SocketException e) {
             if (e.getMessage().equals(CONNECTION_RESET_EXCEPTION_MESSAGE)) {
+                e.printStackTrace();
                 mHttpUrlConnection.disconnect();
                 return HttpURLConnection.HTTP_INTERNAL_ERROR;
             } else {
@@ -95,6 +96,7 @@ public class HttpRequest {
                 Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
             }
         }
+
         return result;
     }
 

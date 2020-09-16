@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 import com.example.wi_ficollector.repository.WifiLocationOutput;
 import com.example.wi_ficollector.wrapper.WifiLocation;
@@ -30,8 +29,6 @@ public class WiFiReceiver extends BroadcastReceiver {
         boolean hasSuccess = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
 
         if (hasSuccess) {
-            Log.d("SCANNING", "RECEIVER");
-
             List<ScanResult> scanResults = wifiManager.getScanResults();
 
             if (shouldSaveScanResults()) {
@@ -45,11 +42,12 @@ public class WiFiReceiver extends BroadcastReceiver {
         LocalDateTime networksTime = LocalDateTime.now();
         LocalDateTime locationTime = mWifiLocation.getLocalDateTime();
         long timeDifference = -1L;
+        long maxTimeDifference = 5L;
 
         if (locationTime != null) {
             timeDifference = ChronoUnit.SECONDS.between(locationTime, networksTime);
         }
 
-        return (timeDifference != -1L && timeDifference <= 5L);
+        return (timeDifference != -1L && timeDifference <= maxTimeDifference);
     }
 }
