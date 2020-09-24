@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 import static android.content.Context.MODE_APPEND;
 import static com.example.wi_ficollector.utility.Constants.*;
 
-public class WifiLocationOutput implements OutputOperation {
+public class WifiLocationOutput  {
 
     private int numOfWifiLocations;
     private Context mContext;
@@ -51,7 +51,7 @@ public class WifiLocationOutput implements OutputOperation {
         WIFI_SCHEMA = "src/main/res/xml/wifi_schema.xsd";
         WIFI_NAMESPACE_PREFIX = "wifi";
         GPX_VERSION = "1.1";
-        CREATOR_NAME = "AGM";
+        CREATOR_NAME = "Unknown";
         CREATOR = "creator";
         VERSION = "version";
         XML_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
@@ -71,7 +71,6 @@ public class WifiLocationOutput implements OutputOperation {
         addRequiredGPXDescription();
     }
 
-    @Override
     public void write(WifiLocation wifiLocation) {
         mExecutorService.execute(() -> {
 
@@ -82,7 +81,7 @@ public class WifiLocationOutput implements OutputOperation {
                 writeTrackPoint(latitude, longitude);
                 writeExtensions(wifiLocation.getScanResults());
                 wifiLocation.clearResults();
-            } catch (IOException IOException) {
+            } catch (IOException ioException) {
                 Log.d(IO_EXCEPTION_THROWN_TAG, IO_EXCEPTION_THROWN_MESSAGE);
                 return;
             }

@@ -97,7 +97,6 @@ public class ForegroundWifiLocationService extends Service {
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-
     public void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
         IntentFilter intentFilter = new IntentFilter(action);
 

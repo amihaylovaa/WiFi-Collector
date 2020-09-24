@@ -12,25 +12,37 @@ import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
 
-import static com.example.wi_ficollector.utility.Constants.ACCEPT;
-import static com.example.wi_ficollector.utility.Constants.CONNECTION_RESET_EXCEPTION_MESSAGE;
-import static com.example.wi_ficollector.utility.Constants.CONTENT_TYPE;
-import static com.example.wi_ficollector.utility.Constants.HOST;
 import static com.example.wi_ficollector.utility.Constants.POSITIVE_INTEGER;
 import static com.example.wi_ficollector.utility.Constants.ZERO_INTEGER;
 import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_MESSAGE;
 import static com.example.wi_ficollector.utility.Constants.IO_EXCEPTION_THROWN_TAG;
 import static com.example.wi_ficollector.utility.Constants.NEGATIVE_INTEGER;
-import static com.example.wi_ficollector.utility.Constants.PATH;
-import static com.example.wi_ficollector.utility.Constants.PORT;
-import static com.example.wi_ficollector.utility.Constants.PROTOCOL;
-import static com.example.wi_ficollector.utility.Constants.TEN_SECONDS;
-import static com.example.wi_ficollector.utility.Constants.TYPE;
 
 public class HttpRequest {
 
     private OutputStream mOutputStream;
     private HttpURLConnection mHttpUrlConnection;
+    private static final int PORT;
+    private static final String PROTOCOL;
+    private static final String HOST;
+    private static final String PATH;
+    private static final int TEN_SECONDS;
+    private static final String CONTENT_TYPE;
+    private static final String ACCEPT;
+    private static final String TYPE;
+    private static final String CONNECTION_RESET_EXCEPTION_MESSAGE;
+
+    static {
+        PORT = 8281;
+        TEN_SECONDS = 10_000;
+        PROTOCOL = "http";
+        HOST = "";
+        PATH = "/wifi/locations";
+        CONTENT_TYPE = "Content-type";
+        ACCEPT = "Accept";
+        TYPE = "application/json";
+        CONNECTION_RESET_EXCEPTION_MESSAGE = "Connection reset";
+    }
 
     public int send(JSONArray wifiLocations) {
         byte[] bytes = wifiLocations.toString().getBytes();

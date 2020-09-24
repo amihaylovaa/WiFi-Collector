@@ -37,9 +37,10 @@ import java.util.concurrent.Executors;
 import static com.example.wi_ficollector.utility.Constants.FILE_NAME;
 import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_MSG;
 import static com.example.wi_ficollector.utility.Constants.FILE_NOT_FOUND_EXCEPTION_TAG;
+import static com.example.wi_ficollector.utility.Constants.LONG_ZERO;
+import static com.example.wi_ficollector.utility.Constants.MINIMUM_FILE_SIZE;
 import static com.example.wi_ficollector.utility.Constants.NEGATIVE_INTEGER;
 import static com.example.wi_ficollector.utility.Constants.ZERO_INTEGER;
-import static com.example.wi_ficollector.utility.Constants.INTRO_DIALOG_TAG;
 import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_MESSAGE;
 import static com.example.wi_ficollector.utility.Constants.JSON_EXCEPTION_TAG;
 
@@ -50,6 +51,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ExecutorService mExecutorService;
     private WifiManager mWifiManager;
     private Handler mHandler;
+    private static final String INTRO_DIALOG_TAG;
+
+    static {
+        INTRO_DIALOG_TAG = "Intro dialog";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +96,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int buttonId = v.getId();
 
         if (buttonId == R.id.sending_button) {
-            sendLocalStoredData();
+            sendLocallyStoredData();
         } else {
-            if (!isFileEmpty()) {
-                showToastMessage(R.string.send_data_before_scanning_again);
-            } else {
+            long fileSize = getFileSize();
+
+            if (fileSize == LONG_ZERO) {
                 startScanning();
+            } else {
+                if (fileSize > MINIMUM_FILE_SIZE) {
+                    showToastMessage(R.string.send_data_before_scanning_again);
+                } else {
+                    // clear invalid data due to scanning activity finishing execution too fast
+                    WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
+                    wifiLocationInput.deleteLocallyStoredData();
+                    wifiLocationInput.closeFileInputStream();
+                    startScanning();
+                }
             }
         }
     }
@@ -120,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
-    public void sendLocalStoredData() {
+    public void sendLocallyStoredData() {
         mExecutorService.execute(() -> {
             WifiLocationInput wifiLocationInput = new WifiLocationInput(MainActivity.this);
             JSONArray wifiLocations;
@@ -190,24 +206,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public boolean isFileEmpty() {
+    public long getFileSize() {
         FileInputStream fileInputStream;
-        long size;
+        long fileSize;
 
         try {
             fileInputStream = MainActivity.this.openFileInput(FILE_NAME);
         } catch (FileNotFoundException e) {
             Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
-            return true;
+            return LONG_ZERO;
         }
         FileChannel channel = fileInputStream.getChannel();
 
         try {
-            size = channel.size();
+            fileSize = channel.size();
         } catch (IOException e) {
-            return true;
+            return LONG_ZERO;
         }
 
-        return size == 0L;
+        return fileSize;
     }
 }

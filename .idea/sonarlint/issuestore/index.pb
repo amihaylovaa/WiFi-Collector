@@ -38,20 +38,14 @@ Wapp/src/main/java/com/example/wi_ficollector/service/ForegroundWifiLocationServ
 \app/src/main/java/com/example/wi_ficollector/notification/ForegroundServiceNotification.java,9\4\94718323dad1fa03b97a8f471025b958796cd77a
 {
 Kapp/src/main/java/com/example/wi_ficollector/receiver/GPSStateReceiver.java,f\1\f1edaa4f16056d4a2edcbab11425899b83a6a40d
-~
-Napp/src/main/java/com/example/wi_ficollector/notification/GSPNotification.java,d\2\d2f8062666274a7a56e7194485d75aa05b75c276
 ç
 ]app/src/main/java/com/example/wi_ficollector/dialogfragment/GPSRequirementDialogFragment.java,b\5\b59ead83a2b6af8ed52181a80fb12d1b2a9d2c12
 ~
 Napp/src/main/java/com/example/wi_ficollector/notification/AppNotification.java,b\8\b815038ceba0e4ff4c96ed9b96f09541007f185f
 ó
 gapp/src/main/java/com/example/wi_ficollector/dialogfragment/LocationRequestRationaleDialogFragment.java,4\a\4a9a10f1b7402968d895f59f05b0f602c51aac15
-|
-Lapp/src/main/java/com/example/wi_ficollector/repository/OutputOperation.java,9\f\9fff9b4bc2a8b3e5b64cba771380725f9349e510
 
 Oapp/src/main/java/com/example/wi_ficollector/repository/WifiLocationOutput.java,2\e\2ed45402f6b18be832c9bb30af7cbac4ab5f326f
-{
-Kapp/src/main/java/com/example/wi_ficollector/repository/InputOperation.java,0\e\0edab10c40df7a4b69a94e007ebdd0c08f4bcb81
 ~
 Napp/src/main/java/com/example/wi_ficollector/repository/WifiLocationInput.java,8\e\8e7b71769df34e6dcad7a4859b65e802875b949f
 s
@@ -74,3 +68,5 @@ w
 Gapp/src/main/java/com/example/wi_ficollector/activity/MainActivity.java,e\2\e2db098d5c9e31d4003428fe7271f46ff70c94d1
 w
 Gapp/src/main/java/com/example/wi_ficollector/activity/ScanActivity.java,6\9\696c04046a80eb0383cef7986767bf95d601e53f
+~
+Napp/src/main/java/com/example/wi_ficollector/notification/GPSNotification.java,c\2\c2c21c77360330855c0243b8ed778f4f68b11934

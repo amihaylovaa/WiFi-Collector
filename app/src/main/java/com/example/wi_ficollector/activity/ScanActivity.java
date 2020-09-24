@@ -1,5 +1,6 @@
 package com.example.wi_ficollector.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.*;
 import android.content.pm.PackageManager;
@@ -47,6 +48,23 @@ public class ScanActivity extends AppCompatActivity implements GPSRequirementsLi
     private BroadcastReceiver mUIUpdateReceiver;
     private FragmentManager mFragmentManager;
     private LocalBroadcastManager mLocalBroadcastManager;
+    private static final int FINE_LOCATION_PERMISSION_CODE;
+    private static final int LOCATION_SETTINGS_CODE;
+    private static final String FINE_LOCATION_PERMISSION;
+    private static final String ANDROID_GPS_DIALOG_SHOWN_KEY;
+    private static final String ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY;
+    private static final String ANDROID_SERVICE_STARTED_KEY;
+    private static final String GPS_REQUIREMENTS_DIALOG_TAG;
+
+    static {
+        FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
+        FINE_LOCATION_PERMISSION_CODE = 87;
+        LOCATION_SETTINGS_CODE = 104;
+        ANDROID_GPS_DIALOG_SHOWN_KEY = "ANDROID_GPS_DIALOG_SHOWN";
+        ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY = "ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN";
+        ANDROID_SERVICE_STARTED_KEY = "ANDROID_SERVICE_STARTED";
+        GPS_REQUIREMENTS_DIALOG_TAG = "GPS requirements dialog";
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

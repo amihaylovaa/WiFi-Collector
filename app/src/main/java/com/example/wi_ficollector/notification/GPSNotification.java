@@ -12,9 +12,9 @@ import androidx.core.app.NotificationCompat;
 import com.example.wi_ficollector.R;
 import com.example.wi_ficollector.activity.ScanActivity;
 
-public class GSPNotification extends AppNotification {
+public class GPSNotification extends AppNotification {
 
-    public GSPNotification(Context mContext) {
+    public GPSNotification(Context mContext) {
         super(mContext);
     }
 

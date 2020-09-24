@@ -1,6 +1,5 @@
 package com.example.wi_ficollector.utility;
 
-import android.Manifest;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 
@@ -10,30 +9,14 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final int TEN_SECONDS = 10_000;
     public static final int NEGATIVE_INTEGER = -1;
     public static final int ZERO_INTEGER = 0;
     public static final int POSITIVE_INTEGER = 1;
-    public static final int PORT = 8281;
-    public static final int FINE_LOCATION_PERMISSION_CODE = 87;
-    public static final int LOCATION_SETTINGS_CODE = 104;
     public static final int FIVE_SECONDS = 5000;
     public static final int THREE_SECONDS = 3000;
+    public static final long MINIMUM_FILE_SIZE = 398L;
+    public static final long LONG_ZERO = 0L;
     public static final String WIFI_TAG = "wap";
-    public static final String FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION;
-    public static final String PROTOCOL = "http";
-    public static final String HOST = "";
-    public static final String PATH = "/wifi/locations";
-    public static final String CONTENT_TYPE = "Content-type";
-    public static final String ACCEPT = "Accept";
-    public static final String TYPE = "application/json";
-    public static final String CONNECTION_RESET_EXCEPTION_MESSAGE = "Connection reset";
-    public static final String PROVIDERS_CHANGED = "android.location.PROVIDERS_CHANGED";
-    public static final String ANDROID_GPS_DIALOG_SHOWN_KEY = "ANDROID_GPS_DIALOG_SHOWN";
-    public static final String ANDROID_LOCATION_PERMISSION_DIALOG_SHOWN_KEY = "ANDROID_BACKGROUND_PERMISSION_DIALOG_SHOWN";
-    public static final String ANDROID_SERVICE_STARTED_KEY = "ANDROID_SERVICE_STARTED";
-    public static final String GPS_REQUIREMENTS_DIALOG_TAG = "GPS requirements dialog";
-    public static final String INTRO_DIALOG_TAG = "Intro dialog";
     public static final String ACTION = "UI_UPDATE";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";

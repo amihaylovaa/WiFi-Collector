@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 
 import static com.example.wi_ficollector.utility.Constants.*;
 
-public class WifiLocationInput implements InputOperation {
+public class WifiLocationInput {
 
     private FileInputStream mFileInputStream;
     private Context mContext;
@@ -34,20 +34,14 @@ public class WifiLocationInput implements InputOperation {
     public WifiLocationInput(Context mContext) {
         this.mContext = mContext;
         mWiFiLocations = new JSONArray();
+        openFileOutputStream();
     }
 
-    @Override
     public JSONArray read() throws JSONException {
-        try {
-            mFileInputStream = mContext.openFileInput(FILE_NAME);
-        } catch (FileNotFoundException e) {
-            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
-            return mWiFiLocations;
-        }
 
         try {
             prepareReading();
-        } catch (XmlPullParserException e) {
+        } catch (XmlPullParserException | IllegalArgumentException e) {
             Log.d(XML_PULL_PARSER_EXCEPTION_TAG, XML_PULL_PARSER_EXCEPTION_MESSAGE);
             return mWiFiLocations;
         }
@@ -185,5 +179,13 @@ public class WifiLocationInput implements InputOperation {
             tagName = mXmlPullParser.getName();
         }
         return wifiScanResult;
+    }
+
+    private void openFileOutputStream() {
+        try {
+            mFileInputStream = mContext.openFileInput(FILE_NAME);
+        } catch (FileNotFoundException e) {
+            Log.d(FILE_NOT_FOUND_EXCEPTION_TAG, FILE_NOT_FOUND_EXCEPTION_MSG);
+        }
     }
 }
