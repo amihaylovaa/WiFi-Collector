@@ -5,6 +5,29 @@
     <string name="agree">Yes</string>
     <string name="disagree">No</string>
     <string name="OK">OK</string>
-    <string name="launching_key">Show dialog intro</string>
     <string name="rationale_dialog_key">Show background permission rationale</string>
+    <string name="found_wireless_networks">Found wireless networks:</string>
+    <string name="foreground_service_channel_name">Foreground service execution</string>
+    <string name="foreground_service_notification_content_text">The app collects your location and wireless access points around you</string>
+    <string name="disabled_gps_notification_channel_name">Disabled GPS</string>
+    <string name="disabled_gps_notification_content_text">Application stopped due to disabled GPS. Tap go enable GPS.</string>
+    <string name="denied_location_permission_channel_name">Previously granted location permission has been denied</string>
+    <string name="denied_location_permission_content_text">Application has been terminated due to denied location permission. Tap to grant permission.</string>
+    <string name="gps_requirements_dialog">GPS Requirements</string>
+    <string name="gps_requirements_fragment_dialog_message">Turning GPS on is required in order to scan WiFi networks and find your location.</string>
+    <string name="gps_requirements_fragment_dialog_title">GPS actions required</string>
+    <string name="location_permission_rationale_dialog_fragment_message">The app needs permission to access your location, otherwise it will not be able to work. Do you want to give permission?</string>
+    <string name="yes_button">Yes</string>
+    <string name="no_button">No</string>
+    <string name="intro">This application collect your location and wireless access points based on your current location. This data is stored on your device and is expected to be sent later.</string>
+    <string name="internet_connection_disabled">Please, enable Wi-Fi and try again</string>
+    <string name="send_data_success">Data has been successfully sent</string>
+    <string name="no_data_found">No data found</string>
+    <string name="send_request_timeout">Can not connect, please try again later</string>
+    <string name="lost_internet_connection">Lost Internet connection, please try again later</string>
+    <string name="send_intent_exception">Unexpected error occurred, please wait</string>
+    <string name="data_send_waiting_for_response">Data has been sent, waiting for response</string>
+    <string name="internal_server_error">Server side error occurred, please try again later</string>
+    <string name="send_data_before_scanning_again">Please send locally stored data before scanning again</string>
+
 </resources>

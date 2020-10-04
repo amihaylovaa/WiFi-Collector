@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="#F6F0F3"
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/start_scanning_button"
+        android:id="@+id/scanning_button"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="187dp"
         android:layout_height="wrap_content"
@@ -17,7 +18,7 @@
         android:textStyle="normal" />
 
     <Button
-        android:id="@+id/send_data_button"
+        android:id="@+id/sending_button"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="187dp"
         android:layout_height="wrap_content"

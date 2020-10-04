@@ -1,48 +1,30 @@
 package com.example.wi_ficollector.wrapper;
 
+
 import android.net.wifi.ScanResult;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class WifiLocation {
-    private static double locationLatitude;
-    private static double locationLongitude;
-    private static List<ScanResult> wifiScanResults;
 
-    private WifiLocation() {
-    }
+    private double latitude;
+    private double longitude;
+    private LocalDateTime localDateTime;
+    private List<ScanResult> scanResults;
 
-    public static double getLatitude() {
-        return locationLatitude;
-    }
+    public void clearResults() {
+        latitude = 0.00;
+        longitude = 0.00;
 
-    public static double getLongitude() {
-        return locationLongitude;
-    }
-
-    public static List<ScanResult> getScanResults() {
-        return wifiScanResults;
-    }
-
-    public static void setLatitude(double latitude) {
-        locationLatitude = latitude;
-    }
-
-    public static void setLongitude(double longitude) {
-        locationLongitude = longitude;
-    }
-
-    public static void setScanResults(List<ScanResult> scanResults) {
-        wifiScanResults = new ArrayList<>();
-        wifiScanResults.addAll(scanResults);
-    }
-
-    public static void clearFields() {
-        if (wifiScanResults != null) {
-            wifiScanResults.clear();
+        if (scanResults != null) {
+            scanResults.clear();
         }
-        locationLatitude = 0.00;
-        locationLongitude = 0.00;
+        localDateTime = null;
     }
 }

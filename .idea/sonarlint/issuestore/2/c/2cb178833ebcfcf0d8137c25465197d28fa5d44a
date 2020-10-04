@@ -1,15 +1,0 @@
-
-P
-java:S1444"3Make this "public static hasWorkFailed" field final(¯§€ˆ8½«‘ˆ¦.
-R
-java:S1444"6Make this "public static fileOutputStream" field final(¬ÖØ48½«‘ˆ¦.
-v
-java:S1104"YMake hasWorkFailed a static final constant or non-public and provide accessors if needed.(¯§€ˆ8½«‘ˆ¦.
-X
-java:S1444"6Make this "public static isAlreadyScanned" field final(ŸÕœÉüÿÿÿÿ8ÈÔïİ¥.
-~
-java:S1104"\Make isAlreadyScanned a static final constant or non-public and provide accessors if needed.(ŸÕœÉüÿÿÿÿ8ÈÔïİ¥.
-x
-java:S1104"\Make fileOutputStream a static final constant or non-public and provide accessors if needed.(¬ÖØ48½«‘ˆ¦.
-Q
-java:S1128"4Remove this unused import 'android.content.Context'.(©Ê‰è8ì¨’ˆ¦.

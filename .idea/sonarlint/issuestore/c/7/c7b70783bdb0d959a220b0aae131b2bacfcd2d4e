@@ -1,16 +1,0 @@
-
-R
-java:S1144I"5Remove this unused private "starWiFiScanning" method.(Õâë–8äòø¦.
-X
-java:S2696_"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8†ƒø¦.
-E
-java:S1148g"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8Ã¸Ó¿¥.
-J	java:S108b")Either remove or fill this block of code.(å¾¬§ýÿÿÿÿ8Ã¸Ó¿¥.
-E
-java:S1148e"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8Ã¸Ó¿¥.
-g
-java:S2147f"ECombine this catch with the one at line 100, which has the same body.(ÊÊÆƒüÿÿÿÿ8Ã¸Ó¿¥.
-Q
-java:S1128"5Remove this unused import 'java.io.FileOutputStream'.(˜«ªg8§Â˜ˆ¦.
->
-java:S1116L"Remove this empty statement.(Åñ­õþÿÿÿÿ8Ã¸Ó¿¥.

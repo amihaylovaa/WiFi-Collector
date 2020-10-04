@@ -1,24 +1,2 @@
 
-O
-java:S1612Ï",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Ë¦.
-F	java:S108Ê")Either remove or fill this block of code.(ï­£Ä8§€Ü‘¦.
-O
-java:S1612™",Replace this lambda with a method reference.(Š´ïöıÿÿÿÿ8Ë¦.
-v
-java:S14503"TRemove the "mFile" field and declare it as a local variable in the relevant methods.(Œ˜‡ÿÿÿÿÿ8Ë¦.
-K
-java:S10683")Remove this unused "mFile" private field.(Œ˜‡ÿÿÿÿÿ8Ë¦.
-F
-java:S1148¯"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ÙÛ‘¦.
-Y
-java:S2696ª"6Make the enclosing method "static" or remove this set.(ÂçîÅøÿÿÿÿ8ÙÀï¦.
-Y	java:S125ğ"<This block of commented-out lines of code should be removed.(™¹ò8»ˆÛ¦.
-S
-java:S2696;"6Make the enclosing method "static" or remove this set.(Âëˆµ8Ë¦.
-Y
-java:S2696"6Make the enclosing method "static" or remove this set.(É¯”Îşÿÿÿÿ8Ë¦.
-P
-java:S1135Ş"2Complete the task associated to this TODO comment.(øç‡›8Ë¦.
-Y	java:S125î"<This block of commented-out lines of code should be removed.(ùğÎ¹8»ˆÛ¦.
-~
-java:S3923í"[Remove this conditional structure or edit its code blocks so that they're not all the same.(ÑÕéùÿÿÿÿ8»ˆÛ¦.
+V	java:S110%"<This class has 9 parents which is greater than 5 authorized.(¸ŒëÌùÿÿÿÿ
