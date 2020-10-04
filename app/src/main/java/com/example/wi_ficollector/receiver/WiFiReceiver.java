@@ -27,29 +27,27 @@ public class WiFiReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         boolean hasSuccess = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
-        if (wifiManager != null && hasSuccess) {
-            List<ScanResult> scanResults = wifiManager.getScanResults();
-            setScanResults(scanResults);
-        }
-    }
 
-    private void setScanResults(List<ScanResult> scanResults) {
-        if (scanResults != null && shouldSaveScanResults()) {
-            if (mWifiLocationOutput != null) {
-                mWifiLocationOutput.write(mWifiLocation, scanResults);
+        if (hasSuccess) {
+            List<ScanResult> scanResults = wifiManager.getScanResults();
+
+            if (shouldSaveScanResults()) {
+                mWifiLocation.setScanResults(scanResults);
+                mWifiLocationOutput.write(mWifiLocation);
             }
         }
     }
 
     private boolean shouldSaveScanResults() {
-        LocalDateTime foundNetworksTime = LocalDateTime.now();
-        LocalDateTime savedLocationTime = mWifiLocation.getLocalDateTime();
-        long difference = -1L;
+        LocalDateTime networksTime = LocalDateTime.now();
+        LocalDateTime locationTime = mWifiLocation.getLocalDateTime();
+        long timeDifference = -1L;
+        long maxTimeDifference = 5L;
 
-        if (savedLocationTime != null) {
-            difference = ChronoUnit.SECONDS.between(savedLocationTime, foundNetworksTime);
+        if (locationTime != null) {
+            timeDifference = ChronoUnit.SECONDS.between(locationTime, networksTime);
         }
 
-        return (difference <= 5L && difference != -1L);
+        return (timeDifference != -1L && timeDifference <= maxTimeDifference);
     }
 }

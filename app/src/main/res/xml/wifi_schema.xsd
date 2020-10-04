@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="src/main/res/xml/wifi_schema.xsd" xmlns:wifi="src/main/res/xml/wifi_schema.xsd">
+  <xs:element name="wap">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wifi:bssid"/>
+        <xs:element ref="wifi:rssi"/>
+        <xs:element ref="wifi:ssid"/>
+        <xs:element ref="wifi:capabilities"/>
+        <xs:element ref="wifi:frequency"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="bssid" type="xs:NMTOKEN"/>
+  <xs:element name="rssi" type="xs:integer"/>
+  <xs:element name="ssid" type="xs:string"/>
+  <xs:element name="capabilities" type="xs:string"/>
+  <xs:element name="frequency" type="xs:integer"/>
+</xs:schema>
+
+

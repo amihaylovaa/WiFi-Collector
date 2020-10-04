@@ -1,5 +1,6 @@
 package com.example.wi_ficollector.notification;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -15,7 +16,7 @@ public class ForegroundServiceNotification extends AppNotification {
     }
 
     @Override
-    public NotificationCompat.Builder createNotification() {
+    public Notification createNotification() {
         String channelId = "Foreground service";
         CharSequence contentText = mContext.getString(R.string.foreground_service_notification_content_text);
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
@@ -28,7 +29,8 @@ public class ForegroundServiceNotification extends AppNotification {
         return new NotificationCompat.Builder(mContext, channelId)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setStyle(bigTextStyle)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .build();
     }
 
     @Override

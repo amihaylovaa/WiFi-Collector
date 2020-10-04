@@ -1,5 +1,6 @@
 package com.example.wi_ficollector.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,8 +13,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
+
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.wi_ficollector.notification.AppNotification;
@@ -31,39 +32,39 @@ import com.google.android.gms.location.LocationServices;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.wi_ficollector.utils.Constants.*;
+import static com.example.wi_ficollector.utility.Constants.*;
 
 public class ForegroundWifiLocationService extends Service {
 
-    private WifiManager mWifiManager;
     private BroadcastReceiver mWifiReceiver;
-    private GPSStateReceiver mGPSStateReceiver;
     private FusedLocationProviderClient mFusedLocationProviderClient;
+    private GPSStateReceiver mGPSStateReceiver;
+    private Intent mLocalBroadcastIntent;
+    private LocalBroadcastManager mLocalBroadcastManager;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
-    private WifiLocationOutput mWifiLocationRepository;
+    private WifiManager mWifiManager;
+    private WifiLocationOutput mWifiLocationOutput;
     private WifiLocation mWifiLocation;
-    private LocalBroadcastManager mLocalBroadcastManager;
-    private Intent mLocalBroadcastIntent;
 
     @Override
     public void onCreate() {
         super.onCreate();
         createLocationRequest();
 
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+        int foregroundServiceNotificationId = 721;
+        AppNotification appNotification = new ForegroundServiceNotification(ForegroundWifiLocationService.this);
+        Notification foregroundServiceNotification = appNotification.createNotification();
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(ForegroundWifiLocationService.this);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(ForegroundWifiLocationService.this);
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        mWifiLocationRepository = new WifiLocationOutput(this);
+        mWifiLocationOutput = new WifiLocationOutput(ForegroundWifiLocationService.this);
         mWifiLocation = new WifiLocation();
         mGPSStateReceiver = new GPSStateReceiver();
-        mWifiReceiver = new WiFiReceiver(mWifiLocationRepository, mWifiLocation);
+        mWifiReceiver = new WiFiReceiver(mWifiLocationOutput, mWifiLocation);
         mLocalBroadcastIntent = new Intent();
-        AppNotification appNotification = new ForegroundServiceNotification(this);
-        NotificationCompat.Builder notificationBuilder = appNotification.createNotification();
-        int foregroundServiceNotificationId = 721;
 
-        startForeground(foregroundServiceNotificationId, notificationBuilder.build());
+        startForeground(foregroundServiceNotificationId, foregroundServiceNotification);
     }
 
     @Override
@@ -97,16 +98,15 @@ public class ForegroundWifiLocationService extends Service {
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-    private void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
+    public void registerReceiver(BroadcastReceiver broadcastReceiver, String action) {
         IntentFilter intentFilter = new IntentFilter(action);
 
         registerReceiver(broadcastReceiver, intentFilter);
     }
 
     public void requestLocationUpdates() {
-        Looper mainLooper = Looper.getMainLooper();
         try {
-            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, mainLooper);
+            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.getMainLooper());
         } catch (SecurityException securityException) {
             stopServiceWork();
             stopSelf();
@@ -128,19 +128,18 @@ public class ForegroundWifiLocationService extends Service {
                 for (Location location : locations) {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
-                    if (latitude != ZERO && longitude != ZERO) {
-                        mWifiLocation.setLocalDateTime(LocalDateTime.now());
-                        mWifiLocation.setLatitude(latitude);
-                        mWifiLocation.setLongitude(longitude);
-                        mWifiManager.startScan();
-                    }
+
+                    mWifiLocation.setLocalDateTime(LocalDateTime.now());
+                    mWifiLocation.setLatitude(latitude);
+                    mWifiLocation.setLongitude(longitude);
+                    mWifiManager.startScan();
                 }
             }
         };
     }
 
     private void sendBroadcast() {
-        int numOfWifiLocations = mWifiLocationRepository.getNumOfWifiLocations();
+        int numOfWifiLocations = mWifiLocationOutput.getNumOfWifiLocations();
 
         mLocalBroadcastIntent.putExtra(EXTRA_NAME, numOfWifiLocations);
         mLocalBroadcastIntent.setAction(ACTION);
@@ -148,18 +147,18 @@ public class ForegroundWifiLocationService extends Service {
     }
 
     private void stopServiceWork() {
+        if (mFusedLocationProviderClient != null) {
+            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        }
+
         try {
             unregisterReceiver(mWifiReceiver);
             unregisterReceiver(mGPSStateReceiver);
         } catch (IllegalArgumentException illegalArgumentException) {
-            illegalArgumentException.printStackTrace();
             Log.d(ILLEGAL_ARGUMENT_EXCEPTION_THROWN_TAG, ILLEGAL_ARGUMENT_EXCEPTION_THROWN_MSG);
         }
-        try {
-            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-        } catch (NullPointerException npe) {
-            Log.d(NULL_POINTER_EXCEPTION_THROWN_TAG, NULL_POINTER_EXCEPTION_THROWN_MESSAGE);
-        }
-        mWifiLocationRepository.closeFileOutputStream();
+
+        mWifiLocationOutput.closeFileOutputStream();
+        mWifiLocationOutput.stopExecutorService();
     }
 }

@@ -2,8 +2,8 @@ package com.example.wi_ficollector.dialogfragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,24 +11,25 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.wi_ficollector.R;
-import com.example.wi_ficollector.activity.ScanActivity;
+import com.example.wi_ficollector.listener.LocationPermissionRequestRationaleListener;
 
 public class LocationRequestRationaleDialogFragment extends DialogFragment {
 
     private AlertDialog mAlertDialog;
-
-    public interface LocationRequestRationaleListener {
-        void positiveButton();
-
-        void negativeButton();
-    }
+    private LocationPermissionRequestRationaleListener mLocationPermissionRequestRationaleListener;
 
     public LocationRequestRationaleDialogFragment() {
-        // Needed when dialog fragment is recreated
+        // Required during dialog fragment recreation
     }
 
     public static LocationRequestRationaleDialogFragment newInstance() {
         return new LocationRequestRationaleDialogFragment();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mLocationPermissionRequestRationaleListener = (LocationPermissionRequestRationaleListener) context;
     }
 
     @NonNull
@@ -41,11 +42,11 @@ public class LocationRequestRationaleDialogFragment extends DialogFragment {
                     .setMessage(R.string.location_permission_rationale_dialog_fragment_message)
                     .setCancelable(false)
                     .setNegativeButton(R.string.disagree, (dialog, whichButton) -> {
-                        ((ScanActivity) getActivity()).negativeButton();
-                          dismiss();
+                        mLocationPermissionRequestRationaleListener.disagree();
+                        dismiss();
                     })
                     .setPositiveButton(R.string.agree, (dialog, whichButton) -> {
-                        ((ScanActivity) getActivity()).positiveButton();
+                        mLocationPermissionRequestRationaleListener.agree();
                         dismiss();
                     });
 
@@ -53,5 +54,11 @@ public class LocationRequestRationaleDialogFragment extends DialogFragment {
             mAlertDialog.setCanceledOnTouchOutside(false);
         }
         return mAlertDialog;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mLocationPermissionRequestRationaleListener = null;
     }
 }
