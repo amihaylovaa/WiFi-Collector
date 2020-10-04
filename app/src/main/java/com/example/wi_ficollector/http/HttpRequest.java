@@ -33,10 +33,10 @@ public class HttpRequest {
     private static final String CONNECTION_RESET_EXCEPTION_MESSAGE;
 
     static {
-        PORT = 8281;
+        PORT = 8282;
         TEN_SECONDS = 10_000;
         PROTOCOL = "http";
-        HOST = "";
+        HOST = "10.0.2.2";
         PATH = "/wifi/locations";
         CONTENT_TYPE = "Content-type";
         ACCEPT = "Accept";
