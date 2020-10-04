@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mFragmentManager = getSupportFragmentManager();
         mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mHandler = new Handler(Looper.getMainLooper());
