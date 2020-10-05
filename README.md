@@ -2,19 +2,21 @@
 Locally stored data is later sent to remote database through [Web service](https://github.com/amihaylovaa/WiFi-Collector-Storage-Service).
 
 
-When the app is launched the user can chose between scanning (collecting) data for wireless networks or sending them to the remote database, if any data is presented.
+When the app is launched the user can chоose between scanning (collecting) data for wireless networks or sending it to the remote database, if any data is present.
 
- ![Intro](https://github.com/amihaylovaa/WiFi-Collector/blob/master/1.png)
+ ![Main](https://github.com/amihaylovaa/WiFi-Collector/blob/master/MainActivity.png)
 
 # START SCANNING  
   1) Requests for turning GPS on and granting location permission to the app is sent to the user. If both are granted, foreground service is started where the main logic of the app is placed (see from 2) and below )
-  2) Periodic location request is sent to Google Play Services API - Fused location API. New location is expected to be received in minimum 3 seconds, maximum 5 with high accuray of the result.
+  2) Periodic location request is sent to Google Play Services API - Fused location API. New location is expected to be received in a range of 3-5 seconds with high accuracy of the result.
   3) New location is received.
   4) Wi-Fi scanning is triggered - results are received asynchronously.
-  5) Data from 2) and 3) are stored in the GPX file.
+  5) Data from 2) and 3) is stored in the GPX file.
   6) Steps 2), 3) and 4)  are repeated until the user stops collecting data.
   
-  After collecing is done, the user MUST send the data otherwise collecting will not be allowed. After the data is sent successfuly, the user is free to collect data again.
+ ![Scanning](https://github.com/amihaylovaa/WiFi-Collector/blob/master/ScanningActivity.png)
+  
+  After collecting is done, the user MUST send the data otherwise collecting will not be allowed. After the data is sent successfully, the user is free to collect data again.
   
 # SEND DATA 
   1) Data is read from the GPX file and parsed to JSON format.
@@ -24,6 +26,6 @@ When the app is launched the user can chose between scanning (collecting) data f
   5) HTTP response is received and Toast message is displayed to inform the user how the operation has finished.
 
 
-* Several dialog fragments (dialog window wrapped in dialog) are shown explaining the user why certain actions are required, for example turning GPS on.
+* Several dialog fragments (dialog window wrapped in dialog) are shown to the user explaining why certain actions are required, for example turning GPS on.
 
 * Unit tests are planned in future.
