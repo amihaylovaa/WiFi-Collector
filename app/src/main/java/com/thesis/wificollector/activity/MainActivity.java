@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.thesis.wificollector.listener.IntroDialogFragmentListener;
-import com.example.wi_ficollector.R;
+import com.thesis.wificollector.R;
 import com.thesis.wificollector.application.WifiCollectorApplication;
 import com.thesis.wificollector.dialogfragment.IntroDialogFragment;
 import com.thesis.wificollector.http.HttpRequest;

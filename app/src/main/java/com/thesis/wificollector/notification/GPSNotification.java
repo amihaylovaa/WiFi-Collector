@@ -9,7 +9,7 @@ import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.wi_ficollector.R;
+import com.thesis.wificollector.R;
 import com.thesis.wificollector.activity.ScanActivity;
 
 public class GPSNotification extends AppNotification {

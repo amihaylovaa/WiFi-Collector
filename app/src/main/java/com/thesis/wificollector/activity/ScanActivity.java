@@ -20,7 +20,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.example.wi_ficollector.R;
+import com.thesis.wificollector.R;
 import com.thesis.wificollector.dialogfragment.LocationRequestRationaleDialogFragment;
 import com.thesis.wificollector.dialogfragment.GPSRequirementDialogFragment;
 

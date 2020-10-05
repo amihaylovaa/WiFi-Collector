@@ -11,7 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.thesis.wificollector.listener.IntroDialogFragmentListener;
-import com.example.wi_ficollector.R;
+import com.thesis.wificollector.R;
 
 public class IntroDialogFragment extends DialogFragment {
 

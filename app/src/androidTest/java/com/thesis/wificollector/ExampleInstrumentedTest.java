@@ -1,4 +1,4 @@
-package com.example.wi_ficollector;
+package com.thesis.wificollector;
 
 import android.content.Context;
 

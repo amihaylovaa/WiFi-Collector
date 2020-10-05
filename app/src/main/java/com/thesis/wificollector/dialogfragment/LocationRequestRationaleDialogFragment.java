@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.wi_ficollector.R;
+import com.thesis.wificollector.R;
 import com.thesis.wificollector.listener.LocationPermissionRequestRationaleListener;
 
 public class LocationRequestRationaleDialogFragment extends DialogFragment {
