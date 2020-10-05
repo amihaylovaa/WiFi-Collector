@@ -14,9 +14,9 @@
 .externalNativeBuild
 .cxx
 /.idea
-build.gradle
 gradlew
 gradle.properties
 gradlew.bat
 settings.gradle
+gradle/wrapper
 
