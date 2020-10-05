@@ -1,7 +1,7 @@
 **Wi-Fi Collector** is an Android mobile application that collects and stores locally data for the available wireless networks situated around identified location in GPS Exchange Format(GPX) file.
 Locally stored data is later sent to remote database through [Web service](https://github.com/amihaylovaa/WiFi-Collector-Storage-Service).
 
-When the app is launched the user can chose between scanning (collecting) data for wireless network or sending it to the remote database, if any data is presented.
+When the app is launched the user can chose between scanning (collecting) data for wireless networks or sending them to the remote database, if any data is presented.
 
 
 # Collecting data 
