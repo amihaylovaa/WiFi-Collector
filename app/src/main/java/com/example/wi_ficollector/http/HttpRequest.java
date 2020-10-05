@@ -88,7 +88,6 @@ public class HttpRequest {
             result = mHttpUrlConnection.getResponseCode();
         } catch (SocketException e) {
             if (e.getMessage().equals(CONNECTION_RESET_EXCEPTION_MESSAGE)) {
-                e.printStackTrace();
                 mHttpUrlConnection.disconnect();
                 return HttpURLConnection.HTTP_INTERNAL_ERROR;
             } else {
