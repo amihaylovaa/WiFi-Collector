@@ -3,7 +3,6 @@ Locally stored data is later sent to remote database through [Web service](https
 
 When the app is launched the user can chose between scanning (collecting) data for wireless network or sending it to the remote database, if any data is presented.
 
-![alt text](https://prikachi.net/image/1.VzG9G)
 
 # Collecting data 
   1) Requests for turning GPS on and granting location permission to the app is sent to the user. If both are granted, foreground service is started where the main logic of the app is placed.
